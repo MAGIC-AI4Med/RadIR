@@ -1,0 +1,2760 @@
+ipex flag is deprecated, will be removed in Accelerate v1.10. From 2.7.0, PyTorch has all needed optimizations for Intel CPU and XPU.
+The following values were not passed to `accelerate launch` and had defaults used instead:
+		More than one GPU was found, enabling multi-GPU training.
+		If this was unintended please pass in `--num_processes=1`.
+	`--num_machines` was set to a value of `1`
+	`--dynamo_backend` was set to a value of `'no'`
+To avoid this warning pass in values for each of the problematic parameters or run `accelerate config`.
+ipex flag is deprecated, will be removed in Accelerate v1.10. From 2.7.0, PyTorch has all needed optimizations for Intel CPU and XPU.
+The following values were not passed to `accelerate launch` and had defaults used instead:
+		More than one GPU was found, enabling multi-GPU training.
+		If this was unintended please pass in `--num_processes=1`.
+	`--num_machines` was set to a value of `1`
+	`--dynamo_backend` was set to a value of `'no'`
+To avoid this warning pass in values for each of the problematic parameters or run `accelerate config`.
+ipex flag is deprecated, will be removed in Accelerate v1.10. From 2.7.0, PyTorch has all needed optimizations for Intel CPU and XPU.
+The following values were not passed to `accelerate launch` and had defaults used instead:
+		More than one GPU was found, enabling multi-GPU training.
+		If this was unintended please pass in `--num_processes=1`.
+	`--num_machines` was set to a value of `1`
+	`--dynamo_backend` was set to a value of `'no'`
+To avoid this warning pass in values for each of the problematic parameters or run `accelerate config`.
+ipex flag is deprecated, will be removed in Accelerate v1.10. From 2.7.0, PyTorch has all needed optimizations for Intel CPU and XPU.
+The following values were not passed to `accelerate launch` and had defaults used instead:
+		More than one GPU was found, enabling multi-GPU training.
+		If this was unintended please pass in `--num_processes=1`.
+	`--num_machines` was set to a value of `1`
+	`--dynamo_backend` was set to a value of `'no'`
+To avoid this warning pass in values for each of the problematic parameters or run `accelerate config`.
+/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/vector_quantize_pytorch/vector_quantize_pytorch.py:261: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  @autocast(enabled = False)
+/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/vector_quantize_pytorch/vector_quantize_pytorch.py:392: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  @autocast(enabled = False)
+/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/vector_quantize_pytorch/vector_quantize_pytorch.py:261: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  @autocast(enabled = False)
+/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/vector_quantize_pytorch/vector_quantize_pytorch.py:392: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  @autocast(enabled = False)
+/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/vector_quantize_pytorch/vector_quantize_pytorch.py:261: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  @autocast(enabled = False)
+/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/vector_quantize_pytorch/vector_quantize_pytorch.py:392: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  @autocast(enabled = False)
+/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/vector_quantize_pytorch/vector_quantize_pytorch.py:261: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  @autocast(enabled = False)
+/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/vector_quantize_pytorch/vector_quantize_pytorch.py:392: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  @autocast(enabled = False)
+/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/vector_quantize_pytorch/vector_quantize_pytorch.py:261: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  @autocast(enabled = False)
+/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/vector_quantize_pytorch/vector_quantize_pytorch.py:392: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  @autocast(enabled = False)
+/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/vector_quantize_pytorch/vector_quantize_pytorch.py:261: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  @autocast(enabled = False)
+/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/vector_quantize_pytorch/vector_quantize_pytorch.py:392: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  @autocast(enabled = False)
+/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/vector_quantize_pytorch/vector_quantize_pytorch.py:261: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  @autocast(enabled = False)
+/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/vector_quantize_pytorch/vector_quantize_pytorch.py:392: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  @autocast(enabled = False)
+/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/vector_quantize_pytorch/vector_quantize_pytorch.py:261: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  @autocast(enabled = False)
+/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/vector_quantize_pytorch/vector_quantize_pytorch.py:392: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  @autocast(enabled = False)
+/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/vector_quantize_pytorch/vector_quantize_pytorch.py:261: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  @autocast(enabled = False)
+/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/vector_quantize_pytorch/vector_quantize_pytorch.py:392: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  @autocast(enabled = False)
+/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/vector_quantize_pytorch/vector_quantize_pytorch.py:261: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  @autocast(enabled = False)
+/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/vector_quantize_pytorch/vector_quantize_pytorch.py:392: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  @autocast(enabled = False)
+/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/vector_quantize_pytorch/vector_quantize_pytorch.py:261: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  @autocast(enabled = False)
+/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/vector_quantize_pytorch/vector_quantize_pytorch.py:392: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  @autocast(enabled = False)
+/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/vector_quantize_pytorch/vector_quantize_pytorch.py:261: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  @autocast(enabled = False)
+/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/vector_quantize_pytorch/vector_quantize_pytorch.py:392: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  @autocast(enabled = False)
+/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/vector_quantize_pytorch/vector_quantize_pytorch.py:261: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  @autocast(enabled = False)
+/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/vector_quantize_pytorch/vector_quantize_pytorch.py:392: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  @autocast(enabled = False)
+/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/vector_quantize_pytorch/vector_quantize_pytorch.py:261: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  @autocast(enabled = False)
+/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/vector_quantize_pytorch/vector_quantize_pytorch.py:392: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  @autocast(enabled = False)
+/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/vector_quantize_pytorch/vector_quantize_pytorch.py:261: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  @autocast(enabled = False)
+/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/vector_quantize_pytorch/vector_quantize_pytorch.py:392: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  @autocast(enabled = False)
+/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/vector_quantize_pytorch/vector_quantize_pytorch.py:261: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  @autocast(enabled = False)
+/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/vector_quantize_pytorch/vector_quantize_pytorch.py:392: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  @autocast(enabled = False)
+Detected kernel version 3.10.0, which is below the recommended minimum of 5.5.0; this can cause the process to hang. It is recommended to upgrade the kernel to the minimum version or higher.
+Rank 0 anatomy subset for training: ['stomach']
+Rank 0 total samples: 61667
+Rank 0 anatomy subset for validation: ['stomach']
+Rank 0 total samples: 61667
+stomach.csv has 753 rows.
+** DATA ** Load 24127 images.
+** DATA ** Load 1 anatomy.
+For stomach, 17 samples has no valid candidate, removed
+** DATA ** Load 1563 images.
+** DATA ** Load 1 anatomy.
+Rank 0 anatomy subset for training: ['pericardium']
+Rank 0 total samples: 189141
+Rank 0 anatomy subset for validation: ['pericardium']
+Rank 0 total samples: 189141
+Detected kernel version 3.10.0, which is below the recommended minimum of 5.5.0; this can cause the process to hang. It is recommended to upgrade the kernel to the minimum version or higher.
+Detected kernel version 3.10.0, which is below the recommended minimum of 5.5.0; this can cause the process to hang. It is recommended to upgrade the kernel to the minimum version or higher.
+Rank 0 anatomy subset for training: ['stomach']
+Rank 0 total samples: 61667
+Rank 0 anatomy subset for validation: ['stomach']
+Rank 0 total samples: 61667
+Rank 0 anatomy subset for training: ['stomach']
+Rank 0 total samples: 61667
+Rank 0 anatomy subset for validation: ['stomach']
+Rank 0 total samples: 61667
+Detected kernel version 3.10.0, which is below the recommended minimum of 5.5.0; this can cause the process to hang. It is recommended to upgrade the kernel to the minimum version or higher.
+Rank 0 anatomy subset for training: ['stomach']
+Rank 0 total samples: 61667
+Rank 0 anatomy subset for validation: ['stomach']
+Rank 0 total samples: 61667
+pericardium.csv has 1770 rows.
+** DATA ** Load 215697 images.
+** DATA ** Load 1 anatomy.
+For pericardium, 10 samples has no valid candidate, removed
+** DATA ** Load 3091 images.
+** DATA ** Load 1 anatomy.
+stomach.csv has 753 rows.
+stomach.csv has 753 rows.
+stomach.csv has 753 rows.
+** DATA ** Load 24127 images.
+** DATA ** Load 1 anatomy.
+For stomach, 17 samples has no valid candidate, removed
+** DATA ** Load 1563 images.
+** DATA ** Load 1 anatomy.
+Rank 0 anatomy subset for training: ['pericardium']
+Rank 0 total samples: 189141
+Rank 0 anatomy subset for validation: ['pericardium']
+Rank 0 total samples: 189141
+** DATA ** Load 24127 images.
+** DATA ** Load 1 anatomy.
+** DATA ** Load 24127 images.
+** DATA ** Load 1 anatomy.
+For stomach, 17 samples has no valid candidate, removed
+** DATA ** Load 1563 images.
+** DATA ** Load 1 anatomy.
+For stomach, 17 samples has no valid candidate, removed
+** DATA ** Load 1563 images.
+** DATA ** Load 1 anatomy.
+Rank 0 anatomy subset for training: ['pericardium']
+Rank 0 total samples: 189141
+Rank 0 anatomy subset for validation: ['pericardium']
+Rank 0 total samples: 189141
+Rank 0 anatomy subset for training: ['pericardium']
+Rank 0 total samples: 189141
+Rank 0 anatomy subset for validation: ['pericardium']
+Rank 0 total samples: 189141
+Rank 3 anatomy subset for training: ['pancreas']
+Rank 3 total samples: 60895
+Rank 3 anatomy subset for validation: []
+Rank 3 total samples: 0
+Rank 1 anatomy subset for training: ['pancreas']
+Rank 1 total samples: 60895
+Rank 1 anatomy subset for validation: ['pancreas']
+Rank 1 total samples: 60895
+Rank 3 anatomy subset for training: ['pancreas']
+Rank 3 total samples: 60895
+Rank 3 anatomy subset for validation: []
+Rank 3 total samples: 0
+Rank 2 anatomy subset for training: ['stomach']
+Rank 2 total samples: 61667
+Rank 2 anatomy subset for validation: []
+Rank 2 total samples: 0
+Rank 1 anatomy subset for training: ['pancreas']
+Rank 1 total samples: 60895
+Rank 1 anatomy subset for validation: ['pancreas']
+Rank 1 total samples: 60895
+pancreas.csv has 782 rows.
+pericardium.csv has 1770 rows.
+Rank 2 anatomy subset for training: ['stomach']
+Rank 2 total samples: 61667
+Rank 2 anatomy subset for validation: []
+Rank 2 total samples: 0
+Rank 1 anatomy subset for training: ['pancreas']
+Rank 1 total samples: 60895
+Rank 1 anatomy subset for validation: ['pancreas']
+Rank 1 total samples: 60895
+Rank 3 anatomy subset for training: ['pancreas']
+Rank 3 total samples: 60895
+Rank 3 anatomy subset for validation: []
+Rank 3 total samples: 0
+Rank 1 anatomy subset for training: ['pancreas']
+Rank 1 total samples: 60895
+Rank 1 anatomy subset for validation: ['pancreas']
+Rank 1 total samples: 60895
+Rank 2 anatomy subset for training: ['stomach']
+Rank 2 total samples: 61667
+Rank 2 anatomy subset for validation: []
+Rank 2 total samples: 0
+Rank 2 anatomy subset for training: ['stomach']
+Rank 2 total samples: 61667
+Rank 2 anatomy subset for validation: []
+Rank 2 total samples: 0
+pericardium.csv has 1770 rows.
+pancreas.csv has 782 rows.
+** DATA ** Load 215697 images.
+** DATA ** Load 1 anatomy.
+For pericardium, 10 samples has no valid candidate, removed
+** DATA ** Load 3091 images.
+** DATA ** Load 1 anatomy.
+Rank 3 anatomy subset for training: ['aortic valve']
+Rank 3 total samples: 53132
+Rank 3 anatomy subset for validation: []
+Rank 3 total samples: 0
+For pancreas, 14 samples has no valid candidate, removed
+Rank 1 anatomy subset for training: ['aortic valve']
+Rank 1 total samples: 53132
+Rank 1 anatomy subset for validation: ['aortic valve']
+Rank 1 total samples: 53132
+** DATA ** Load 215697 images.
+** DATA ** Load 1 anatomy.
+pericardium.csv has 1770 rows.
+For pericardium, 10 samples has no valid candidate, removed
+** DATA ** Load 3091 images.
+** DATA ** Load 1 anatomy.
+** DATA ** Load 215697 images.
+** DATA ** Load 1 anatomy.
+For pericardium, 10 samples has no valid candidate, removed
+** DATA ** Load 3091 images.
+** DATA ** Load 1 anatomy.
+pancreas.csv has 782 rows.
+pancreas.csv has 782 rows.
+stomach.csv has 753 rows.
+For pancreas, 14 samples has no valid candidate, removed
+Rank 1 anatomy subset for training: ['aortic valve']
+Rank 1 total samples: 53132
+Rank 1 anatomy subset for validation: ['aortic valve']
+Rank 1 total samples: 53132
+pancreas.csv has 782 rows.
+pancreas.csv has 782 rows.
+pancreas.csv has 782 rows.
+For pancreas, 14 samples has no valid candidate, removed
+Rank 1 anatomy subset for training: ['aortic valve']
+Rank 1 total samples: 53132
+Rank 1 anatomy subset for validation: ['aortic valve']
+Rank 1 total samples: 53132
+stomach.csv has 753 rows.
+stomach.csv has 753 rows.
+Rank 2 anatomy subset for training: ['pericardium']
+Rank 2 total samples: 189141
+Rank 2 anatomy subset for validation: []
+Rank 2 total samples: 0
+Rank 3 anatomy subset for training: ['aortic valve']
+Rank 3 total samples: 53132
+Rank 3 anatomy subset for validation: []
+Rank 3 total samples: 0
+Rank 3 anatomy subset for training: ['aortic valve']
+Rank 3 total samples: 53132
+Rank 3 anatomy subset for validation: []
+Rank 3 total samples: 0
+Rank 2 anatomy subset for training: ['pericardium']
+Rank 2 total samples: 189141
+Rank 2 anatomy subset for validation: []
+Rank 2 total samples: 0
+For pancreas, 14 samples has no valid candidate, removed
+Rank 1 anatomy subset for training: ['aortic valve']
+Rank 1 total samples: 53132
+Rank 1 anatomy subset for validation: ['aortic valve']
+Rank 1 total samples: 53132
+stomach.csv has 753 rows.
+Rank 2 anatomy subset for training: ['pericardium']
+Rank 2 total samples: 189141
+Rank 2 anatomy subset for validation: []
+Rank 2 total samples: 0
+Rank 2 anatomy subset for training: ['pericardium']
+Rank 2 total samples: 189141
+Rank 2 anatomy subset for validation: []
+Rank 2 total samples: 0
+aortic valve.csv has 1030 rows.
+/p14/p14789176/s51143872 is missing, removed
+/p14/p14789176/s58819381 is missing, removed
+/p14/p14789176/s59710127 is missing, removed
+Rank 3 anatomy subset for training: ['pancreas']
+Rank 3 total samples: 60895
+Rank 3 anatomy subset for validation: []
+Rank 3 total samples: 0
+aortic valve.csv has 1030 rows.
+/p14/p14789176/s51143872 is missing, removed
+/p14/p14789176/s58819381 is missing, removed
+/p14/p14789176/s59710127 is missing, removed
+For aortic valve, 23 samples has no valid candidate, removed
+aortic valve.csv has 1030 rows.
+aortic valve.csv has 1030 rows.
+/p14/p14789176/s51143872 is missing, removed
+/p14/p14789176/s58819381 is missing, removed
+/p14/p14789176/s59710127 is missing, removed
+/p14/p14789176/s51143872 is missing, removed
+/p14/p14789176/s58819381 is missing, removed
+/p14/p14789176/s59710127 is missing, removed
+For aortic valve, 23 samples has no valid candidate, removed
+pancreas.csv has 782 rows.
+aortic valve.csv has 1030 rows.
+Rank 3 anatomy subset for training: ['aortic valve']
+Rank 3 total samples: 53132
+Rank 3 anatomy subset for validation: []
+Rank 3 total samples: 0
+pericardium.csv has 1770 rows.
+/p14/p14789176/s51143872 is missing, removed
+/p14/p14789176/s58819381 is missing, removed
+/p14/p14789176/s59710127 is missing, removed
+For aortic valve, 23 samples has no valid candidate, removed
+pericardium.csv has 1770 rows.
+pericardium.csv has 1770 rows.
+aortic valve.csv has 1030 rows.
+aortic valve.csv has 1030 rows.
+/p14/p14789176/s51143872 is missing, removed
+/p14/p14789176/s58819381 is missing, removed
+/p14/p14789176/s59710127 is missing, removed
+/p14/p14789176/s51143872 is missing, removed
+/p14/p14789176/s58819381 is missing, removed
+/p14/p14789176/s59710127 is missing, removed
+For aortic valve, 23 samples has no valid candidate, removed
+pericardium.csv has 1770 rows.
+aortic valve.csv has 1030 rows.
+/p14/p14789176/s51143872 is missing, removed
+/p14/p14789176/s58819381 is missing, removed
+/p14/p14789176/s59710127 is missing, removed
+Log at /mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/log/CXR_CT_overfit_v2_4
+** MODEL ** The following parameters are FROZEN:
+text_transformer.embeddings.word_embeddings.weight
+text_transformer.embeddings.position_embeddings.weight
+text_transformer.embeddings.token_type_embeddings.weight
+text_transformer.embeddings.LayerNorm.weight
+text_transformer.embeddings.LayerNorm.bias
+text_transformer.encoder.layer.0.attention.self.query.weight
+text_transformer.encoder.layer.0.attention.self.query.bias
+text_transformer.encoder.layer.0.attention.self.key.weight
+text_transformer.encoder.layer.0.attention.self.key.bias
+text_transformer.encoder.layer.0.attention.self.value.weight
+text_transformer.encoder.layer.0.attention.self.value.bias
+text_transformer.encoder.layer.0.attention.output.dense.weight
+text_transformer.encoder.layer.0.attention.output.dense.bias
+text_transformer.encoder.layer.0.attention.output.LayerNorm.weight
+text_transformer.encoder.layer.0.attention.output.LayerNorm.bias
+text_transformer.encoder.layer.0.intermediate.dense.weight
+text_transformer.encoder.layer.0.intermediate.dense.bias
+text_transformer.encoder.layer.0.output.dense.weight
+text_transformer.encoder.layer.0.output.dense.bias
+text_transformer.encoder.layer.0.output.LayerNorm.weight
+text_transformer.encoder.layer.0.output.LayerNorm.bias
+text_transformer.encoder.layer.1.attention.self.query.weight
+text_transformer.encoder.layer.1.attention.self.query.bias
+text_transformer.encoder.layer.1.attention.self.key.weight
+text_transformer.encoder.layer.1.attention.self.key.bias
+text_transformer.encoder.layer.1.attention.self.value.weight
+text_transformer.encoder.layer.1.attention.self.value.bias
+text_transformer.encoder.layer.1.attention.output.dense.weight
+text_transformer.encoder.layer.1.attention.output.dense.bias
+text_transformer.encoder.layer.1.attention.output.LayerNorm.weight
+text_transformer.encoder.layer.1.attention.output.LayerNorm.bias
+text_transformer.encoder.layer.1.intermediate.dense.weight
+text_transformer.encoder.layer.1.intermediate.dense.bias
+text_transformer.encoder.layer.1.output.dense.weight
+text_transformer.encoder.layer.1.output.dense.bias
+text_transformer.encoder.layer.1.output.LayerNorm.weight
+text_transformer.encoder.layer.1.output.LayerNorm.bias
+text_transformer.encoder.layer.2.attention.self.query.weight
+text_transformer.encoder.layer.2.attention.self.query.bias
+text_transformer.encoder.layer.2.attention.self.key.weight
+text_transformer.encoder.layer.2.attention.self.key.bias
+text_transformer.encoder.layer.2.attention.self.value.weight
+text_transformer.encoder.layer.2.attention.self.value.bias
+text_transformer.encoder.layer.2.attention.output.dense.weight
+text_transformer.encoder.layer.2.attention.output.dense.bias
+text_transformer.encoder.layer.2.attention.output.LayerNorm.weight
+text_transformer.encoder.layer.2.attention.output.LayerNorm.bias
+text_transformer.encoder.layer.2.intermediate.dense.weight
+text_transformer.encoder.layer.2.intermediate.dense.bias
+text_transformer.encoder.layer.2.output.dense.weight
+text_transformer.encoder.layer.2.output.dense.bias
+text_transformer.encoder.layer.2.output.LayerNorm.weight
+text_transformer.encoder.layer.2.output.LayerNorm.bias
+text_transformer.encoder.layer.3.attention.self.query.weight
+text_transformer.encoder.layer.3.attention.self.query.bias
+text_transformer.encoder.layer.3.attention.self.key.weight
+text_transformer.encoder.layer.3.attention.self.key.bias
+text_transformer.encoder.layer.3.attention.self.value.weight
+text_transformer.encoder.layer.3.attention.self.value.bias
+text_transformer.encoder.layer.3.attention.output.dense.weight
+text_transformer.encoder.layer.3.attention.output.dense.bias
+text_transformer.encoder.layer.3.attention.output.LayerNorm.weight
+text_transformer.encoder.layer.3.attention.output.LayerNorm.bias
+text_transformer.encoder.layer.3.intermediate.dense.weight
+text_transformer.encoder.layer.3.intermediate.dense.bias
+text_transformer.encoder.layer.3.output.dense.weight
+text_transformer.encoder.layer.3.output.dense.bias
+text_transformer.encoder.layer.3.output.LayerNorm.weight
+text_transformer.encoder.layer.3.output.LayerNorm.bias
+text_transformer.encoder.layer.4.attention.self.query.weight
+text_transformer.encoder.layer.4.attention.self.query.bias
+text_transformer.encoder.layer.4.attention.self.key.weight
+text_transformer.encoder.layer.4.attention.self.key.bias
+text_transformer.encoder.layer.4.attention.self.value.weight
+text_transformer.encoder.layer.4.attention.self.value.bias
+text_transformer.encoder.layer.4.attention.output.dense.weight
+text_transformer.encoder.layer.4.attention.output.dense.bias
+text_transformer.encoder.layer.4.attention.output.LayerNorm.weight
+text_transformer.encoder.layer.4.attention.output.LayerNorm.bias
+text_transformer.encoder.layer.4.intermediate.dense.weight
+text_transformer.encoder.layer.4.intermediate.dense.bias
+text_transformer.encoder.layer.4.output.dense.weight
+text_transformer.encoder.layer.4.output.dense.bias
+text_transformer.encoder.layer.4.output.LayerNorm.weight
+text_transformer.encoder.layer.4.output.LayerNorm.bias
+text_transformer.encoder.layer.5.attention.self.query.weight
+text_transformer.encoder.layer.5.attention.self.query.bias
+text_transformer.encoder.layer.5.attention.self.key.weight
+text_transformer.encoder.layer.5.attention.self.key.bias
+text_transformer.encoder.layer.5.attention.self.value.weight
+text_transformer.encoder.layer.5.attention.self.value.bias
+text_transformer.encoder.layer.5.attention.output.dense.weight
+text_transformer.encoder.layer.5.attention.output.dense.bias
+text_transformer.encoder.layer.5.attention.output.LayerNorm.weight
+text_transformer.encoder.layer.5.attention.output.LayerNorm.bias
+text_transformer.encoder.layer.5.intermediate.dense.weight
+text_transformer.encoder.layer.5.intermediate.dense.bias
+text_transformer.encoder.layer.5.output.dense.weight
+text_transformer.encoder.layer.5.output.dense.bias
+text_transformer.encoder.layer.5.output.LayerNorm.weight
+text_transformer.encoder.layer.5.output.LayerNorm.bias
+text_transformer.encoder.layer.6.attention.self.query.weight
+text_transformer.encoder.layer.6.attention.self.query.bias
+text_transformer.encoder.layer.6.attention.self.key.weight
+text_transformer.encoder.layer.6.attention.self.key.bias
+text_transformer.encoder.layer.6.attention.self.value.weight
+text_transformer.encoder.layer.6.attention.self.value.bias
+text_transformer.encoder.layer.6.attention.output.dense.weight
+text_transformer.encoder.layer.6.attention.output.dense.bias
+text_transformer.encoder.layer.6.attention.output.LayerNorm.weight
+text_transformer.encoder.layer.6.attention.output.LayerNorm.bias
+text_transformer.encoder.layer.6.intermediate.dense.weight
+text_transformer.encoder.layer.6.intermediate.dense.bias
+text_transformer.encoder.layer.6.output.dense.weight
+text_transformer.encoder.layer.6.output.dense.bias
+text_transformer.encoder.layer.6.output.LayerNorm.weight
+text_transformer.encoder.layer.6.output.LayerNorm.bias
+text_transformer.encoder.layer.7.attention.self.query.weight
+text_transformer.encoder.layer.7.attention.self.query.bias
+text_transformer.encoder.layer.7.attention.self.key.weight
+text_transformer.encoder.layer.7.attention.self.key.bias
+text_transformer.encoder.layer.7.attention.self.value.weight
+text_transformer.encoder.layer.7.attention.self.value.bias
+text_transformer.encoder.layer.7.attention.output.dense.weight
+text_transformer.encoder.layer.7.attention.output.dense.bias
+text_transformer.encoder.layer.7.attention.output.LayerNorm.weight
+text_transformer.encoder.layer.7.attention.output.LayerNorm.bias
+text_transformer.encoder.layer.7.intermediate.dense.weight
+text_transformer.encoder.layer.7.intermediate.dense.bias
+text_transformer.encoder.layer.7.output.dense.weight
+text_transformer.encoder.layer.7.output.dense.bias
+text_transformer.encoder.layer.7.output.LayerNorm.weight
+text_transformer.encoder.layer.7.output.LayerNorm.bias
+text_transformer.encoder.layer.8.attention.self.query.weight
+text_transformer.encoder.layer.8.attention.self.query.bias
+text_transformer.encoder.layer.8.attention.self.key.weight
+text_transformer.encoder.layer.8.attention.self.key.bias
+text_transformer.encoder.layer.8.attention.self.value.weight
+text_transformer.encoder.layer.8.attention.self.value.bias
+text_transformer.encoder.layer.8.attention.output.dense.weight
+text_transformer.encoder.layer.8.attention.output.dense.bias
+text_transformer.encoder.layer.8.attention.output.LayerNorm.weight
+text_transformer.encoder.layer.8.attention.output.LayerNorm.bias
+text_transformer.encoder.layer.8.intermediate.dense.weight
+text_transformer.encoder.layer.8.intermediate.dense.bias
+text_transformer.encoder.layer.8.output.dense.weight
+text_transformer.encoder.layer.8.output.dense.bias
+text_transformer.encoder.layer.8.output.LayerNorm.weight
+text_transformer.encoder.layer.8.output.LayerNorm.bias
+text_transformer.encoder.layer.9.attention.self.query.weight
+text_transformer.encoder.layer.9.attention.self.query.bias
+text_transformer.encoder.layer.9.attention.self.key.weight
+text_transformer.encoder.layer.9.attention.self.key.bias
+text_transformer.encoder.layer.9.attention.self.value.weight
+text_transformer.encoder.layer.9.attention.self.value.bias
+text_transformer.encoder.layer.9.attention.output.dense.weight
+text_transformer.encoder.layer.9.attention.output.dense.bias
+text_transformer.encoder.layer.9.attention.output.LayerNorm.weight
+text_transformer.encoder.layer.9.attention.output.LayerNorm.bias
+text_transformer.encoder.layer.9.intermediate.dense.weight
+text_transformer.encoder.layer.9.intermediate.dense.bias
+text_transformer.encoder.layer.9.output.dense.weight
+text_transformer.encoder.layer.9.output.dense.bias
+text_transformer.encoder.layer.9.output.LayerNorm.weight
+text_transformer.encoder.layer.9.output.LayerNorm.bias
+text_transformer.encoder.layer.10.attention.self.query.weight
+text_transformer.encoder.layer.10.attention.self.query.bias
+text_transformer.encoder.layer.10.attention.self.key.weight
+text_transformer.encoder.layer.10.attention.self.key.bias
+text_transformer.encoder.layer.10.attention.self.value.weight
+text_transformer.encoder.layer.10.attention.self.value.bias
+text_transformer.encoder.layer.10.attention.output.dense.weight
+text_transformer.encoder.layer.10.attention.output.dense.bias
+text_transformer.encoder.layer.10.attention.output.LayerNorm.weight
+text_transformer.encoder.layer.10.attention.output.LayerNorm.bias
+text_transformer.encoder.layer.10.intermediate.dense.weight
+text_transformer.encoder.layer.10.intermediate.dense.bias
+text_transformer.encoder.layer.10.output.dense.weight
+text_transformer.encoder.layer.10.output.dense.bias
+text_transformer.encoder.layer.10.output.LayerNorm.weight
+text_transformer.encoder.layer.10.output.LayerNorm.bias
+text_transformer.encoder.layer.11.attention.self.query.weight
+text_transformer.encoder.layer.11.attention.self.query.bias
+text_transformer.encoder.layer.11.attention.self.key.weight
+text_transformer.encoder.layer.11.attention.self.key.bias
+text_transformer.encoder.layer.11.attention.self.value.weight
+text_transformer.encoder.layer.11.attention.self.value.bias
+text_transformer.encoder.layer.11.attention.output.dense.weight
+text_transformer.encoder.layer.11.attention.output.dense.bias
+text_transformer.encoder.layer.11.attention.output.LayerNorm.weight
+text_transformer.encoder.layer.11.attention.output.LayerNorm.bias
+text_transformer.encoder.layer.11.intermediate.dense.weight
+text_transformer.encoder.layer.11.intermediate.dense.bias
+text_transformer.encoder.layer.11.output.dense.weight
+text_transformer.encoder.layer.11.output.dense.bias
+text_transformer.encoder.layer.11.output.LayerNorm.weight
+text_transformer.encoder.layer.11.output.LayerNorm.bias
+text_transformer.pooler.dense.weight
+text_transformer.pooler.dense.bias
+to_text_latent.weight
+** MODEL ** The following parameters are TRAINABLE:
+temperature
+visual_transformer.spatial_rel_pos_bias.net.0.0.weight
+visual_transformer.spatial_rel_pos_bias.net.0.0.bias
+visual_transformer.spatial_rel_pos_bias.net.1.0.weight
+visual_transformer.spatial_rel_pos_bias.net.1.0.bias
+visual_transformer.spatial_rel_pos_bias.net.2.weight
+visual_transformer.spatial_rel_pos_bias.net.2.bias
+visual_transformer.to_patch_emb_first_frame.1.weight
+visual_transformer.to_patch_emb_first_frame.1.bias
+visual_transformer.to_patch_emb_first_frame.2.weight
+visual_transformer.to_patch_emb_first_frame.2.bias
+visual_transformer.to_patch_emb_first_frame.3.weight
+visual_transformer.to_patch_emb_first_frame.3.bias
+visual_transformer.to_patch_emb.1.weight
+visual_transformer.to_patch_emb.1.bias
+visual_transformer.to_patch_emb.2.weight
+visual_transformer.to_patch_emb.2.bias
+visual_transformer.to_patch_emb.3.weight
+visual_transformer.to_patch_emb.3.bias
+visual_transformer.enc_spatial_transformer.layers.0.0.dsconv.weight
+visual_transformer.enc_spatial_transformer.layers.0.0.dsconv.bias
+visual_transformer.enc_spatial_transformer.layers.0.1.null_kv
+visual_transformer.enc_spatial_transformer.layers.0.1.q_scale
+visual_transformer.enc_spatial_transformer.layers.0.1.k_scale
+visual_transformer.enc_spatial_transformer.layers.0.1.norm.gamma
+visual_transformer.enc_spatial_transformer.layers.0.1.context_norm.gamma
+visual_transformer.enc_spatial_transformer.layers.0.1.to_q.weight
+visual_transformer.enc_spatial_transformer.layers.0.1.to_kv.weight
+visual_transformer.enc_spatial_transformer.layers.0.1.to_out.weight
+visual_transformer.enc_spatial_transformer.layers.0.3.0.weight
+visual_transformer.enc_spatial_transformer.layers.0.3.0.bias
+visual_transformer.enc_spatial_transformer.layers.0.3.1.weight
+visual_transformer.enc_spatial_transformer.layers.0.3.4.weight
+visual_transformer.enc_spatial_transformer.layers.1.0.dsconv.weight
+visual_transformer.enc_spatial_transformer.layers.1.0.dsconv.bias
+visual_transformer.enc_spatial_transformer.layers.1.1.null_kv
+visual_transformer.enc_spatial_transformer.layers.1.1.q_scale
+visual_transformer.enc_spatial_transformer.layers.1.1.k_scale
+visual_transformer.enc_spatial_transformer.layers.1.1.norm.gamma
+visual_transformer.enc_spatial_transformer.layers.1.1.context_norm.gamma
+visual_transformer.enc_spatial_transformer.layers.1.1.to_q.weight
+visual_transformer.enc_spatial_transformer.layers.1.1.to_kv.weight
+visual_transformer.enc_spatial_transformer.layers.1.1.to_out.weight
+visual_transformer.enc_spatial_transformer.layers.1.3.0.weight
+visual_transformer.enc_spatial_transformer.layers.1.3.0.bias
+visual_transformer.enc_spatial_transformer.layers.1.3.1.weight
+visual_transformer.enc_spatial_transformer.layers.1.3.4.weight
+visual_transformer.enc_spatial_transformer.layers.2.0.dsconv.weight
+visual_transformer.enc_spatial_transformer.layers.2.0.dsconv.bias
+visual_transformer.enc_spatial_transformer.layers.2.1.null_kv
+visual_transformer.enc_spatial_transformer.layers.2.1.q_scale
+visual_transformer.enc_spatial_transformer.layers.2.1.k_scale
+visual_transformer.enc_spatial_transformer.layers.2.1.norm.gamma
+visual_transformer.enc_spatial_transformer.layers.2.1.context_norm.gamma
+visual_transformer.enc_spatial_transformer.layers.2.1.to_q.weight
+visual_transformer.enc_spatial_transformer.layers.2.1.to_kv.weight
+visual_transformer.enc_spatial_transformer.layers.2.1.to_out.weight
+visual_transformer.enc_spatial_transformer.layers.2.3.0.weight
+visual_transformer.enc_spatial_transformer.layers.2.3.0.bias
+visual_transformer.enc_spatial_transformer.layers.2.3.1.weight
+visual_transformer.enc_spatial_transformer.layers.2.3.4.weight
+visual_transformer.enc_spatial_transformer.layers.3.0.dsconv.weight
+visual_transformer.enc_spatial_transformer.layers.3.0.dsconv.bias
+visual_transformer.enc_spatial_transformer.layers.3.1.null_kv
+visual_transformer.enc_spatial_transformer.layers.3.1.q_scale
+visual_transformer.enc_spatial_transformer.layers.3.1.k_scale
+visual_transformer.enc_spatial_transformer.layers.3.1.norm.gamma
+visual_transformer.enc_spatial_transformer.layers.3.1.context_norm.gamma
+visual_transformer.enc_spatial_transformer.layers.3.1.to_q.weight
+visual_transformer.enc_spatial_transformer.layers.3.1.to_kv.weight
+visual_transformer.enc_spatial_transformer.layers.3.1.to_out.weight
+visual_transformer.enc_spatial_transformer.layers.3.3.0.weight
+visual_transformer.enc_spatial_transformer.layers.3.3.0.bias
+visual_transformer.enc_spatial_transformer.layers.3.3.1.weight
+visual_transformer.enc_spatial_transformer.layers.3.3.4.weight
+visual_transformer.enc_spatial_transformer.norm_out.gamma
+visual_transformer.enc_temporal_transformer.layers.0.0.dsconv.weight
+visual_transformer.enc_temporal_transformer.layers.0.0.dsconv.bias
+visual_transformer.enc_temporal_transformer.layers.0.1.null_kv
+visual_transformer.enc_temporal_transformer.layers.0.1.q_scale
+visual_transformer.enc_temporal_transformer.layers.0.1.k_scale
+visual_transformer.enc_temporal_transformer.layers.0.1.norm.gamma
+visual_transformer.enc_temporal_transformer.layers.0.1.context_norm.gamma
+visual_transformer.enc_temporal_transformer.layers.0.1.to_q.weight
+visual_transformer.enc_temporal_transformer.layers.0.1.to_kv.weight
+visual_transformer.enc_temporal_transformer.layers.0.1.to_out.weight
+visual_transformer.enc_temporal_transformer.layers.0.3.0.weight
+visual_transformer.enc_temporal_transformer.layers.0.3.0.bias
+visual_transformer.enc_temporal_transformer.layers.0.3.1.weight
+visual_transformer.enc_temporal_transformer.layers.0.3.4.weight
+visual_transformer.enc_temporal_transformer.layers.1.0.dsconv.weight
+visual_transformer.enc_temporal_transformer.layers.1.0.dsconv.bias
+visual_transformer.enc_temporal_transformer.layers.1.1.null_kv
+visual_transformer.enc_temporal_transformer.layers.1.1.q_scale
+visual_transformer.enc_temporal_transformer.layers.1.1.k_scale
+visual_transformer.enc_temporal_transformer.layers.1.1.norm.gamma
+visual_transformer.enc_temporal_transformer.layers.1.1.context_norm.gamma
+visual_transformer.enc_temporal_transformer.layers.1.1.to_q.weight
+visual_transformer.enc_temporal_transformer.layers.1.1.to_kv.weight
+visual_transformer.enc_temporal_transformer.layers.1.1.to_out.weight
+visual_transformer.enc_temporal_transformer.layers.1.3.0.weight
+visual_transformer.enc_temporal_transformer.layers.1.3.0.bias
+visual_transformer.enc_temporal_transformer.layers.1.3.1.weight
+visual_transformer.enc_temporal_transformer.layers.1.3.4.weight
+visual_transformer.enc_temporal_transformer.layers.2.0.dsconv.weight
+visual_transformer.enc_temporal_transformer.layers.2.0.dsconv.bias
+visual_transformer.enc_temporal_transformer.layers.2.1.null_kv
+visual_transformer.enc_temporal_transformer.layers.2.1.q_scale
+visual_transformer.enc_temporal_transformer.layers.2.1.k_scale
+visual_transformer.enc_temporal_transformer.layers.2.1.norm.gamma
+visual_transformer.enc_temporal_transformer.layers.2.1.context_norm.gamma
+visual_transformer.enc_temporal_transformer.layers.2.1.to_q.weight
+visual_transformer.enc_temporal_transformer.layers.2.1.to_kv.weight
+visual_transformer.enc_temporal_transformer.layers.2.1.to_out.weight
+visual_transformer.enc_temporal_transformer.layers.2.3.0.weight
+visual_transformer.enc_temporal_transformer.layers.2.3.0.bias
+visual_transformer.enc_temporal_transformer.layers.2.3.1.weight
+visual_transformer.enc_temporal_transformer.layers.2.3.4.weight
+visual_transformer.enc_temporal_transformer.layers.3.0.dsconv.weight
+visual_transformer.enc_temporal_transformer.layers.3.0.dsconv.bias
+visual_transformer.enc_temporal_transformer.layers.3.1.null_kv
+visual_transformer.enc_temporal_transformer.layers.3.1.q_scale
+visual_transformer.enc_temporal_transformer.layers.3.1.k_scale
+visual_transformer.enc_temporal_transformer.layers.3.1.norm.gamma
+visual_transformer.enc_temporal_transformer.layers.3.1.context_norm.gamma
+visual_transformer.enc_temporal_transformer.layers.3.1.to_q.weight
+visual_transformer.enc_temporal_transformer.layers.3.1.to_kv.weight
+visual_transformer.enc_temporal_transformer.layers.3.1.to_out.weight
+visual_transformer.enc_temporal_transformer.layers.3.3.0.weight
+visual_transformer.enc_temporal_transformer.layers.3.3.0.bias
+visual_transformer.enc_temporal_transformer.layers.3.3.1.weight
+visual_transformer.enc_temporal_transformer.layers.3.3.4.weight
+visual_transformer.enc_temporal_transformer.norm_out.gamma
+visual_transformer.to_pixels_first_frame.0.weight
+visual_transformer.to_pixels_first_frame.0.bias
+visual_transformer.to_pixels.0.weight
+visual_transformer.to_pixels.0.bias
+fusion_module.layers.0.multihead_attn.in_proj_weight
+fusion_module.layers.0.multihead_attn.in_proj_bias
+fusion_module.layers.0.multihead_attn.out_proj.weight
+fusion_module.layers.0.multihead_attn.out_proj.bias
+fusion_module.layers.0.linear1.weight
+fusion_module.layers.0.linear1.bias
+fusion_module.layers.0.linear2.weight
+fusion_module.layers.0.linear2.bias
+fusion_module.layers.0.norm1.weight
+fusion_module.layers.0.norm1.bias
+fusion_module.layers.0.norm2.weight
+fusion_module.layers.0.norm2.bias
+fusion_module.layers.0.norm3.weight
+fusion_module.layers.0.norm3.bias
+fusion_module.layers.1.multihead_attn.in_proj_weight
+fusion_module.layers.1.multihead_attn.in_proj_bias
+fusion_module.layers.1.multihead_attn.out_proj.weight
+fusion_module.layers.1.multihead_attn.out_proj.bias
+fusion_module.layers.1.linear1.weight
+fusion_module.layers.1.linear1.bias
+fusion_module.layers.1.linear2.weight
+fusion_module.layers.1.linear2.bias
+fusion_module.layers.1.norm1.weight
+fusion_module.layers.1.norm1.bias
+fusion_module.layers.1.norm2.weight
+fusion_module.layers.1.norm2.bias
+fusion_module.layers.1.norm3.weight
+fusion_module.layers.1.norm3.bias
+fusion_module.layers.2.multihead_attn.in_proj_weight
+fusion_module.layers.2.multihead_attn.in_proj_bias
+fusion_module.layers.2.multihead_attn.out_proj.weight
+fusion_module.layers.2.multihead_attn.out_proj.bias
+fusion_module.layers.2.linear1.weight
+fusion_module.layers.2.linear1.bias
+fusion_module.layers.2.linear2.weight
+fusion_module.layers.2.linear2.bias
+fusion_module.layers.2.norm1.weight
+fusion_module.layers.2.norm1.bias
+fusion_module.layers.2.norm2.weight
+fusion_module.layers.2.norm2.bias
+fusion_module.layers.2.norm3.weight
+fusion_module.layers.2.norm3.bias
+fusion_module.layers.3.multihead_attn.in_proj_weight
+fusion_module.layers.3.multihead_attn.in_proj_bias
+fusion_module.layers.3.multihead_attn.out_proj.weight
+fusion_module.layers.3.multihead_attn.out_proj.bias
+fusion_module.layers.3.linear1.weight
+fusion_module.layers.3.linear1.bias
+fusion_module.layers.3.linear2.weight
+fusion_module.layers.3.linear2.bias
+fusion_module.layers.3.norm1.weight
+fusion_module.layers.3.norm1.bias
+fusion_module.layers.3.norm2.weight
+fusion_module.layers.3.norm2.bias
+fusion_module.layers.3.norm3.weight
+fusion_module.layers.3.norm3.bias
+fusion_module.layers.4.multihead_attn.in_proj_weight
+fusion_module.layers.4.multihead_attn.in_proj_bias
+fusion_module.layers.4.multihead_attn.out_proj.weight
+fusion_module.layers.4.multihead_attn.out_proj.bias
+fusion_module.layers.4.linear1.weight
+fusion_module.layers.4.linear1.bias
+fusion_module.layers.4.linear2.weight
+fusion_module.layers.4.linear2.bias
+fusion_module.layers.4.norm1.weight
+fusion_module.layers.4.norm1.bias
+fusion_module.layers.4.norm2.weight
+fusion_module.layers.4.norm2.bias
+fusion_module.layers.4.norm3.weight
+fusion_module.layers.4.norm3.bias
+fusion_module.layers.5.multihead_attn.in_proj_weight
+fusion_module.layers.5.multihead_attn.in_proj_bias
+fusion_module.layers.5.multihead_attn.out_proj.weight
+fusion_module.layers.5.multihead_attn.out_proj.bias
+fusion_module.layers.5.linear1.weight
+fusion_module.layers.5.linear1.bias
+fusion_module.layers.5.linear2.weight
+fusion_module.layers.5.linear2.bias
+fusion_module.layers.5.norm1.weight
+fusion_module.layers.5.norm1.bias
+fusion_module.layers.5.norm2.weight
+fusion_module.layers.5.norm2.bias
+fusion_module.layers.5.norm3.weight
+fusion_module.layers.5.norm3.bias
+fusion_module.norm.weight
+fusion_module.norm.bias
+to_visual_latent.weight
+Start Training
+Log at /mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/log/CXR_CT_overfit_v2_4
+** MODEL ** The following parameters are FROZEN:
+text_transformer.embeddings.word_embeddings.weight
+text_transformer.embeddings.position_embeddings.weight
+text_transformer.embeddings.token_type_embeddings.weight
+text_transformer.embeddings.LayerNorm.weight
+text_transformer.embeddings.LayerNorm.bias
+text_transformer.encoder.layer.0.attention.self.query.weight
+text_transformer.encoder.layer.0.attention.self.query.bias
+text_transformer.encoder.layer.0.attention.self.key.weight
+text_transformer.encoder.layer.0.attention.self.key.bias
+text_transformer.encoder.layer.0.attention.self.value.weight
+text_transformer.encoder.layer.0.attention.self.value.bias
+text_transformer.encoder.layer.0.attention.output.dense.weight
+text_transformer.encoder.layer.0.attention.output.dense.bias
+text_transformer.encoder.layer.0.attention.output.LayerNorm.weight
+text_transformer.encoder.layer.0.attention.output.LayerNorm.bias
+text_transformer.encoder.layer.0.intermediate.dense.weight
+text_transformer.encoder.layer.0.intermediate.dense.bias
+text_transformer.encoder.layer.0.output.dense.weight
+text_transformer.encoder.layer.0.output.dense.bias
+text_transformer.encoder.layer.0.output.LayerNorm.weight
+text_transformer.encoder.layer.0.output.LayerNorm.bias
+text_transformer.encoder.layer.1.attention.self.query.weight
+text_transformer.encoder.layer.1.attention.self.query.bias
+text_transformer.encoder.layer.1.attention.self.key.weight
+text_transformer.encoder.layer.1.attention.self.key.bias
+text_transformer.encoder.layer.1.attention.self.value.weight
+text_transformer.encoder.layer.1.attention.self.value.bias
+text_transformer.encoder.layer.1.attention.output.dense.weight
+text_transformer.encoder.layer.1.attention.output.dense.bias
+text_transformer.encoder.layer.1.attention.output.LayerNorm.weight
+text_transformer.encoder.layer.1.attention.output.LayerNorm.bias
+text_transformer.encoder.layer.1.intermediate.dense.weight
+text_transformer.encoder.layer.1.intermediate.dense.bias
+text_transformer.encoder.layer.1.output.dense.weight
+text_transformer.encoder.layer.1.output.dense.bias
+text_transformer.encoder.layer.1.output.LayerNorm.weight
+text_transformer.encoder.layer.1.output.LayerNorm.bias
+text_transformer.encoder.layer.2.attention.self.query.weight
+text_transformer.encoder.layer.2.attention.self.query.bias
+text_transformer.encoder.layer.2.attention.self.key.weight
+text_transformer.encoder.layer.2.attention.self.key.bias
+text_transformer.encoder.layer.2.attention.self.value.weight
+text_transformer.encoder.layer.2.attention.self.value.bias
+text_transformer.encoder.layer.2.attention.output.dense.weight
+text_transformer.encoder.layer.2.attention.output.dense.bias
+text_transformer.encoder.layer.2.attention.output.LayerNorm.weight
+text_transformer.encoder.layer.2.attention.output.LayerNorm.bias
+text_transformer.encoder.layer.2.intermediate.dense.weight
+text_transformer.encoder.layer.2.intermediate.dense.bias
+text_transformer.encoder.layer.2.output.dense.weight
+text_transformer.encoder.layer.2.output.dense.bias
+text_transformer.encoder.layer.2.output.LayerNorm.weight
+text_transformer.encoder.layer.2.output.LayerNorm.bias
+text_transformer.encoder.layer.3.attention.self.query.weight
+text_transformer.encoder.layer.3.attention.self.query.bias
+text_transformer.encoder.layer.3.attention.self.key.weight
+text_transformer.encoder.layer.3.attention.self.key.bias
+text_transformer.encoder.layer.3.attention.self.value.weight
+text_transformer.encoder.layer.3.attention.self.value.bias
+text_transformer.encoder.layer.3.attention.output.dense.weight
+text_transformer.encoder.layer.3.attention.output.dense.bias
+text_transformer.encoder.layer.3.attention.output.LayerNorm.weight
+text_transformer.encoder.layer.3.attention.output.LayerNorm.bias
+text_transformer.encoder.layer.3.intermediate.dense.weight
+text_transformer.encoder.layer.3.intermediate.dense.bias
+text_transformer.encoder.layer.3.output.dense.weight
+text_transformer.encoder.layer.3.output.dense.bias
+text_transformer.encoder.layer.3.output.LayerNorm.weight
+text_transformer.encoder.layer.3.output.LayerNorm.bias
+text_transformer.encoder.layer.4.attention.self.query.weight
+text_transformer.encoder.layer.4.attention.self.query.bias
+text_transformer.encoder.layer.4.attention.self.key.weight
+text_transformer.encoder.layer.4.attention.self.key.bias
+text_transformer.encoder.layer.4.attention.self.value.weight
+text_transformer.encoder.layer.4.attention.self.value.bias
+text_transformer.encoder.layer.4.attention.output.dense.weight
+text_transformer.encoder.layer.4.attention.output.dense.bias
+text_transformer.encoder.layer.4.attention.output.LayerNorm.weight
+text_transformer.encoder.layer.4.attention.output.LayerNorm.bias
+text_transformer.encoder.layer.4.intermediate.dense.weight
+text_transformer.encoder.layer.4.intermediate.dense.bias
+text_transformer.encoder.layer.4.output.dense.weight
+text_transformer.encoder.layer.4.output.dense.bias
+text_transformer.encoder.layer.4.output.LayerNorm.weight
+text_transformer.encoder.layer.4.output.LayerNorm.bias
+text_transformer.encoder.layer.5.attention.self.query.weight
+text_transformer.encoder.layer.5.attention.self.query.bias
+text_transformer.encoder.layer.5.attention.self.key.weight
+text_transformer.encoder.layer.5.attention.self.key.bias
+text_transformer.encoder.layer.5.attention.self.value.weight
+text_transformer.encoder.layer.5.attention.self.value.bias
+text_transformer.encoder.layer.5.attention.output.dense.weight
+text_transformer.encoder.layer.5.attention.output.dense.bias
+text_transformer.encoder.layer.5.attention.output.LayerNorm.weight
+text_transformer.encoder.layer.5.attention.output.LayerNorm.bias
+text_transformer.encoder.layer.5.intermediate.dense.weight
+text_transformer.encoder.layer.5.intermediate.dense.bias
+text_transformer.encoder.layer.5.output.dense.weight
+text_transformer.encoder.layer.5.output.dense.bias
+text_transformer.encoder.layer.5.output.LayerNorm.weight
+text_transformer.encoder.layer.5.output.LayerNorm.bias
+text_transformer.encoder.layer.6.attention.self.query.weight
+text_transformer.encoder.layer.6.attention.self.query.bias
+text_transformer.encoder.layer.6.attention.self.key.weight
+text_transformer.encoder.layer.6.attention.self.key.bias
+text_transformer.encoder.layer.6.attention.self.value.weight
+text_transformer.encoder.layer.6.attention.self.value.bias
+text_transformer.encoder.layer.6.attention.output.dense.weight
+text_transformer.encoder.layer.6.attention.output.dense.bias
+text_transformer.encoder.layer.6.attention.output.LayerNorm.weight
+text_transformer.encoder.layer.6.attention.output.LayerNorm.bias
+text_transformer.encoder.layer.6.intermediate.dense.weight
+text_transformer.encoder.layer.6.intermediate.dense.bias
+text_transformer.encoder.layer.6.output.dense.weight
+text_transformer.encoder.layer.6.output.dense.bias
+text_transformer.encoder.layer.6.output.LayerNorm.weight
+text_transformer.encoder.layer.6.output.LayerNorm.bias
+text_transformer.encoder.layer.7.attention.self.query.weight
+text_transformer.encoder.layer.7.attention.self.query.bias
+text_transformer.encoder.layer.7.attention.self.key.weight
+text_transformer.encoder.layer.7.attention.self.key.bias
+text_transformer.encoder.layer.7.attention.self.value.weight
+text_transformer.encoder.layer.7.attention.self.value.bias
+text_transformer.encoder.layer.7.attention.output.dense.weight
+text_transformer.encoder.layer.7.attention.output.dense.bias
+text_transformer.encoder.layer.7.attention.output.LayerNorm.weight
+text_transformer.encoder.layer.7.attention.output.LayerNorm.bias
+text_transformer.encoder.layer.7.intermediate.dense.weight
+text_transformer.encoder.layer.7.intermediate.dense.bias
+text_transformer.encoder.layer.7.output.dense.weight
+text_transformer.encoder.layer.7.output.dense.bias
+text_transformer.encoder.layer.7.output.LayerNorm.weight
+text_transformer.encoder.layer.7.output.LayerNorm.bias
+text_transformer.encoder.layer.8.attention.self.query.weight
+text_transformer.encoder.layer.8.attention.self.query.bias
+text_transformer.encoder.layer.8.attention.self.key.weight
+text_transformer.encoder.layer.8.attention.self.key.bias
+text_transformer.encoder.layer.8.attention.self.value.weight
+text_transformer.encoder.layer.8.attention.self.value.bias
+text_transformer.encoder.layer.8.attention.output.dense.weight
+text_transformer.encoder.layer.8.attention.output.dense.bias
+text_transformer.encoder.layer.8.attention.output.LayerNorm.weight
+text_transformer.encoder.layer.8.attention.output.LayerNorm.bias
+text_transformer.encoder.layer.8.intermediate.dense.weight
+text_transformer.encoder.layer.8.intermediate.dense.bias
+text_transformer.encoder.layer.8.output.dense.weight
+text_transformer.encoder.layer.8.output.dense.bias
+text_transformer.encoder.layer.8.output.LayerNorm.weight
+text_transformer.encoder.layer.8.output.LayerNorm.bias
+text_transformer.encoder.layer.9.attention.self.query.weight
+text_transformer.encoder.layer.9.attention.self.query.bias
+text_transformer.encoder.layer.9.attention.self.key.weight
+text_transformer.encoder.layer.9.attention.self.key.bias
+text_transformer.encoder.layer.9.attention.self.value.weight
+text_transformer.encoder.layer.9.attention.self.value.bias
+text_transformer.encoder.layer.9.attention.output.dense.weight
+text_transformer.encoder.layer.9.attention.output.dense.bias
+text_transformer.encoder.layer.9.attention.output.LayerNorm.weight
+text_transformer.encoder.layer.9.attention.output.LayerNorm.bias
+text_transformer.encoder.layer.9.intermediate.dense.weight
+text_transformer.encoder.layer.9.intermediate.dense.bias
+text_transformer.encoder.layer.9.output.dense.weight
+text_transformer.encoder.layer.9.output.dense.bias
+text_transformer.encoder.layer.9.output.LayerNorm.weight
+text_transformer.encoder.layer.9.output.LayerNorm.bias
+text_transformer.encoder.layer.10.attention.self.query.weight
+text_transformer.encoder.layer.10.attention.self.query.bias
+text_transformer.encoder.layer.10.attention.self.key.weight
+text_transformer.encoder.layer.10.attention.self.key.bias
+text_transformer.encoder.layer.10.attention.self.value.weight
+text_transformer.encoder.layer.10.attention.self.value.bias
+text_transformer.encoder.layer.10.attention.output.dense.weight
+text_transformer.encoder.layer.10.attention.output.dense.bias
+text_transformer.encoder.layer.10.attention.output.LayerNorm.weight
+text_transformer.encoder.layer.10.attention.output.LayerNorm.bias
+text_transformer.encoder.layer.10.intermediate.dense.weight
+text_transformer.encoder.layer.10.intermediate.dense.bias
+text_transformer.encoder.layer.10.output.dense.weight
+text_transformer.encoder.layer.10.output.dense.bias
+text_transformer.encoder.layer.10.output.LayerNorm.weight
+text_transformer.encoder.layer.10.output.LayerNorm.bias
+text_transformer.encoder.layer.11.attention.self.query.weight
+text_transformer.encoder.layer.11.attention.self.query.bias
+text_transformer.encoder.layer.11.attention.self.key.weight
+text_transformer.encoder.layer.11.attention.self.key.bias
+text_transformer.encoder.layer.11.attention.self.value.weight
+text_transformer.encoder.layer.11.attention.self.value.bias
+text_transformer.encoder.layer.11.attention.output.dense.weight
+text_transformer.encoder.layer.11.attention.output.dense.bias
+text_transformer.encoder.layer.11.attention.output.LayerNorm.weight
+text_transformer.encoder.layer.11.attention.output.LayerNorm.bias
+text_transformer.encoder.layer.11.intermediate.dense.weight
+text_transformer.encoder.layer.11.intermediate.dense.bias
+text_transformer.encoder.layer.11.output.dense.weight
+text_transformer.encoder.layer.11.output.dense.bias
+text_transformer.encoder.layer.11.output.LayerNorm.weight
+text_transformer.encoder.layer.11.output.LayerNorm.bias
+text_transformer.pooler.dense.weight
+text_transformer.pooler.dense.bias
+to_text_latent.weight
+** MODEL ** The following parameters are TRAINABLE:
+temperature
+visual_transformer.spatial_rel_pos_bias.net.0.0.weight
+visual_transformer.spatial_rel_pos_bias.net.0.0.bias
+visual_transformer.spatial_rel_pos_bias.net.1.0.weight
+visual_transformer.spatial_rel_pos_bias.net.1.0.bias
+visual_transformer.spatial_rel_pos_bias.net.2.weight
+visual_transformer.spatial_rel_pos_bias.net.2.bias
+visual_transformer.to_patch_emb_first_frame.1.weight
+visual_transformer.to_patch_emb_first_frame.1.bias
+visual_transformer.to_patch_emb_first_frame.2.weight
+visual_transformer.to_patch_emb_first_frame.2.bias
+visual_transformer.to_patch_emb_first_frame.3.weight
+visual_transformer.to_patch_emb_first_frame.3.bias
+visual_transformer.to_patch_emb.1.weight
+visual_transformer.to_patch_emb.1.bias
+visual_transformer.to_patch_emb.2.weight
+visual_transformer.to_patch_emb.2.bias
+visual_transformer.to_patch_emb.3.weight
+visual_transformer.to_patch_emb.3.bias
+visual_transformer.enc_spatial_transformer.layers.0.0.dsconv.weight
+visual_transformer.enc_spatial_transformer.layers.0.0.dsconv.bias
+visual_transformer.enc_spatial_transformer.layers.0.1.null_kv
+visual_transformer.enc_spatial_transformer.layers.0.1.q_scale
+visual_transformer.enc_spatial_transformer.layers.0.1.k_scale
+visual_transformer.enc_spatial_transformer.layers.0.1.norm.gamma
+visual_transformer.enc_spatial_transformer.layers.0.1.context_norm.gamma
+visual_transformer.enc_spatial_transformer.layers.0.1.to_q.weight
+visual_transformer.enc_spatial_transformer.layers.0.1.to_kv.weight
+visual_transformer.enc_spatial_transformer.layers.0.1.to_out.weight
+visual_transformer.enc_spatial_transformer.layers.0.3.0.weight
+visual_transformer.enc_spatial_transformer.layers.0.3.0.bias
+visual_transformer.enc_spatial_transformer.layers.0.3.1.weight
+visual_transformer.enc_spatial_transformer.layers.0.3.4.weight
+visual_transformer.enc_spatial_transformer.layers.1.0.dsconv.weight
+visual_transformer.enc_spatial_transformer.layers.1.0.dsconv.bias
+visual_transformer.enc_spatial_transformer.layers.1.1.null_kv
+visual_transformer.enc_spatial_transformer.layers.1.1.q_scale
+visual_transformer.enc_spatial_transformer.layers.1.1.k_scale
+visual_transformer.enc_spatial_transformer.layers.1.1.norm.gamma
+visual_transformer.enc_spatial_transformer.layers.1.1.context_norm.gamma
+visual_transformer.enc_spatial_transformer.layers.1.1.to_q.weight
+visual_transformer.enc_spatial_transformer.layers.1.1.to_kv.weight
+visual_transformer.enc_spatial_transformer.layers.1.1.to_out.weight
+visual_transformer.enc_spatial_transformer.layers.1.3.0.weight
+visual_transformer.enc_spatial_transformer.layers.1.3.0.bias
+visual_transformer.enc_spatial_transformer.layers.1.3.1.weight
+visual_transformer.enc_spatial_transformer.layers.1.3.4.weight
+visual_transformer.enc_spatial_transformer.layers.2.0.dsconv.weight
+visual_transformer.enc_spatial_transformer.layers.2.0.dsconv.bias
+visual_transformer.enc_spatial_transformer.layers.2.1.null_kv
+visual_transformer.enc_spatial_transformer.layers.2.1.q_scale
+visual_transformer.enc_spatial_transformer.layers.2.1.k_scale
+visual_transformer.enc_spatial_transformer.layers.2.1.norm.gamma
+visual_transformer.enc_spatial_transformer.layers.2.1.context_norm.gamma
+visual_transformer.enc_spatial_transformer.layers.2.1.to_q.weight
+visual_transformer.enc_spatial_transformer.layers.2.1.to_kv.weight
+visual_transformer.enc_spatial_transformer.layers.2.1.to_out.weight
+visual_transformer.enc_spatial_transformer.layers.2.3.0.weight
+visual_transformer.enc_spatial_transformer.layers.2.3.0.bias
+visual_transformer.enc_spatial_transformer.layers.2.3.1.weight
+visual_transformer.enc_spatial_transformer.layers.2.3.4.weight
+visual_transformer.enc_spatial_transformer.layers.3.0.dsconv.weight
+visual_transformer.enc_spatial_transformer.layers.3.0.dsconv.bias
+visual_transformer.enc_spatial_transformer.layers.3.1.null_kv
+visual_transformer.enc_spatial_transformer.layers.3.1.q_scale
+visual_transformer.enc_spatial_transformer.layers.3.1.k_scale
+visual_transformer.enc_spatial_transformer.layers.3.1.norm.gamma
+visual_transformer.enc_spatial_transformer.layers.3.1.context_norm.gamma
+visual_transformer.enc_spatial_transformer.layers.3.1.to_q.weight
+visual_transformer.enc_spatial_transformer.layers.3.1.to_kv.weight
+visual_transformer.enc_spatial_transformer.layers.3.1.to_out.weight
+visual_transformer.enc_spatial_transformer.layers.3.3.0.weight
+visual_transformer.enc_spatial_transformer.layers.3.3.0.bias
+visual_transformer.enc_spatial_transformer.layers.3.3.1.weight
+visual_transformer.enc_spatial_transformer.layers.3.3.4.weight
+visual_transformer.enc_spatial_transformer.norm_out.gamma
+visual_transformer.enc_temporal_transformer.layers.0.0.dsconv.weight
+visual_transformer.enc_temporal_transformer.layers.0.0.dsconv.bias
+visual_transformer.enc_temporal_transformer.layers.0.1.null_kv
+visual_transformer.enc_temporal_transformer.layers.0.1.q_scale
+visual_transformer.enc_temporal_transformer.layers.0.1.k_scale
+visual_transformer.enc_temporal_transformer.layers.0.1.norm.gamma
+visual_transformer.enc_temporal_transformer.layers.0.1.context_norm.gamma
+visual_transformer.enc_temporal_transformer.layers.0.1.to_q.weight
+visual_transformer.enc_temporal_transformer.layers.0.1.to_kv.weight
+visual_transformer.enc_temporal_transformer.layers.0.1.to_out.weight
+visual_transformer.enc_temporal_transformer.layers.0.3.0.weight
+visual_transformer.enc_temporal_transformer.layers.0.3.0.bias
+visual_transformer.enc_temporal_transformer.layers.0.3.1.weight
+visual_transformer.enc_temporal_transformer.layers.0.3.4.weight
+visual_transformer.enc_temporal_transformer.layers.1.0.dsconv.weight
+visual_transformer.enc_temporal_transformer.layers.1.0.dsconv.bias
+visual_transformer.enc_temporal_transformer.layers.1.1.null_kv
+visual_transformer.enc_temporal_transformer.layers.1.1.q_scale
+visual_transformer.enc_temporal_transformer.layers.1.1.k_scale
+visual_transformer.enc_temporal_transformer.layers.1.1.norm.gamma
+visual_transformer.enc_temporal_transformer.layers.1.1.context_norm.gamma
+visual_transformer.enc_temporal_transformer.layers.1.1.to_q.weight
+visual_transformer.enc_temporal_transformer.layers.1.1.to_kv.weight
+visual_transformer.enc_temporal_transformer.layers.1.1.to_out.weight
+visual_transformer.enc_temporal_transformer.layers.1.3.0.weight
+visual_transformer.enc_temporal_transformer.layers.1.3.0.bias
+visual_transformer.enc_temporal_transformer.layers.1.3.1.weight
+visual_transformer.enc_temporal_transformer.layers.1.3.4.weight
+visual_transformer.enc_temporal_transformer.layers.2.0.dsconv.weight
+visual_transformer.enc_temporal_transformer.layers.2.0.dsconv.bias
+visual_transformer.enc_temporal_transformer.layers.2.1.null_kv
+visual_transformer.enc_temporal_transformer.layers.2.1.q_scale
+visual_transformer.enc_temporal_transformer.layers.2.1.k_scale
+visual_transformer.enc_temporal_transformer.layers.2.1.norm.gamma
+visual_transformer.enc_temporal_transformer.layers.2.1.context_norm.gamma
+visual_transformer.enc_temporal_transformer.layers.2.1.to_q.weight
+visual_transformer.enc_temporal_transformer.layers.2.1.to_kv.weight
+visual_transformer.enc_temporal_transformer.layers.2.1.to_out.weight
+visual_transformer.enc_temporal_transformer.layers.2.3.0.weight
+visual_transformer.enc_temporal_transformer.layers.2.3.0.bias
+visual_transformer.enc_temporal_transformer.layers.2.3.1.weight
+visual_transformer.enc_temporal_transformer.layers.2.3.4.weight
+visual_transformer.enc_temporal_transformer.layers.3.0.dsconv.weight
+visual_transformer.enc_temporal_transformer.layers.3.0.dsconv.bias
+visual_transformer.enc_temporal_transformer.layers.3.1.null_kv
+visual_transformer.enc_temporal_transformer.layers.3.1.q_scale
+visual_transformer.enc_temporal_transformer.layers.3.1.k_scale
+visual_transformer.enc_temporal_transformer.layers.3.1.norm.gamma
+visual_transformer.enc_temporal_transformer.layers.3.1.context_norm.gamma
+visual_transformer.enc_temporal_transformer.layers.3.1.to_q.weight
+visual_transformer.enc_temporal_transformer.layers.3.1.to_kv.weight
+visual_transformer.enc_temporal_transformer.layers.3.1.to_out.weight
+visual_transformer.enc_temporal_transformer.layers.3.3.0.weight
+visual_transformer.enc_temporal_transformer.layers.3.3.0.bias
+visual_transformer.enc_temporal_transformer.layers.3.3.1.weight
+visual_transformer.enc_temporal_transformer.layers.3.3.4.weight
+visual_transformer.enc_temporal_transformer.norm_out.gamma
+visual_transformer.to_pixels_first_frame.0.weight
+visual_transformer.to_pixels_first_frame.0.bias
+visual_transformer.to_pixels.0.weight
+visual_transformer.to_pixels.0.bias
+fusion_module.layers.0.multihead_attn.in_proj_weight
+fusion_module.layers.0.multihead_attn.in_proj_bias
+fusion_module.layers.0.multihead_attn.out_proj.weight
+fusion_module.layers.0.multihead_attn.out_proj.bias
+fusion_module.layers.0.linear1.weight
+fusion_module.layers.0.linear1.bias
+fusion_module.layers.0.linear2.weight
+fusion_module.layers.0.linear2.bias
+fusion_module.layers.0.norm1.weight
+fusion_module.layers.0.norm1.bias
+fusion_module.layers.0.norm2.weight
+fusion_module.layers.0.norm2.bias
+fusion_module.layers.0.norm3.weight
+fusion_module.layers.0.norm3.bias
+fusion_module.layers.1.multihead_attn.in_proj_weight
+fusion_module.layers.1.multihead_attn.in_proj_bias
+fusion_module.layers.1.multihead_attn.out_proj.weight
+fusion_module.layers.1.multihead_attn.out_proj.bias
+fusion_module.layers.1.linear1.weight
+fusion_module.layers.1.linear1.bias
+fusion_module.layers.1.linear2.weight
+fusion_module.layers.1.linear2.bias
+fusion_module.layers.1.norm1.weight
+fusion_module.layers.1.norm1.bias
+fusion_module.layers.1.norm2.weight
+fusion_module.layers.1.norm2.bias
+fusion_module.layers.1.norm3.weight
+fusion_module.layers.1.norm3.bias
+fusion_module.layers.2.multihead_attn.in_proj_weight
+fusion_module.layers.2.multihead_attn.in_proj_bias
+fusion_module.layers.2.multihead_attn.out_proj.weight
+fusion_module.layers.2.multihead_attn.out_proj.bias
+fusion_module.layers.2.linear1.weight
+fusion_module.layers.2.linear1.bias
+fusion_module.layers.2.linear2.weight
+fusion_module.layers.2.linear2.bias
+fusion_module.layers.2.norm1.weight
+fusion_module.layers.2.norm1.bias
+fusion_module.layers.2.norm2.weight
+fusion_module.layers.2.norm2.bias
+fusion_module.layers.2.norm3.weight
+fusion_module.layers.2.norm3.bias
+fusion_module.layers.3.multihead_attn.in_proj_weight
+fusion_module.layers.3.multihead_attn.in_proj_bias
+fusion_module.layers.3.multihead_attn.out_proj.weight
+fusion_module.layers.3.multihead_attn.out_proj.bias
+fusion_module.layers.3.linear1.weight
+fusion_module.layers.3.linear1.bias
+fusion_module.layers.3.linear2.weight
+fusion_module.layers.3.linear2.bias
+fusion_module.layers.3.norm1.weight
+fusion_module.layers.3.norm1.bias
+fusion_module.layers.3.norm2.weight
+fusion_module.layers.3.norm2.bias
+fusion_module.layers.3.norm3.weight
+fusion_module.layers.3.norm3.bias
+fusion_module.layers.4.multihead_attn.in_proj_weight
+fusion_module.layers.4.multihead_attn.in_proj_bias
+fusion_module.layers.4.multihead_attn.out_proj.weight
+fusion_module.layers.4.multihead_attn.out_proj.bias
+fusion_module.layers.4.linear1.weight
+fusion_module.layers.4.linear1.bias
+fusion_module.layers.4.linear2.weight
+fusion_module.layers.4.linear2.bias
+fusion_module.layers.4.norm1.weight
+fusion_module.layers.4.norm1.bias
+fusion_module.layers.4.norm2.weight
+fusion_module.layers.4.norm2.bias
+fusion_module.layers.4.norm3.weight
+fusion_module.layers.4.norm3.bias
+fusion_module.layers.5.multihead_attn.in_proj_weight
+fusion_module.layers.5.multihead_attn.in_proj_bias
+fusion_module.layers.5.multihead_attn.out_proj.weight
+fusion_module.layers.5.multihead_attn.out_proj.bias
+fusion_module.layers.5.linear1.weight
+fusion_module.layers.5.linear1.bias
+fusion_module.layers.5.linear2.weight
+fusion_module.layers.5.linear2.bias
+fusion_module.layers.5.norm1.weight
+fusion_module.layers.5.norm1.bias
+fusion_module.layers.5.norm2.weight
+fusion_module.layers.5.norm2.bias
+fusion_module.layers.5.norm3.weight
+fusion_module.layers.5.norm3.bias
+fusion_module.norm.weight
+fusion_module.norm.bias
+to_visual_latent.weight
+Start Training
+Log at /mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/log/CXR_CT_overfit_v2_4
+** MODEL ** The following parameters are FROZEN:
+text_transformer.embeddings.word_embeddings.weight
+text_transformer.embeddings.position_embeddings.weight
+text_transformer.embeddings.token_type_embeddings.weight
+text_transformer.embeddings.LayerNorm.weight
+text_transformer.embeddings.LayerNorm.bias
+text_transformer.encoder.layer.0.attention.self.query.weight
+text_transformer.encoder.layer.0.attention.self.query.bias
+text_transformer.encoder.layer.0.attention.self.key.weight
+text_transformer.encoder.layer.0.attention.self.key.bias
+text_transformer.encoder.layer.0.attention.self.value.weight
+text_transformer.encoder.layer.0.attention.self.value.bias
+text_transformer.encoder.layer.0.attention.output.dense.weight
+text_transformer.encoder.layer.0.attention.output.dense.bias
+text_transformer.encoder.layer.0.attention.output.LayerNorm.weight
+text_transformer.encoder.layer.0.attention.output.LayerNorm.bias
+text_transformer.encoder.layer.0.intermediate.dense.weight
+text_transformer.encoder.layer.0.intermediate.dense.bias
+text_transformer.encoder.layer.0.output.dense.weight
+text_transformer.encoder.layer.0.output.dense.bias
+text_transformer.encoder.layer.0.output.LayerNorm.weight
+text_transformer.encoder.layer.0.output.LayerNorm.bias
+text_transformer.encoder.layer.1.attention.self.query.weight
+text_transformer.encoder.layer.1.attention.self.query.bias
+text_transformer.encoder.layer.1.attention.self.key.weight
+text_transformer.encoder.layer.1.attention.self.key.bias
+text_transformer.encoder.layer.1.attention.self.value.weight
+text_transformer.encoder.layer.1.attention.self.value.bias
+text_transformer.encoder.layer.1.attention.output.dense.weight
+text_transformer.encoder.layer.1.attention.output.dense.bias
+text_transformer.encoder.layer.1.attention.output.LayerNorm.weight
+text_transformer.encoder.layer.1.attention.output.LayerNorm.bias
+text_transformer.encoder.layer.1.intermediate.dense.weight
+text_transformer.encoder.layer.1.intermediate.dense.bias
+text_transformer.encoder.layer.1.output.dense.weight
+text_transformer.encoder.layer.1.output.dense.bias
+text_transformer.encoder.layer.1.output.LayerNorm.weight
+text_transformer.encoder.layer.1.output.LayerNorm.bias
+text_transformer.encoder.layer.2.attention.self.query.weight
+text_transformer.encoder.layer.2.attention.self.query.bias
+text_transformer.encoder.layer.2.attention.self.key.weight
+text_transformer.encoder.layer.2.attention.self.key.bias
+text_transformer.encoder.layer.2.attention.self.value.weight
+text_transformer.encoder.layer.2.attention.self.value.bias
+text_transformer.encoder.layer.2.attention.output.dense.weight
+text_transformer.encoder.layer.2.attention.output.dense.bias
+text_transformer.encoder.layer.2.attention.output.LayerNorm.weight
+text_transformer.encoder.layer.2.attention.output.LayerNorm.bias
+text_transformer.encoder.layer.2.intermediate.dense.weight
+text_transformer.encoder.layer.2.intermediate.dense.bias
+text_transformer.encoder.layer.2.output.dense.weight
+text_transformer.encoder.layer.2.output.dense.bias
+text_transformer.encoder.layer.2.output.LayerNorm.weight
+text_transformer.encoder.layer.2.output.LayerNorm.bias
+text_transformer.encoder.layer.3.attention.self.query.weight
+text_transformer.encoder.layer.3.attention.self.query.bias
+text_transformer.encoder.layer.3.attention.self.key.weight
+text_transformer.encoder.layer.3.attention.self.key.bias
+text_transformer.encoder.layer.3.attention.self.value.weight
+text_transformer.encoder.layer.3.attention.self.value.bias
+text_transformer.encoder.layer.3.attention.output.dense.weight
+text_transformer.encoder.layer.3.attention.output.dense.bias
+text_transformer.encoder.layer.3.attention.output.LayerNorm.weight
+text_transformer.encoder.layer.3.attention.output.LayerNorm.bias
+text_transformer.encoder.layer.3.intermediate.dense.weight
+text_transformer.encoder.layer.3.intermediate.dense.bias
+text_transformer.encoder.layer.3.output.dense.weight
+text_transformer.encoder.layer.3.output.dense.bias
+text_transformer.encoder.layer.3.output.LayerNorm.weight
+text_transformer.encoder.layer.3.output.LayerNorm.bias
+text_transformer.encoder.layer.4.attention.self.query.weight
+text_transformer.encoder.layer.4.attention.self.query.bias
+text_transformer.encoder.layer.4.attention.self.key.weight
+text_transformer.encoder.layer.4.attention.self.key.bias
+text_transformer.encoder.layer.4.attention.self.value.weight
+text_transformer.encoder.layer.4.attention.self.value.bias
+text_transformer.encoder.layer.4.attention.output.dense.weight
+text_transformer.encoder.layer.4.attention.output.dense.bias
+text_transformer.encoder.layer.4.attention.output.LayerNorm.weight
+text_transformer.encoder.layer.4.attention.output.LayerNorm.bias
+text_transformer.encoder.layer.4.intermediate.dense.weight
+text_transformer.encoder.layer.4.intermediate.dense.bias
+text_transformer.encoder.layer.4.output.dense.weight
+text_transformer.encoder.layer.4.output.dense.bias
+text_transformer.encoder.layer.4.output.LayerNorm.weight
+text_transformer.encoder.layer.4.output.LayerNorm.bias
+text_transformer.encoder.layer.5.attention.self.query.weight
+text_transformer.encoder.layer.5.attention.self.query.bias
+text_transformer.encoder.layer.5.attention.self.key.weight
+text_transformer.encoder.layer.5.attention.self.key.bias
+text_transformer.encoder.layer.5.attention.self.value.weight
+text_transformer.encoder.layer.5.attention.self.value.bias
+text_transformer.encoder.layer.5.attention.output.dense.weight
+text_transformer.encoder.layer.5.attention.output.dense.bias
+text_transformer.encoder.layer.5.attention.output.LayerNorm.weight
+text_transformer.encoder.layer.5.attention.output.LayerNorm.bias
+text_transformer.encoder.layer.5.intermediate.dense.weight
+text_transformer.encoder.layer.5.intermediate.dense.bias
+text_transformer.encoder.layer.5.output.dense.weight
+text_transformer.encoder.layer.5.output.dense.bias
+text_transformer.encoder.layer.5.output.LayerNorm.weight
+text_transformer.encoder.layer.5.output.LayerNorm.bias
+text_transformer.encoder.layer.6.attention.self.query.weight
+text_transformer.encoder.layer.6.attention.self.query.bias
+text_transformer.encoder.layer.6.attention.self.key.weight
+text_transformer.encoder.layer.6.attention.self.key.bias
+text_transformer.encoder.layer.6.attention.self.value.weight
+text_transformer.encoder.layer.6.attention.self.value.bias
+text_transformer.encoder.layer.6.attention.output.dense.weight
+text_transformer.encoder.layer.6.attention.output.dense.bias
+text_transformer.encoder.layer.6.attention.output.LayerNorm.weight
+text_transformer.encoder.layer.6.attention.output.LayerNorm.bias
+text_transformer.encoder.layer.6.intermediate.dense.weight
+text_transformer.encoder.layer.6.intermediate.dense.bias
+text_transformer.encoder.layer.6.output.dense.weight
+text_transformer.encoder.layer.6.output.dense.bias
+text_transformer.encoder.layer.6.output.LayerNorm.weight
+text_transformer.encoder.layer.6.output.LayerNorm.bias
+text_transformer.encoder.layer.7.attention.self.query.weight
+text_transformer.encoder.layer.7.attention.self.query.bias
+text_transformer.encoder.layer.7.attention.self.key.weight
+text_transformer.encoder.layer.7.attention.self.key.bias
+text_transformer.encoder.layer.7.attention.self.value.weight
+text_transformer.encoder.layer.7.attention.self.value.bias
+text_transformer.encoder.layer.7.attention.output.dense.weight
+text_transformer.encoder.layer.7.attention.output.dense.bias
+text_transformer.encoder.layer.7.attention.output.LayerNorm.weight
+text_transformer.encoder.layer.7.attention.output.LayerNorm.bias
+text_transformer.encoder.layer.7.intermediate.dense.weight
+text_transformer.encoder.layer.7.intermediate.dense.bias
+text_transformer.encoder.layer.7.output.dense.weight
+text_transformer.encoder.layer.7.output.dense.bias
+text_transformer.encoder.layer.7.output.LayerNorm.weight
+text_transformer.encoder.layer.7.output.LayerNorm.bias
+text_transformer.encoder.layer.8.attention.self.query.weight
+text_transformer.encoder.layer.8.attention.self.query.bias
+text_transformer.encoder.layer.8.attention.self.key.weight
+text_transformer.encoder.layer.8.attention.self.key.bias
+text_transformer.encoder.layer.8.attention.self.value.weight
+text_transformer.encoder.layer.8.attention.self.value.bias
+text_transformer.encoder.layer.8.attention.output.dense.weight
+text_transformer.encoder.layer.8.attention.output.dense.bias
+text_transformer.encoder.layer.8.attention.output.LayerNorm.weight
+text_transformer.encoder.layer.8.attention.output.LayerNorm.bias
+text_transformer.encoder.layer.8.intermediate.dense.weight
+text_transformer.encoder.layer.8.intermediate.dense.bias
+text_transformer.encoder.layer.8.output.dense.weight
+text_transformer.encoder.layer.8.output.dense.bias
+text_transformer.encoder.layer.8.output.LayerNorm.weight
+text_transformer.encoder.layer.8.output.LayerNorm.bias
+text_transformer.encoder.layer.9.attention.self.query.weight
+text_transformer.encoder.layer.9.attention.self.query.bias
+text_transformer.encoder.layer.9.attention.self.key.weight
+text_transformer.encoder.layer.9.attention.self.key.bias
+text_transformer.encoder.layer.9.attention.self.value.weight
+text_transformer.encoder.layer.9.attention.self.value.bias
+text_transformer.encoder.layer.9.attention.output.dense.weight
+text_transformer.encoder.layer.9.attention.output.dense.bias
+text_transformer.encoder.layer.9.attention.output.LayerNorm.weight
+text_transformer.encoder.layer.9.attention.output.LayerNorm.bias
+text_transformer.encoder.layer.9.intermediate.dense.weight
+text_transformer.encoder.layer.9.intermediate.dense.bias
+text_transformer.encoder.layer.9.output.dense.weight
+text_transformer.encoder.layer.9.output.dense.bias
+text_transformer.encoder.layer.9.output.LayerNorm.weight
+text_transformer.encoder.layer.9.output.LayerNorm.bias
+text_transformer.encoder.layer.10.attention.self.query.weight
+text_transformer.encoder.layer.10.attention.self.query.bias
+text_transformer.encoder.layer.10.attention.self.key.weight
+text_transformer.encoder.layer.10.attention.self.key.bias
+text_transformer.encoder.layer.10.attention.self.value.weight
+text_transformer.encoder.layer.10.attention.self.value.bias
+text_transformer.encoder.layer.10.attention.output.dense.weight
+text_transformer.encoder.layer.10.attention.output.dense.bias
+text_transformer.encoder.layer.10.attention.output.LayerNorm.weight
+text_transformer.encoder.layer.10.attention.output.LayerNorm.bias
+text_transformer.encoder.layer.10.intermediate.dense.weight
+text_transformer.encoder.layer.10.intermediate.dense.bias
+text_transformer.encoder.layer.10.output.dense.weight
+text_transformer.encoder.layer.10.output.dense.bias
+text_transformer.encoder.layer.10.output.LayerNorm.weight
+text_transformer.encoder.layer.10.output.LayerNorm.bias
+text_transformer.encoder.layer.11.attention.self.query.weight
+text_transformer.encoder.layer.11.attention.self.query.bias
+text_transformer.encoder.layer.11.attention.self.key.weight
+text_transformer.encoder.layer.11.attention.self.key.bias
+text_transformer.encoder.layer.11.attention.self.value.weight
+text_transformer.encoder.layer.11.attention.self.value.bias
+text_transformer.encoder.layer.11.attention.output.dense.weight
+text_transformer.encoder.layer.11.attention.output.dense.bias
+text_transformer.encoder.layer.11.attention.output.LayerNorm.weight
+text_transformer.encoder.layer.11.attention.output.LayerNorm.bias
+text_transformer.encoder.layer.11.intermediate.dense.weight
+text_transformer.encoder.layer.11.intermediate.dense.bias
+text_transformer.encoder.layer.11.output.dense.weight
+text_transformer.encoder.layer.11.output.dense.bias
+text_transformer.encoder.layer.11.output.LayerNorm.weight
+text_transformer.encoder.layer.11.output.LayerNorm.bias
+text_transformer.pooler.dense.weight
+text_transformer.pooler.dense.bias
+to_text_latent.weight
+** MODEL ** The following parameters are TRAINABLE:
+temperature
+visual_transformer.spatial_rel_pos_bias.net.0.0.weight
+visual_transformer.spatial_rel_pos_bias.net.0.0.bias
+visual_transformer.spatial_rel_pos_bias.net.1.0.weight
+visual_transformer.spatial_rel_pos_bias.net.1.0.bias
+visual_transformer.spatial_rel_pos_bias.net.2.weight
+visual_transformer.spatial_rel_pos_bias.net.2.bias
+visual_transformer.to_patch_emb_first_frame.1.weight
+visual_transformer.to_patch_emb_first_frame.1.bias
+visual_transformer.to_patch_emb_first_frame.2.weight
+visual_transformer.to_patch_emb_first_frame.2.bias
+visual_transformer.to_patch_emb_first_frame.3.weight
+visual_transformer.to_patch_emb_first_frame.3.bias
+visual_transformer.to_patch_emb.1.weight
+visual_transformer.to_patch_emb.1.bias
+visual_transformer.to_patch_emb.2.weight
+visual_transformer.to_patch_emb.2.bias
+visual_transformer.to_patch_emb.3.weight
+visual_transformer.to_patch_emb.3.bias
+visual_transformer.enc_spatial_transformer.layers.0.0.dsconv.weight
+visual_transformer.enc_spatial_transformer.layers.0.0.dsconv.bias
+visual_transformer.enc_spatial_transformer.layers.0.1.null_kv
+visual_transformer.enc_spatial_transformer.layers.0.1.q_scale
+visual_transformer.enc_spatial_transformer.layers.0.1.k_scale
+visual_transformer.enc_spatial_transformer.layers.0.1.norm.gamma
+visual_transformer.enc_spatial_transformer.layers.0.1.context_norm.gamma
+visual_transformer.enc_spatial_transformer.layers.0.1.to_q.weight
+visual_transformer.enc_spatial_transformer.layers.0.1.to_kv.weight
+visual_transformer.enc_spatial_transformer.layers.0.1.to_out.weight
+visual_transformer.enc_spatial_transformer.layers.0.3.0.weight
+visual_transformer.enc_spatial_transformer.layers.0.3.0.bias
+visual_transformer.enc_spatial_transformer.layers.0.3.1.weight
+visual_transformer.enc_spatial_transformer.layers.0.3.4.weight
+visual_transformer.enc_spatial_transformer.layers.1.0.dsconv.weight
+visual_transformer.enc_spatial_transformer.layers.1.0.dsconv.bias
+visual_transformer.enc_spatial_transformer.layers.1.1.null_kv
+visual_transformer.enc_spatial_transformer.layers.1.1.q_scale
+visual_transformer.enc_spatial_transformer.layers.1.1.k_scale
+visual_transformer.enc_spatial_transformer.layers.1.1.norm.gamma
+visual_transformer.enc_spatial_transformer.layers.1.1.context_norm.gamma
+visual_transformer.enc_spatial_transformer.layers.1.1.to_q.weight
+visual_transformer.enc_spatial_transformer.layers.1.1.to_kv.weight
+visual_transformer.enc_spatial_transformer.layers.1.1.to_out.weight
+visual_transformer.enc_spatial_transformer.layers.1.3.0.weight
+visual_transformer.enc_spatial_transformer.layers.1.3.0.bias
+visual_transformer.enc_spatial_transformer.layers.1.3.1.weight
+visual_transformer.enc_spatial_transformer.layers.1.3.4.weight
+visual_transformer.enc_spatial_transformer.layers.2.0.dsconv.weight
+visual_transformer.enc_spatial_transformer.layers.2.0.dsconv.bias
+visual_transformer.enc_spatial_transformer.layers.2.1.null_kv
+visual_transformer.enc_spatial_transformer.layers.2.1.q_scale
+visual_transformer.enc_spatial_transformer.layers.2.1.k_scale
+visual_transformer.enc_spatial_transformer.layers.2.1.norm.gamma
+visual_transformer.enc_spatial_transformer.layers.2.1.context_norm.gamma
+visual_transformer.enc_spatial_transformer.layers.2.1.to_q.weight
+visual_transformer.enc_spatial_transformer.layers.2.1.to_kv.weight
+visual_transformer.enc_spatial_transformer.layers.2.1.to_out.weight
+visual_transformer.enc_spatial_transformer.layers.2.3.0.weight
+visual_transformer.enc_spatial_transformer.layers.2.3.0.bias
+visual_transformer.enc_spatial_transformer.layers.2.3.1.weight
+visual_transformer.enc_spatial_transformer.layers.2.3.4.weight
+visual_transformer.enc_spatial_transformer.layers.3.0.dsconv.weight
+visual_transformer.enc_spatial_transformer.layers.3.0.dsconv.bias
+visual_transformer.enc_spatial_transformer.layers.3.1.null_kv
+visual_transformer.enc_spatial_transformer.layers.3.1.q_scale
+visual_transformer.enc_spatial_transformer.layers.3.1.k_scale
+visual_transformer.enc_spatial_transformer.layers.3.1.norm.gamma
+visual_transformer.enc_spatial_transformer.layers.3.1.context_norm.gamma
+visual_transformer.enc_spatial_transformer.layers.3.1.to_q.weight
+visual_transformer.enc_spatial_transformer.layers.3.1.to_kv.weight
+visual_transformer.enc_spatial_transformer.layers.3.1.to_out.weight
+visual_transformer.enc_spatial_transformer.layers.3.3.0.weight
+visual_transformer.enc_spatial_transformer.layers.3.3.0.bias
+visual_transformer.enc_spatial_transformer.layers.3.3.1.weight
+visual_transformer.enc_spatial_transformer.layers.3.3.4.weight
+visual_transformer.enc_spatial_transformer.norm_out.gamma
+visual_transformer.enc_temporal_transformer.layers.0.0.dsconv.weight
+visual_transformer.enc_temporal_transformer.layers.0.0.dsconv.bias
+visual_transformer.enc_temporal_transformer.layers.0.1.null_kv
+visual_transformer.enc_temporal_transformer.layers.0.1.q_scale
+visual_transformer.enc_temporal_transformer.layers.0.1.k_scale
+visual_transformer.enc_temporal_transformer.layers.0.1.norm.gamma
+visual_transformer.enc_temporal_transformer.layers.0.1.context_norm.gamma
+visual_transformer.enc_temporal_transformer.layers.0.1.to_q.weight
+visual_transformer.enc_temporal_transformer.layers.0.1.to_kv.weight
+visual_transformer.enc_temporal_transformer.layers.0.1.to_out.weight
+visual_transformer.enc_temporal_transformer.layers.0.3.0.weight
+visual_transformer.enc_temporal_transformer.layers.0.3.0.bias
+visual_transformer.enc_temporal_transformer.layers.0.3.1.weight
+visual_transformer.enc_temporal_transformer.layers.0.3.4.weight
+visual_transformer.enc_temporal_transformer.layers.1.0.dsconv.weight
+visual_transformer.enc_temporal_transformer.layers.1.0.dsconv.bias
+visual_transformer.enc_temporal_transformer.layers.1.1.null_kv
+visual_transformer.enc_temporal_transformer.layers.1.1.q_scale
+visual_transformer.enc_temporal_transformer.layers.1.1.k_scale
+visual_transformer.enc_temporal_transformer.layers.1.1.norm.gamma
+visual_transformer.enc_temporal_transformer.layers.1.1.context_norm.gamma
+visual_transformer.enc_temporal_transformer.layers.1.1.to_q.weight
+visual_transformer.enc_temporal_transformer.layers.1.1.to_kv.weight
+visual_transformer.enc_temporal_transformer.layers.1.1.to_out.weight
+visual_transformer.enc_temporal_transformer.layers.1.3.0.weight
+visual_transformer.enc_temporal_transformer.layers.1.3.0.bias
+visual_transformer.enc_temporal_transformer.layers.1.3.1.weight
+visual_transformer.enc_temporal_transformer.layers.1.3.4.weight
+visual_transformer.enc_temporal_transformer.layers.2.0.dsconv.weight
+visual_transformer.enc_temporal_transformer.layers.2.0.dsconv.bias
+visual_transformer.enc_temporal_transformer.layers.2.1.null_kv
+visual_transformer.enc_temporal_transformer.layers.2.1.q_scale
+visual_transformer.enc_temporal_transformer.layers.2.1.k_scale
+visual_transformer.enc_temporal_transformer.layers.2.1.norm.gamma
+visual_transformer.enc_temporal_transformer.layers.2.1.context_norm.gamma
+visual_transformer.enc_temporal_transformer.layers.2.1.to_q.weight
+visual_transformer.enc_temporal_transformer.layers.2.1.to_kv.weight
+visual_transformer.enc_temporal_transformer.layers.2.1.to_out.weight
+visual_transformer.enc_temporal_transformer.layers.2.3.0.weight
+visual_transformer.enc_temporal_transformer.layers.2.3.0.bias
+visual_transformer.enc_temporal_transformer.layers.2.3.1.weight
+visual_transformer.enc_temporal_transformer.layers.2.3.4.weight
+visual_transformer.enc_temporal_transformer.layers.3.0.dsconv.weight
+visual_transformer.enc_temporal_transformer.layers.3.0.dsconv.bias
+visual_transformer.enc_temporal_transformer.layers.3.1.null_kv
+visual_transformer.enc_temporal_transformer.layers.3.1.q_scale
+visual_transformer.enc_temporal_transformer.layers.3.1.k_scale
+visual_transformer.enc_temporal_transformer.layers.3.1.norm.gamma
+visual_transformer.enc_temporal_transformer.layers.3.1.context_norm.gamma
+visual_transformer.enc_temporal_transformer.layers.3.1.to_q.weight
+visual_transformer.enc_temporal_transformer.layers.3.1.to_kv.weight
+visual_transformer.enc_temporal_transformer.layers.3.1.to_out.weight
+visual_transformer.enc_temporal_transformer.layers.3.3.0.weight
+visual_transformer.enc_temporal_transformer.layers.3.3.0.bias
+visual_transformer.enc_temporal_transformer.layers.3.3.1.weight
+visual_transformer.enc_temporal_transformer.layers.3.3.4.weight
+visual_transformer.enc_temporal_transformer.norm_out.gamma
+visual_transformer.to_pixels_first_frame.0.weight
+visual_transformer.to_pixels_first_frame.0.bias
+visual_transformer.to_pixels.0.weight
+visual_transformer.to_pixels.0.bias
+fusion_module.layers.0.multihead_attn.in_proj_weight
+fusion_module.layers.0.multihead_attn.in_proj_bias
+fusion_module.layers.0.multihead_attn.out_proj.weight
+fusion_module.layers.0.multihead_attn.out_proj.bias
+fusion_module.layers.0.linear1.weight
+fusion_module.layers.0.linear1.bias
+fusion_module.layers.0.linear2.weight
+fusion_module.layers.0.linear2.bias
+fusion_module.layers.0.norm1.weight
+fusion_module.layers.0.norm1.bias
+fusion_module.layers.0.norm2.weight
+fusion_module.layers.0.norm2.bias
+fusion_module.layers.0.norm3.weight
+fusion_module.layers.0.norm3.bias
+fusion_module.layers.1.multihead_attn.in_proj_weight
+fusion_module.layers.1.multihead_attn.in_proj_bias
+fusion_module.layers.1.multihead_attn.out_proj.weight
+fusion_module.layers.1.multihead_attn.out_proj.bias
+fusion_module.layers.1.linear1.weight
+fusion_module.layers.1.linear1.bias
+fusion_module.layers.1.linear2.weight
+fusion_module.layers.1.linear2.bias
+fusion_module.layers.1.norm1.weight
+fusion_module.layers.1.norm1.bias
+fusion_module.layers.1.norm2.weight
+fusion_module.layers.1.norm2.bias
+fusion_module.layers.1.norm3.weight
+fusion_module.layers.1.norm3.bias
+fusion_module.layers.2.multihead_attn.in_proj_weight
+fusion_module.layers.2.multihead_attn.in_proj_bias
+fusion_module.layers.2.multihead_attn.out_proj.weight
+fusion_module.layers.2.multihead_attn.out_proj.bias
+fusion_module.layers.2.linear1.weight
+fusion_module.layers.2.linear1.bias
+fusion_module.layers.2.linear2.weight
+fusion_module.layers.2.linear2.bias
+fusion_module.layers.2.norm1.weight
+fusion_module.layers.2.norm1.bias
+fusion_module.layers.2.norm2.weight
+fusion_module.layers.2.norm2.bias
+fusion_module.layers.2.norm3.weight
+fusion_module.layers.2.norm3.bias
+fusion_module.layers.3.multihead_attn.in_proj_weight
+fusion_module.layers.3.multihead_attn.in_proj_bias
+fusion_module.layers.3.multihead_attn.out_proj.weight
+fusion_module.layers.3.multihead_attn.out_proj.bias
+fusion_module.layers.3.linear1.weight
+fusion_module.layers.3.linear1.bias
+fusion_module.layers.3.linear2.weight
+fusion_module.layers.3.linear2.bias
+fusion_module.layers.3.norm1.weight
+fusion_module.layers.3.norm1.bias
+fusion_module.layers.3.norm2.weight
+fusion_module.layers.3.norm2.bias
+fusion_module.layers.3.norm3.weight
+fusion_module.layers.3.norm3.bias
+fusion_module.layers.4.multihead_attn.in_proj_weight
+fusion_module.layers.4.multihead_attn.in_proj_bias
+fusion_module.layers.4.multihead_attn.out_proj.weight
+fusion_module.layers.4.multihead_attn.out_proj.bias
+fusion_module.layers.4.linear1.weight
+fusion_module.layers.4.linear1.bias
+fusion_module.layers.4.linear2.weight
+fusion_module.layers.4.linear2.bias
+fusion_module.layers.4.norm1.weight
+fusion_module.layers.4.norm1.bias
+fusion_module.layers.4.norm2.weight
+fusion_module.layers.4.norm2.bias
+fusion_module.layers.4.norm3.weight
+fusion_module.layers.4.norm3.bias
+fusion_module.layers.5.multihead_attn.in_proj_weight
+fusion_module.layers.5.multihead_attn.in_proj_bias
+fusion_module.layers.5.multihead_attn.out_proj.weight
+fusion_module.layers.5.multihead_attn.out_proj.bias
+fusion_module.layers.5.linear1.weight
+fusion_module.layers.5.linear1.bias
+fusion_module.layers.5.linear2.weight
+fusion_module.layers.5.linear2.bias
+fusion_module.layers.5.norm1.weight
+fusion_module.layers.5.norm1.bias
+fusion_module.layers.5.norm2.weight
+fusion_module.layers.5.norm2.bias
+fusion_module.layers.5.norm3.weight
+fusion_module.layers.5.norm3.bias
+fusion_module.norm.weight
+fusion_module.norm.bias
+to_visual_latent.weight
+Start Training
+Log at /mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/log/CXR_CT_overfit_v2_4
+** MODEL ** The following parameters are FROZEN:
+text_transformer.embeddings.word_embeddings.weight
+text_transformer.embeddings.position_embeddings.weight
+text_transformer.embeddings.token_type_embeddings.weight
+text_transformer.embeddings.LayerNorm.weight
+text_transformer.embeddings.LayerNorm.bias
+text_transformer.encoder.layer.0.attention.self.query.weight
+text_transformer.encoder.layer.0.attention.self.query.bias
+text_transformer.encoder.layer.0.attention.self.key.weight
+text_transformer.encoder.layer.0.attention.self.key.bias
+text_transformer.encoder.layer.0.attention.self.value.weight
+text_transformer.encoder.layer.0.attention.self.value.bias
+text_transformer.encoder.layer.0.attention.output.dense.weight
+text_transformer.encoder.layer.0.attention.output.dense.bias
+text_transformer.encoder.layer.0.attention.output.LayerNorm.weight
+text_transformer.encoder.layer.0.attention.output.LayerNorm.bias
+text_transformer.encoder.layer.0.intermediate.dense.weight
+text_transformer.encoder.layer.0.intermediate.dense.bias
+text_transformer.encoder.layer.0.output.dense.weight
+text_transformer.encoder.layer.0.output.dense.bias
+text_transformer.encoder.layer.0.output.LayerNorm.weight
+text_transformer.encoder.layer.0.output.LayerNorm.bias
+text_transformer.encoder.layer.1.attention.self.query.weight
+text_transformer.encoder.layer.1.attention.self.query.bias
+text_transformer.encoder.layer.1.attention.self.key.weight
+text_transformer.encoder.layer.1.attention.self.key.bias
+text_transformer.encoder.layer.1.attention.self.value.weight
+text_transformer.encoder.layer.1.attention.self.value.bias
+text_transformer.encoder.layer.1.attention.output.dense.weight
+text_transformer.encoder.layer.1.attention.output.dense.bias
+text_transformer.encoder.layer.1.attention.output.LayerNorm.weight
+text_transformer.encoder.layer.1.attention.output.LayerNorm.bias
+text_transformer.encoder.layer.1.intermediate.dense.weight
+text_transformer.encoder.layer.1.intermediate.dense.bias
+text_transformer.encoder.layer.1.output.dense.weight
+text_transformer.encoder.layer.1.output.dense.bias
+text_transformer.encoder.layer.1.output.LayerNorm.weight
+text_transformer.encoder.layer.1.output.LayerNorm.bias
+text_transformer.encoder.layer.2.attention.self.query.weight
+text_transformer.encoder.layer.2.attention.self.query.bias
+text_transformer.encoder.layer.2.attention.self.key.weight
+text_transformer.encoder.layer.2.attention.self.key.bias
+text_transformer.encoder.layer.2.attention.self.value.weight
+text_transformer.encoder.layer.2.attention.self.value.bias
+text_transformer.encoder.layer.2.attention.output.dense.weight
+text_transformer.encoder.layer.2.attention.output.dense.bias
+text_transformer.encoder.layer.2.attention.output.LayerNorm.weight
+text_transformer.encoder.layer.2.attention.output.LayerNorm.bias
+text_transformer.encoder.layer.2.intermediate.dense.weight
+text_transformer.encoder.layer.2.intermediate.dense.bias
+text_transformer.encoder.layer.2.output.dense.weight
+text_transformer.encoder.layer.2.output.dense.bias
+text_transformer.encoder.layer.2.output.LayerNorm.weight
+text_transformer.encoder.layer.2.output.LayerNorm.bias
+text_transformer.encoder.layer.3.attention.self.query.weight
+text_transformer.encoder.layer.3.attention.self.query.bias
+text_transformer.encoder.layer.3.attention.self.key.weight
+text_transformer.encoder.layer.3.attention.self.key.bias
+text_transformer.encoder.layer.3.attention.self.value.weight
+text_transformer.encoder.layer.3.attention.self.value.bias
+text_transformer.encoder.layer.3.attention.output.dense.weight
+text_transformer.encoder.layer.3.attention.output.dense.bias
+text_transformer.encoder.layer.3.attention.output.LayerNorm.weight
+text_transformer.encoder.layer.3.attention.output.LayerNorm.bias
+text_transformer.encoder.layer.3.intermediate.dense.weight
+text_transformer.encoder.layer.3.intermediate.dense.bias
+text_transformer.encoder.layer.3.output.dense.weight
+text_transformer.encoder.layer.3.output.dense.bias
+text_transformer.encoder.layer.3.output.LayerNorm.weight
+text_transformer.encoder.layer.3.output.LayerNorm.bias
+text_transformer.encoder.layer.4.attention.self.query.weight
+text_transformer.encoder.layer.4.attention.self.query.bias
+text_transformer.encoder.layer.4.attention.self.key.weight
+text_transformer.encoder.layer.4.attention.self.key.bias
+text_transformer.encoder.layer.4.attention.self.value.weight
+text_transformer.encoder.layer.4.attention.self.value.bias
+text_transformer.encoder.layer.4.attention.output.dense.weight
+text_transformer.encoder.layer.4.attention.output.dense.bias
+text_transformer.encoder.layer.4.attention.output.LayerNorm.weight
+text_transformer.encoder.layer.4.attention.output.LayerNorm.bias
+text_transformer.encoder.layer.4.intermediate.dense.weight
+text_transformer.encoder.layer.4.intermediate.dense.bias
+text_transformer.encoder.layer.4.output.dense.weight
+text_transformer.encoder.layer.4.output.dense.bias
+text_transformer.encoder.layer.4.output.LayerNorm.weight
+text_transformer.encoder.layer.4.output.LayerNorm.bias
+text_transformer.encoder.layer.5.attention.self.query.weight
+text_transformer.encoder.layer.5.attention.self.query.bias
+text_transformer.encoder.layer.5.attention.self.key.weight
+text_transformer.encoder.layer.5.attention.self.key.bias
+text_transformer.encoder.layer.5.attention.self.value.weight
+text_transformer.encoder.layer.5.attention.self.value.bias
+text_transformer.encoder.layer.5.attention.output.dense.weight
+text_transformer.encoder.layer.5.attention.output.dense.bias
+text_transformer.encoder.layer.5.attention.output.LayerNorm.weight
+text_transformer.encoder.layer.5.attention.output.LayerNorm.bias
+text_transformer.encoder.layer.5.intermediate.dense.weight
+text_transformer.encoder.layer.5.intermediate.dense.bias
+text_transformer.encoder.layer.5.output.dense.weight
+text_transformer.encoder.layer.5.output.dense.bias
+text_transformer.encoder.layer.5.output.LayerNorm.weight
+text_transformer.encoder.layer.5.output.LayerNorm.bias
+text_transformer.encoder.layer.6.attention.self.query.weight
+text_transformer.encoder.layer.6.attention.self.query.bias
+text_transformer.encoder.layer.6.attention.self.key.weight
+text_transformer.encoder.layer.6.attention.self.key.bias
+text_transformer.encoder.layer.6.attention.self.value.weight
+text_transformer.encoder.layer.6.attention.self.value.bias
+text_transformer.encoder.layer.6.attention.output.dense.weight
+text_transformer.encoder.layer.6.attention.output.dense.bias
+text_transformer.encoder.layer.6.attention.output.LayerNorm.weight
+text_transformer.encoder.layer.6.attention.output.LayerNorm.bias
+text_transformer.encoder.layer.6.intermediate.dense.weight
+text_transformer.encoder.layer.6.intermediate.dense.bias
+text_transformer.encoder.layer.6.output.dense.weight
+text_transformer.encoder.layer.6.output.dense.bias
+text_transformer.encoder.layer.6.output.LayerNorm.weight
+text_transformer.encoder.layer.6.output.LayerNorm.bias
+text_transformer.encoder.layer.7.attention.self.query.weight
+text_transformer.encoder.layer.7.attention.self.query.bias
+text_transformer.encoder.layer.7.attention.self.key.weight
+text_transformer.encoder.layer.7.attention.self.key.bias
+text_transformer.encoder.layer.7.attention.self.value.weight
+text_transformer.encoder.layer.7.attention.self.value.bias
+text_transformer.encoder.layer.7.attention.output.dense.weight
+text_transformer.encoder.layer.7.attention.output.dense.bias
+text_transformer.encoder.layer.7.attention.output.LayerNorm.weight
+text_transformer.encoder.layer.7.attention.output.LayerNorm.bias
+text_transformer.encoder.layer.7.intermediate.dense.weight
+text_transformer.encoder.layer.7.intermediate.dense.bias
+text_transformer.encoder.layer.7.output.dense.weight
+text_transformer.encoder.layer.7.output.dense.bias
+text_transformer.encoder.layer.7.output.LayerNorm.weight
+text_transformer.encoder.layer.7.output.LayerNorm.bias
+text_transformer.encoder.layer.8.attention.self.query.weight
+text_transformer.encoder.layer.8.attention.self.query.bias
+text_transformer.encoder.layer.8.attention.self.key.weight
+text_transformer.encoder.layer.8.attention.self.key.bias
+text_transformer.encoder.layer.8.attention.self.value.weight
+text_transformer.encoder.layer.8.attention.self.value.bias
+text_transformer.encoder.layer.8.attention.output.dense.weight
+text_transformer.encoder.layer.8.attention.output.dense.bias
+text_transformer.encoder.layer.8.attention.output.LayerNorm.weight
+text_transformer.encoder.layer.8.attention.output.LayerNorm.bias
+text_transformer.encoder.layer.8.intermediate.dense.weight
+text_transformer.encoder.layer.8.intermediate.dense.bias
+text_transformer.encoder.layer.8.output.dense.weight
+text_transformer.encoder.layer.8.output.dense.bias
+text_transformer.encoder.layer.8.output.LayerNorm.weight
+text_transformer.encoder.layer.8.output.LayerNorm.bias
+text_transformer.encoder.layer.9.attention.self.query.weight
+text_transformer.encoder.layer.9.attention.self.query.bias
+text_transformer.encoder.layer.9.attention.self.key.weight
+text_transformer.encoder.layer.9.attention.self.key.bias
+text_transformer.encoder.layer.9.attention.self.value.weight
+text_transformer.encoder.layer.9.attention.self.value.bias
+text_transformer.encoder.layer.9.attention.output.dense.weight
+text_transformer.encoder.layer.9.attention.output.dense.bias
+text_transformer.encoder.layer.9.attention.output.LayerNorm.weight
+text_transformer.encoder.layer.9.attention.output.LayerNorm.bias
+text_transformer.encoder.layer.9.intermediate.dense.weight
+text_transformer.encoder.layer.9.intermediate.dense.bias
+text_transformer.encoder.layer.9.output.dense.weight
+text_transformer.encoder.layer.9.output.dense.bias
+text_transformer.encoder.layer.9.output.LayerNorm.weight
+text_transformer.encoder.layer.9.output.LayerNorm.bias
+text_transformer.encoder.layer.10.attention.self.query.weight
+text_transformer.encoder.layer.10.attention.self.query.bias
+text_transformer.encoder.layer.10.attention.self.key.weight
+text_transformer.encoder.layer.10.attention.self.key.bias
+text_transformer.encoder.layer.10.attention.self.value.weight
+text_transformer.encoder.layer.10.attention.self.value.bias
+text_transformer.encoder.layer.10.attention.output.dense.weight
+text_transformer.encoder.layer.10.attention.output.dense.bias
+text_transformer.encoder.layer.10.attention.output.LayerNorm.weight
+text_transformer.encoder.layer.10.attention.output.LayerNorm.bias
+text_transformer.encoder.layer.10.intermediate.dense.weight
+text_transformer.encoder.layer.10.intermediate.dense.bias
+text_transformer.encoder.layer.10.output.dense.weight
+text_transformer.encoder.layer.10.output.dense.bias
+text_transformer.encoder.layer.10.output.LayerNorm.weight
+text_transformer.encoder.layer.10.output.LayerNorm.bias
+text_transformer.encoder.layer.11.attention.self.query.weight
+text_transformer.encoder.layer.11.attention.self.query.bias
+text_transformer.encoder.layer.11.attention.self.key.weight
+text_transformer.encoder.layer.11.attention.self.key.bias
+text_transformer.encoder.layer.11.attention.self.value.weight
+text_transformer.encoder.layer.11.attention.self.value.bias
+text_transformer.encoder.layer.11.attention.output.dense.weight
+text_transformer.encoder.layer.11.attention.output.dense.bias
+text_transformer.encoder.layer.11.attention.output.LayerNorm.weight
+text_transformer.encoder.layer.11.attention.output.LayerNorm.bias
+text_transformer.encoder.layer.11.intermediate.dense.weight
+text_transformer.encoder.layer.11.intermediate.dense.bias
+text_transformer.encoder.layer.11.output.dense.weight
+text_transformer.encoder.layer.11.output.dense.bias
+text_transformer.encoder.layer.11.output.LayerNorm.weight
+text_transformer.encoder.layer.11.output.LayerNorm.bias
+text_transformer.pooler.dense.weight
+text_transformer.pooler.dense.bias
+to_text_latent.weight
+** MODEL ** The following parameters are TRAINABLE:
+temperature
+visual_transformer.spatial_rel_pos_bias.net.0.0.weight
+visual_transformer.spatial_rel_pos_bias.net.0.0.bias
+visual_transformer.spatial_rel_pos_bias.net.1.0.weight
+visual_transformer.spatial_rel_pos_bias.net.1.0.bias
+visual_transformer.spatial_rel_pos_bias.net.2.weight
+visual_transformer.spatial_rel_pos_bias.net.2.bias
+visual_transformer.to_patch_emb_first_frame.1.weight
+visual_transformer.to_patch_emb_first_frame.1.bias
+visual_transformer.to_patch_emb_first_frame.2.weight
+visual_transformer.to_patch_emb_first_frame.2.bias
+visual_transformer.to_patch_emb_first_frame.3.weight
+visual_transformer.to_patch_emb_first_frame.3.bias
+visual_transformer.to_patch_emb.1.weight
+visual_transformer.to_patch_emb.1.bias
+visual_transformer.to_patch_emb.2.weight
+visual_transformer.to_patch_emb.2.bias
+visual_transformer.to_patch_emb.3.weight
+visual_transformer.to_patch_emb.3.bias
+visual_transformer.enc_spatial_transformer.layers.0.0.dsconv.weight
+visual_transformer.enc_spatial_transformer.layers.0.0.dsconv.bias
+visual_transformer.enc_spatial_transformer.layers.0.1.null_kv
+visual_transformer.enc_spatial_transformer.layers.0.1.q_scale
+visual_transformer.enc_spatial_transformer.layers.0.1.k_scale
+visual_transformer.enc_spatial_transformer.layers.0.1.norm.gamma
+visual_transformer.enc_spatial_transformer.layers.0.1.context_norm.gamma
+visual_transformer.enc_spatial_transformer.layers.0.1.to_q.weight
+visual_transformer.enc_spatial_transformer.layers.0.1.to_kv.weight
+visual_transformer.enc_spatial_transformer.layers.0.1.to_out.weight
+visual_transformer.enc_spatial_transformer.layers.0.3.0.weight
+visual_transformer.enc_spatial_transformer.layers.0.3.0.bias
+visual_transformer.enc_spatial_transformer.layers.0.3.1.weight
+visual_transformer.enc_spatial_transformer.layers.0.3.4.weight
+visual_transformer.enc_spatial_transformer.layers.1.0.dsconv.weight
+visual_transformer.enc_spatial_transformer.layers.1.0.dsconv.bias
+visual_transformer.enc_spatial_transformer.layers.1.1.null_kv
+visual_transformer.enc_spatial_transformer.layers.1.1.q_scale
+visual_transformer.enc_spatial_transformer.layers.1.1.k_scale
+visual_transformer.enc_spatial_transformer.layers.1.1.norm.gamma
+visual_transformer.enc_spatial_transformer.layers.1.1.context_norm.gamma
+visual_transformer.enc_spatial_transformer.layers.1.1.to_q.weight
+visual_transformer.enc_spatial_transformer.layers.1.1.to_kv.weight
+visual_transformer.enc_spatial_transformer.layers.1.1.to_out.weight
+visual_transformer.enc_spatial_transformer.layers.1.3.0.weight
+visual_transformer.enc_spatial_transformer.layers.1.3.0.bias
+visual_transformer.enc_spatial_transformer.layers.1.3.1.weight
+visual_transformer.enc_spatial_transformer.layers.1.3.4.weight
+visual_transformer.enc_spatial_transformer.layers.2.0.dsconv.weight
+visual_transformer.enc_spatial_transformer.layers.2.0.dsconv.bias
+visual_transformer.enc_spatial_transformer.layers.2.1.null_kv
+visual_transformer.enc_spatial_transformer.layers.2.1.q_scale
+visual_transformer.enc_spatial_transformer.layers.2.1.k_scale
+visual_transformer.enc_spatial_transformer.layers.2.1.norm.gamma
+visual_transformer.enc_spatial_transformer.layers.2.1.context_norm.gamma
+visual_transformer.enc_spatial_transformer.layers.2.1.to_q.weight
+visual_transformer.enc_spatial_transformer.layers.2.1.to_kv.weight
+visual_transformer.enc_spatial_transformer.layers.2.1.to_out.weight
+visual_transformer.enc_spatial_transformer.layers.2.3.0.weight
+visual_transformer.enc_spatial_transformer.layers.2.3.0.bias
+visual_transformer.enc_spatial_transformer.layers.2.3.1.weight
+visual_transformer.enc_spatial_transformer.layers.2.3.4.weight
+visual_transformer.enc_spatial_transformer.layers.3.0.dsconv.weight
+visual_transformer.enc_spatial_transformer.layers.3.0.dsconv.bias
+visual_transformer.enc_spatial_transformer.layers.3.1.null_kv
+visual_transformer.enc_spatial_transformer.layers.3.1.q_scale
+visual_transformer.enc_spatial_transformer.layers.3.1.k_scale
+visual_transformer.enc_spatial_transformer.layers.3.1.norm.gamma
+visual_transformer.enc_spatial_transformer.layers.3.1.context_norm.gamma
+visual_transformer.enc_spatial_transformer.layers.3.1.to_q.weight
+visual_transformer.enc_spatial_transformer.layers.3.1.to_kv.weight
+visual_transformer.enc_spatial_transformer.layers.3.1.to_out.weight
+visual_transformer.enc_spatial_transformer.layers.3.3.0.weight
+visual_transformer.enc_spatial_transformer.layers.3.3.0.bias
+visual_transformer.enc_spatial_transformer.layers.3.3.1.weight
+visual_transformer.enc_spatial_transformer.layers.3.3.4.weight
+visual_transformer.enc_spatial_transformer.norm_out.gamma
+visual_transformer.enc_temporal_transformer.layers.0.0.dsconv.weight
+visual_transformer.enc_temporal_transformer.layers.0.0.dsconv.bias
+visual_transformer.enc_temporal_transformer.layers.0.1.null_kv
+visual_transformer.enc_temporal_transformer.layers.0.1.q_scale
+visual_transformer.enc_temporal_transformer.layers.0.1.k_scale
+visual_transformer.enc_temporal_transformer.layers.0.1.norm.gamma
+visual_transformer.enc_temporal_transformer.layers.0.1.context_norm.gamma
+visual_transformer.enc_temporal_transformer.layers.0.1.to_q.weight
+visual_transformer.enc_temporal_transformer.layers.0.1.to_kv.weight
+visual_transformer.enc_temporal_transformer.layers.0.1.to_out.weight
+visual_transformer.enc_temporal_transformer.layers.0.3.0.weight
+visual_transformer.enc_temporal_transformer.layers.0.3.0.bias
+visual_transformer.enc_temporal_transformer.layers.0.3.1.weight
+visual_transformer.enc_temporal_transformer.layers.0.3.4.weight
+visual_transformer.enc_temporal_transformer.layers.1.0.dsconv.weight
+visual_transformer.enc_temporal_transformer.layers.1.0.dsconv.bias
+visual_transformer.enc_temporal_transformer.layers.1.1.null_kv
+visual_transformer.enc_temporal_transformer.layers.1.1.q_scale
+visual_transformer.enc_temporal_transformer.layers.1.1.k_scale
+visual_transformer.enc_temporal_transformer.layers.1.1.norm.gamma
+visual_transformer.enc_temporal_transformer.layers.1.1.context_norm.gamma
+visual_transformer.enc_temporal_transformer.layers.1.1.to_q.weight
+visual_transformer.enc_temporal_transformer.layers.1.1.to_kv.weight
+visual_transformer.enc_temporal_transformer.layers.1.1.to_out.weight
+visual_transformer.enc_temporal_transformer.layers.1.3.0.weight
+visual_transformer.enc_temporal_transformer.layers.1.3.0.bias
+visual_transformer.enc_temporal_transformer.layers.1.3.1.weight
+visual_transformer.enc_temporal_transformer.layers.1.3.4.weight
+visual_transformer.enc_temporal_transformer.layers.2.0.dsconv.weight
+visual_transformer.enc_temporal_transformer.layers.2.0.dsconv.bias
+visual_transformer.enc_temporal_transformer.layers.2.1.null_kv
+visual_transformer.enc_temporal_transformer.layers.2.1.q_scale
+visual_transformer.enc_temporal_transformer.layers.2.1.k_scale
+visual_transformer.enc_temporal_transformer.layers.2.1.norm.gamma
+visual_transformer.enc_temporal_transformer.layers.2.1.context_norm.gamma
+visual_transformer.enc_temporal_transformer.layers.2.1.to_q.weight
+visual_transformer.enc_temporal_transformer.layers.2.1.to_kv.weight
+visual_transformer.enc_temporal_transformer.layers.2.1.to_out.weight
+visual_transformer.enc_temporal_transformer.layers.2.3.0.weight
+visual_transformer.enc_temporal_transformer.layers.2.3.0.bias
+visual_transformer.enc_temporal_transformer.layers.2.3.1.weight
+visual_transformer.enc_temporal_transformer.layers.2.3.4.weight
+visual_transformer.enc_temporal_transformer.layers.3.0.dsconv.weight
+visual_transformer.enc_temporal_transformer.layers.3.0.dsconv.bias
+visual_transformer.enc_temporal_transformer.layers.3.1.null_kv
+visual_transformer.enc_temporal_transformer.layers.3.1.q_scale
+visual_transformer.enc_temporal_transformer.layers.3.1.k_scale
+visual_transformer.enc_temporal_transformer.layers.3.1.norm.gamma
+visual_transformer.enc_temporal_transformer.layers.3.1.context_norm.gamma
+visual_transformer.enc_temporal_transformer.layers.3.1.to_q.weight
+visual_transformer.enc_temporal_transformer.layers.3.1.to_kv.weight
+visual_transformer.enc_temporal_transformer.layers.3.1.to_out.weight
+visual_transformer.enc_temporal_transformer.layers.3.3.0.weight
+visual_transformer.enc_temporal_transformer.layers.3.3.0.bias
+visual_transformer.enc_temporal_transformer.layers.3.3.1.weight
+visual_transformer.enc_temporal_transformer.layers.3.3.4.weight
+visual_transformer.enc_temporal_transformer.norm_out.gamma
+visual_transformer.to_pixels_first_frame.0.weight
+visual_transformer.to_pixels_first_frame.0.bias
+visual_transformer.to_pixels.0.weight
+visual_transformer.to_pixels.0.bias
+fusion_module.layers.0.multihead_attn.in_proj_weight
+fusion_module.layers.0.multihead_attn.in_proj_bias
+fusion_module.layers.0.multihead_attn.out_proj.weight
+fusion_module.layers.0.multihead_attn.out_proj.bias
+fusion_module.layers.0.linear1.weight
+fusion_module.layers.0.linear1.bias
+fusion_module.layers.0.linear2.weight
+fusion_module.layers.0.linear2.bias
+fusion_module.layers.0.norm1.weight
+fusion_module.layers.0.norm1.bias
+fusion_module.layers.0.norm2.weight
+fusion_module.layers.0.norm2.bias
+fusion_module.layers.0.norm3.weight
+fusion_module.layers.0.norm3.bias
+fusion_module.layers.1.multihead_attn.in_proj_weight
+fusion_module.layers.1.multihead_attn.in_proj_bias
+fusion_module.layers.1.multihead_attn.out_proj.weight
+fusion_module.layers.1.multihead_attn.out_proj.bias
+fusion_module.layers.1.linear1.weight
+fusion_module.layers.1.linear1.bias
+fusion_module.layers.1.linear2.weight
+fusion_module.layers.1.linear2.bias
+fusion_module.layers.1.norm1.weight
+fusion_module.layers.1.norm1.bias
+fusion_module.layers.1.norm2.weight
+fusion_module.layers.1.norm2.bias
+fusion_module.layers.1.norm3.weight
+fusion_module.layers.1.norm3.bias
+fusion_module.layers.2.multihead_attn.in_proj_weight
+fusion_module.layers.2.multihead_attn.in_proj_bias
+fusion_module.layers.2.multihead_attn.out_proj.weight
+fusion_module.layers.2.multihead_attn.out_proj.bias
+fusion_module.layers.2.linear1.weight
+fusion_module.layers.2.linear1.bias
+fusion_module.layers.2.linear2.weight
+fusion_module.layers.2.linear2.bias
+fusion_module.layers.2.norm1.weight
+fusion_module.layers.2.norm1.bias
+fusion_module.layers.2.norm2.weight
+fusion_module.layers.2.norm2.bias
+fusion_module.layers.2.norm3.weight
+fusion_module.layers.2.norm3.bias
+fusion_module.layers.3.multihead_attn.in_proj_weight
+fusion_module.layers.3.multihead_attn.in_proj_bias
+fusion_module.layers.3.multihead_attn.out_proj.weight
+fusion_module.layers.3.multihead_attn.out_proj.bias
+fusion_module.layers.3.linear1.weight
+fusion_module.layers.3.linear1.bias
+fusion_module.layers.3.linear2.weight
+fusion_module.layers.3.linear2.bias
+fusion_module.layers.3.norm1.weight
+fusion_module.layers.3.norm1.bias
+fusion_module.layers.3.norm2.weight
+fusion_module.layers.3.norm2.bias
+fusion_module.layers.3.norm3.weight
+fusion_module.layers.3.norm3.bias
+fusion_module.layers.4.multihead_attn.in_proj_weight
+fusion_module.layers.4.multihead_attn.in_proj_bias
+fusion_module.layers.4.multihead_attn.out_proj.weight
+fusion_module.layers.4.multihead_attn.out_proj.bias
+fusion_module.layers.4.linear1.weight
+fusion_module.layers.4.linear1.bias
+fusion_module.layers.4.linear2.weight
+fusion_module.layers.4.linear2.bias
+fusion_module.layers.4.norm1.weight
+fusion_module.layers.4.norm1.bias
+fusion_module.layers.4.norm2.weight
+fusion_module.layers.4.norm2.bias
+fusion_module.layers.4.norm3.weight
+fusion_module.layers.4.norm3.bias
+fusion_module.layers.5.multihead_attn.in_proj_weight
+fusion_module.layers.5.multihead_attn.in_proj_bias
+fusion_module.layers.5.multihead_attn.out_proj.weight
+fusion_module.layers.5.multihead_attn.out_proj.bias
+fusion_module.layers.5.linear1.weight
+fusion_module.layers.5.linear1.bias
+fusion_module.layers.5.linear2.weight
+fusion_module.layers.5.linear2.bias
+fusion_module.layers.5.norm1.weight
+fusion_module.layers.5.norm1.bias
+fusion_module.layers.5.norm2.weight
+fusion_module.layers.5.norm2.bias
+fusion_module.layers.5.norm3.weight
+fusion_module.layers.5.norm3.bias
+fusion_module.norm.weight
+fusion_module.norm.bias
+to_visual_latent.weight
+Start Training
+[rank0]: Traceback (most recent call last):
+[rank0]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/scripts/run_train_CXR_CT.py", line 324, in <module>
+[rank0]:     trainer.train(config.evaluate_before_train)
+[rank0]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/scripts/CTCLIPTrainer_CXR_CT.py", line 893, in train
+[rank0]:     self.train_step()
+[rank0]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/scripts/CTCLIPTrainer_CXR_CT.py", line 752, in train_step
+[rank0]:     loss, triplet_loss, infoNCE_loss, valid_triplet_count = self.CTClip(text_tokens, video, gt_similarity_matrix=similarity_tab, return_loss=True, device=device)
+[rank0]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+[rank0]:     return self._call_impl(*args, **kwargs)
+[rank0]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+[rank0]:     return forward_call(*args, **kwargs)
+[rank0]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/parallel/distributed.py", line 1643, in forward
+[rank0]:     else self._run_ddp_forward(*inputs, **kwargs)
+[rank0]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/parallel/distributed.py", line 1459, in _run_ddp_forward
+[rank0]:     return self.module(*inputs, **kwargs)  # type: ignore[index]
+[rank0]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+[rank0]:     return self._call_impl(*args, **kwargs)
+[rank0]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+[rank0]:     return forward_call(*args, **kwargs)
+[rank0]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/accelerate/utils/operations.py", line 818, in forward
+[rank0]:     return model_forward(*args, **kwargs)
+[rank0]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/accelerate/utils/operations.py", line 806, in __call__
+[rank0]:     return convert_to_fp32(self.model_forward(*args, **kwargs))
+[rank0]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/amp/autocast_mode.py", line 44, in decorate_autocast
+[rank0]:     return func(*args, **kwargs)
+[rank0]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/CT_CLIP/ct_clip/ct_clip.py", line 793, in forward
+[rank0]:     enc_image = self.visual_transformer(image, return_encoded_tokens=True)   # B*N 24 24 24 512(vis_dim)
+[rank0]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+[rank0]:     return self._call_impl(*args, **kwargs)
+[rank0]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+[rank0]:     return forward_call(*args, **kwargs)
+[rank0]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/transformer_maskgit/transformer_maskgit/ctvit.py", line 392, in forward
+[rank0]:     tokens = self.encode(tokens)
+[rank0]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/transformer_maskgit/transformer_maskgit/ctvit.py", line 295, in encode
+[rank0]:     tokens = self.enc_spatial_transformer(tokens, attn_bias = attn_bias, video_shape = video_shape)
+[rank0]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+[rank0]:     return self._call_impl(*args, **kwargs)
+[rank0]: Traceback (most recent call last):
+[rank0]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/scripts/run_train_CXR_CT.py", line 324, in <module>
+[rank0]:     trainer.train(config.evaluate_before_train)
+[rank0]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/scripts/CTCLIPTrainer_CXR_CT.py", line 893, in train
+[rank0]:     self.train_step()
+[rank0]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/scripts/CTCLIPTrainer_CXR_CT.py", line 752, in train_step
+[rank0]:     loss, triplet_loss, infoNCE_loss, valid_triplet_count = self.CTClip(text_tokens, video, gt_similarity_matrix=similarity_tab, return_loss=True, device=device)
+[rank0]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+[rank0]:     return self._call_impl(*args, **kwargs)
+[rank0]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+[rank0]:     return forward_call(*args, **kwargs)
+[rank0]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/parallel/distributed.py", line 1643, in forward
+[rank0]:     else self._run_ddp_forward(*inputs, **kwargs)
+[rank0]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/parallel/distributed.py", line 1459, in _run_ddp_forward
+[rank0]:     return self.module(*inputs, **kwargs)  # type: ignore[index]
+[rank0]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+[rank0]:     return self._call_impl(*args, **kwargs)
+[rank0]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+[rank0]:     return forward_call(*args, **kwargs)
+[rank0]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/accelerate/utils/operations.py", line 818, in forward
+[rank0]:     return model_forward(*args, **kwargs)
+[rank0]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/accelerate/utils/operations.py", line 806, in __call__
+[rank0]:     return convert_to_fp32(self.model_forward(*args, **kwargs))
+[rank0]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/amp/autocast_mode.py", line 44, in decorate_autocast
+[rank0]:     return func(*args, **kwargs)
+[rank0]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/CT_CLIP/ct_clip/ct_clip.py", line 793, in forward
+[rank0]:     enc_image = self.visual_transformer(image, return_encoded_tokens=True)   # B*N 24 24 24 512(vis_dim)
+[rank0]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+[rank0]:     return self._call_impl(*args, **kwargs)
+[rank0]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+[rank0]:     return forward_call(*args, **kwargs)
+[rank0]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/transformer_maskgit/transformer_maskgit/ctvit.py", line 392, in forward
+[rank0]:     tokens = self.encode(tokens)
+[rank0]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/transformer_maskgit/transformer_maskgit/ctvit.py", line 307, in encode
+[rank0]:     tokens = self.enc_temporal_transformer(tokens, video_shape = video_shape)
+[rank0]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+[rank0]:     return self._call_impl(*args, **kwargs)
+[rank0]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+[rank0]:     return forward_call(*args, **kwargs)
+[rank0]:   File "<@beartype(transformer_maskgit.attention.Transformer.forward) at 0x7f406ae72ee0>", line 48, in forward
+[rank0]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/transformer_maskgit/transformer_maskgit/attention.py", line 326, in forward
+[rank0]:     x = self_attn(x, attn_bias = attn_bias, mask = self_attn_mask) + x
+[rank0]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+[rank0]:     return self._call_impl(*args, **kwargs)
+[rank0]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+[rank0]:     return forward_call(*args, **kwargs)
+[rank0]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/transformer_maskgit/transformer_maskgit/attention.py", line 156, in forward
+[rank0]:     sim = einsum('b h i d, b h j d -> b h i j', q, k) * self.scale
+[rank0]: RuntimeError: CUDA driver error: invalid argument
+[rank0]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+[rank0]:     return forward_call(*args, **kwargs)
+[rank0]:   File "<@beartype(transformer_maskgit.attention.Transformer.forward) at 0x7f6e77b4eee0>", line 48, in forward
+[rank0]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/transformer_maskgit/transformer_maskgit/attention.py", line 326, in forward
+[rank0]:     x = self_attn(x, attn_bias = attn_bias, mask = self_attn_mask) + x
+[rank0]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+[rank0]:     return self._call_impl(*args, **kwargs)
+[rank0]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+[rank0]:     return forward_call(*args, **kwargs)
+[rank0]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/transformer_maskgit/transformer_maskgit/attention.py", line 152, in forward
+[rank0]:     q, k = map(l2norm, (q, k))
+[rank0]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/transformer_maskgit/transformer_maskgit/attention.py", line 23, in l2norm
+[rank0]:     return F.normalize(t, dim = -1)
+[rank0]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/functional.py", line 5487, in normalize
+[rank0]:     return input / denom
+[rank0]: RuntimeError: CUDA driver error: invalid argument
+[rank3]: Traceback (most recent call last):
+[rank3]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/scripts/run_train_CXR_CT.py", line 324, in <module>
+[rank3]:     trainer.train(config.evaluate_before_train)
+[rank3]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/scripts/CTCLIPTrainer_CXR_CT.py", line 893, in train
+[rank3]:     self.train_step()
+[rank3]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/scripts/CTCLIPTrainer_CXR_CT.py", line 752, in train_step
+[rank3]:     loss, triplet_loss, infoNCE_loss, valid_triplet_count = self.CTClip(text_tokens, video, gt_similarity_matrix=similarity_tab, return_loss=True, device=device)
+[rank3]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+[rank3]:     return self._call_impl(*args, **kwargs)
+[rank3]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+[rank3]:     return forward_call(*args, **kwargs)
+[rank3]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/parallel/distributed.py", line 1643, in forward
+[rank3]:     else self._run_ddp_forward(*inputs, **kwargs)
+[rank3]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/parallel/distributed.py", line 1459, in _run_ddp_forward
+[rank3]:     return self.module(*inputs, **kwargs)  # type: ignore[index]
+[rank3]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+[rank3]:     return self._call_impl(*args, **kwargs)
+[rank3]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+[rank3]:     return forward_call(*args, **kwargs)
+[rank3]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/accelerate/utils/operations.py", line 818, in forward
+[rank3]:     return model_forward(*args, **kwargs)
+[rank3]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/accelerate/utils/operations.py", line 806, in __call__
+[rank3]:     return convert_to_fp32(self.model_forward(*args, **kwargs))
+[rank3]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/amp/autocast_mode.py", line 44, in decorate_autocast
+[rank3]:     return func(*args, **kwargs)
+[rank3]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/CT_CLIP/ct_clip/ct_clip.py", line 793, in forward
+[rank3]:     enc_image = self.visual_transformer(image, return_encoded_tokens=True)   # B*N 24 24 24 512(vis_dim)
+[rank3]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+[rank3]:     return self._call_impl(*args, **kwargs)
+[rank3]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+[rank3]:     return forward_call(*args, **kwargs)
+[rank3]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/transformer_maskgit/transformer_maskgit/ctvit.py", line 402, in forward
+[rank3]:     tokens, indices, commit_loss = self.vq(tokens, mask = vq_mask)
+[rank3]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+[rank3]:     return self._call_impl(*args, **kwargs)
+[rank3]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+[rank3]:     return forward_call(*args, **kwargs)
+[rank3]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/vector_quantize_pytorch/vector_quantize_pytorch.py", line 569, in forward
+[rank3]:     quantize, embed_ind = self._codebook(x)
+[rank3]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+[rank3]:     return self._call_impl(*args, **kwargs)
+[rank3]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+[rank3]:     return forward_call(*args, **kwargs)
+[rank3]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/amp/autocast_mode.py", line 44, in decorate_autocast
+[rank3]:     return func(*args, **kwargs)
+[rank3]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/vector_quantize_pytorch/vector_quantize_pytorch.py", line 413, in forward
+[rank3]:     embed_onehot = F.one_hot(embed_ind, self.codebook_size).type(dtype)
+[rank3]: RuntimeError: CUDA driver error: invalid argument
+[rank3]: Traceback (most recent call last):
+[rank3]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/scripts/run_train_CXR_CT.py", line 324, in <module>
+[rank3]:     trainer.train(config.evaluate_before_train)
+[rank3]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/scripts/CTCLIPTrainer_CXR_CT.py", line 893, in train
+[rank3]:     self.train_step()
+[rank3]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/scripts/CTCLIPTrainer_CXR_CT.py", line 752, in train_step
+[rank3]:     loss, triplet_loss, infoNCE_loss, valid_triplet_count = self.CTClip(text_tokens, video, gt_similarity_matrix=similarity_tab, return_loss=True, device=device)
+[rank3]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+[rank3]:     return self._call_impl(*args, **kwargs)
+[rank3]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+[rank3]:     return forward_call(*args, **kwargs)
+[rank3]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/parallel/distributed.py", line 1643, in forward
+[rank3]:     else self._run_ddp_forward(*inputs, **kwargs)
+[rank3]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/parallel/distributed.py", line 1459, in _run_ddp_forward
+[rank3]:     return self.module(*inputs, **kwargs)  # type: ignore[index]
+[rank3]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+[rank3]:     return self._call_impl(*args, **kwargs)
+[rank3]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+[rank3]:     return forward_call(*args, **kwargs)
+[rank3]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/accelerate/utils/operations.py", line 818, in forward
+[rank3]:     return model_forward(*args, **kwargs)
+[rank3]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/accelerate/utils/operations.py", line 806, in __call__
+[rank3]:     return convert_to_fp32(self.model_forward(*args, **kwargs))
+[rank3]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/amp/autocast_mode.py", line 44, in decorate_autocast
+[rank3]:     return func(*args, **kwargs)
+[rank3]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/CT_CLIP/ct_clip/ct_clip.py", line 793, in forward
+[rank3]:     enc_image = self.visual_transformer(image, return_encoded_tokens=True)   # B*N 24 24 24 512(vis_dim)
+[rank3]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+[rank3]:     return self._call_impl(*args, **kwargs)
+[rank3]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+[rank3]:     return forward_call(*args, **kwargs)
+[rank3]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/transformer_maskgit/transformer_maskgit/ctvit.py", line 392, in forward
+[rank3]:     tokens = self.encode(tokens)
+[rank3]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/transformer_maskgit/transformer_maskgit/ctvit.py", line 295, in encode
+[rank3]:     tokens = self.enc_spatial_transformer(tokens, attn_bias = attn_bias, video_shape = video_shape)
+[rank3]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+[rank3]:     return self._call_impl(*args, **kwargs)
+[rank3]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+[rank3]:     return forward_call(*args, **kwargs)
+[rank3]:   File "<@beartype(transformer_maskgit.attention.Transformer.forward) at 0x7f65bb742ee0>", line 48, in forward
+[rank3]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/transformer_maskgit/transformer_maskgit/attention.py", line 326, in forward
+[rank3]:     x = self_attn(x, attn_bias = attn_bias, mask = self_attn_mask) + x
+[rank3]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+[rank3]:     return self._call_impl(*args, **kwargs)
+[rank3]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+[rank3]:     return forward_call(*args, **kwargs)
+[rank3]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/transformer_maskgit/transformer_maskgit/attention.py", line 178, in forward
+[rank3]:     out = einsum('b h i j, b h j d -> b h i d', attn, v)
+[rank3]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/functional.py", line 407, in einsum
+[rank3]:     return _VF.einsum(equation, operands)  # type: ignore[attr-defined]
+[rank3]: RuntimeError: CUDA driver error: invalid argument
+[rank1]: Traceback (most recent call last):
+[rank1]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/scripts/run_train_CXR_CT.py", line 324, in <module>
+[rank1]:     trainer.train(config.evaluate_before_train)
+[rank1]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/scripts/CTCLIPTrainer_CXR_CT.py", line 893, in train
+[rank1]:     self.train_step()
+[rank1]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/scripts/CTCLIPTrainer_CXR_CT.py", line 752, in train_step
+[rank1]:     loss, triplet_loss, infoNCE_loss, valid_triplet_count = self.CTClip(text_tokens, video, gt_similarity_matrix=similarity_tab, return_loss=True, device=device)
+[rank1]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+[rank1]:     return self._call_impl(*args, **kwargs)
+[rank1]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+[rank1]:     return forward_call(*args, **kwargs)
+[rank1]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/parallel/distributed.py", line 1643, in forward
+[rank1]:     else self._run_ddp_forward(*inputs, **kwargs)
+[rank1]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/parallel/distributed.py", line 1459, in _run_ddp_forward
+[rank1]:     return self.module(*inputs, **kwargs)  # type: ignore[index]
+[rank1]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+[rank1]:     return self._call_impl(*args, **kwargs)
+[rank1]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+[rank1]:     return forward_call(*args, **kwargs)
+[rank1]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/accelerate/utils/operations.py", line 818, in forward
+[rank1]:     return model_forward(*args, **kwargs)
+[rank1]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/accelerate/utils/operations.py", line 806, in __call__
+[rank1]:     return convert_to_fp32(self.model_forward(*args, **kwargs))
+[rank1]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/amp/autocast_mode.py", line 44, in decorate_autocast
+[rank1]:     return func(*args, **kwargs)
+[rank1]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/CT_CLIP/ct_clip/ct_clip.py", line 793, in forward
+[rank1]:     enc_image = self.visual_transformer(image, return_encoded_tokens=True)   # B*N 24 24 24 512(vis_dim)
+[rank1]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+[rank1]:     return self._call_impl(*args, **kwargs)
+[rank1]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+[rank1]:     return forward_call(*args, **kwargs)
+[rank1]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/transformer_maskgit/transformer_maskgit/ctvit.py", line 392, in forward
+[rank1]:     tokens = self.encode(tokens)
+[rank1]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/transformer_maskgit/transformer_maskgit/ctvit.py", line 295, in encode
+[rank1]:     tokens = self.enc_spatial_transformer(tokens, attn_bias = attn_bias, video_shape = video_shape)
+[rank1]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+[rank1]:     return self._call_impl(*args, **kwargs)
+[rank1]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+[rank1]:     return forward_call(*args, **kwargs)
+[rank1]:   File "<@beartype(transformer_maskgit.attention.Transformer.forward) at 0x7f7c49b9cee0>", line 48, in forward
+[rank1]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/transformer_maskgit/transformer_maskgit/attention.py", line 326, in forward
+[rank1]:     x = self_attn(x, attn_bias = attn_bias, mask = self_attn_mask) + x
+[rank1]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+[rank1]:     return self._call_impl(*args, **kwargs)
+[rank1]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+[rank1]:     return forward_call(*args, **kwargs)
+[rank1]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/transformer_maskgit/transformer_maskgit/attention.py", line 175, in forward
+[rank1]:     attn = sim.softmax(dim = -1)
+[rank1]: RuntimeError: CUDA driver error: invalid argument
+[rank1]: Traceback (most recent call last):
+[rank1]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/scripts/run_train_CXR_CT.py", line 324, in <module>
+[rank1]:     trainer.train(config.evaluate_before_train)
+[rank1]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/scripts/CTCLIPTrainer_CXR_CT.py", line 893, in train
+[rank1]:     self.train_step()
+[rank1]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/scripts/CTCLIPTrainer_CXR_CT.py", line 752, in train_step
+[rank1]:     loss, triplet_loss, infoNCE_loss, valid_triplet_count = self.CTClip(text_tokens, video, gt_similarity_matrix=similarity_tab, return_loss=True, device=device)
+[rank1]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+[rank1]:     return self._call_impl(*args, **kwargs)
+[rank1]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+[rank1]:     return forward_call(*args, **kwargs)
+[rank1]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/parallel/distributed.py", line 1643, in forward
+[rank1]:     else self._run_ddp_forward(*inputs, **kwargs)
+[rank1]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/parallel/distributed.py", line 1459, in _run_ddp_forward
+[rank1]:     return self.module(*inputs, **kwargs)  # type: ignore[index]
+[rank1]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+[rank1]:     return self._call_impl(*args, **kwargs)
+[rank1]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+[rank1]:     return forward_call(*args, **kwargs)
+[rank1]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/accelerate/utils/operations.py", line 818, in forward
+[rank1]:     return model_forward(*args, **kwargs)
+[rank1]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/accelerate/utils/operations.py", line 806, in __call__
+[rank1]:     return convert_to_fp32(self.model_forward(*args, **kwargs))
+[rank1]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/amp/autocast_mode.py", line 44, in decorate_autocast
+[rank1]:     return func(*args, **kwargs)
+[rank1]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/CT_CLIP/ct_clip/ct_clip.py", line 793, in forward
+[rank1]:     enc_image = self.visual_transformer(image, return_encoded_tokens=True)   # B*N 24 24 24 512(vis_dim)
+[rank1]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+[rank1]:     return self._call_impl(*args, **kwargs)
+[rank1]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+[rank1]:     return forward_call(*args, **kwargs)
+[rank1]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/transformer_maskgit/transformer_maskgit/ctvit.py", line 392, in forward
+[rank1]:     tokens = self.encode(tokens)
+[rank1]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/transformer_maskgit/transformer_maskgit/ctvit.py", line 307, in encode
+[rank1]:     tokens = self.enc_temporal_transformer(tokens, video_shape = video_shape)
+[rank1]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+[rank1]:     return self._call_impl(*args, **kwargs)
+[rank1]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+[rank1]:     return forward_call(*args, **kwargs)
+[rank1]:   File "<@beartype(transformer_maskgit.attention.Transformer.forward) at 0x7f0b6426dee0>", line 48, in forward
+[rank1]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/transformer_maskgit/transformer_maskgit/attention.py", line 331, in forward
+[rank1]:     x = ff(x) + x
+[rank1]: RuntimeError: CUDA driver error: invalid argument
+[rank2]: Traceback (most recent call last):
+[rank2]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/scripts/run_train_CXR_CT.py", line 324, in <module>
+[rank2]:     trainer.train(config.evaluate_before_train)
+[rank2]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/scripts/CTCLIPTrainer_CXR_CT.py", line 893, in train
+[rank2]:     self.train_step()
+[rank2]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/scripts/CTCLIPTrainer_CXR_CT.py", line 752, in train_step
+[rank2]:     loss, triplet_loss, infoNCE_loss, valid_triplet_count = self.CTClip(text_tokens, video, gt_similarity_matrix=similarity_tab, return_loss=True, device=device)
+[rank2]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+[rank2]:     return self._call_impl(*args, **kwargs)
+[rank2]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+[rank2]:     return forward_call(*args, **kwargs)
+[rank2]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/parallel/distributed.py", line 1643, in forward
+[rank2]:     else self._run_ddp_forward(*inputs, **kwargs)
+[rank2]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/parallel/distributed.py", line 1459, in _run_ddp_forward
+[rank2]:     return self.module(*inputs, **kwargs)  # type: ignore[index]
+[rank2]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+[rank2]:     return self._call_impl(*args, **kwargs)
+[rank2]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+[rank2]:     return forward_call(*args, **kwargs)
+[rank2]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/accelerate/utils/operations.py", line 818, in forward
+[rank2]:     return model_forward(*args, **kwargs)
+[rank2]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/accelerate/utils/operations.py", line 806, in __call__
+[rank2]:     return convert_to_fp32(self.model_forward(*args, **kwargs))
+[rank2]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/amp/autocast_mode.py", line 44, in decorate_autocast
+[rank2]:     return func(*args, **kwargs)
+[rank2]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/CT_CLIP/ct_clip/ct_clip.py", line 793, in forward
+[rank2]:     enc_image = self.visual_transformer(image, return_encoded_tokens=True)   # B*N 24 24 24 512(vis_dim)
+[rank2]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+[rank2]:     return self._call_impl(*args, **kwargs)
+[rank2]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+[rank2]:     return forward_call(*args, **kwargs)
+[rank2]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/transformer_maskgit/transformer_maskgit/ctvit.py", line 392, in forward
+[rank2]:     tokens = self.encode(tokens)
+[rank2]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/transformer_maskgit/transformer_maskgit/ctvit.py", line 307, in encode
+[rank2]:     tokens = self.enc_temporal_transformer(tokens, video_shape = video_shape)
+[rank2]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+[rank2]:     return self._call_impl(*args, **kwargs)
+[rank2]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+[rank2]:     return forward_call(*args, **kwargs)
+[rank2]:   File "<@beartype(transformer_maskgit.attention.Transformer.forward) at 0x7f9ca9b76ee0>", line 48, in forward
+[rank2]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/transformer_maskgit/transformer_maskgit/attention.py", line 331, in forward
+[rank2]:     x = ff(x) + x
+[rank2]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+[rank2]:     return self._call_impl(*args, **kwargs)
+[rank2]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+[rank2]:     return forward_call(*args, **kwargs)
+[rank2]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/container.py", line 250, in forward
+[rank2]:     input = module(input)
+[rank2]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+[rank2]:     return self._call_impl(*args, **kwargs)
+[rank2]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+[rank2]:     return forward_call(*args, **kwargs)
+[rank2]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/transformer_maskgit/transformer_maskgit/attention.py", line 42, in forward
+[rank2]:     return F.gelu(gate) * x
+[rank2]: RuntimeError: CUDA driver error: invalid argument
+[rank2]: Traceback (most recent call last):
+[rank2]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/scripts/run_train_CXR_CT.py", line 324, in <module>
+[rank2]:     trainer.train(config.evaluate_before_train)
+[rank2]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/scripts/CTCLIPTrainer_CXR_CT.py", line 893, in train
+[rank2]:     self.train_step()
+[rank2]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/scripts/CTCLIPTrainer_CXR_CT.py", line 752, in train_step
+[rank2]:     loss, triplet_loss, infoNCE_loss, valid_triplet_count = self.CTClip(text_tokens, video, gt_similarity_matrix=similarity_tab, return_loss=True, device=device)
+[rank2]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+[rank2]:     return self._call_impl(*args, **kwargs)
+[rank2]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+[rank2]:     return forward_call(*args, **kwargs)
+[rank2]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/parallel/distributed.py", line 1643, in forward
+[rank2]:     else self._run_ddp_forward(*inputs, **kwargs)
+[rank2]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/parallel/distributed.py", line 1459, in _run_ddp_forward
+[rank2]:     return self.module(*inputs, **kwargs)  # type: ignore[index]
+[rank2]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+[rank2]:     return self._call_impl(*args, **kwargs)
+[rank2]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+[rank2]:     return forward_call(*args, **kwargs)
+[rank2]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/accelerate/utils/operations.py", line 818, in forward
+[rank2]:     return model_forward(*args, **kwargs)
+[rank2]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/accelerate/utils/operations.py", line 806, in __call__
+[rank2]:     return convert_to_fp32(self.model_forward(*args, **kwargs))
+[rank2]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/amp/autocast_mode.py", line 44, in decorate_autocast
+[rank2]:     return func(*args, **kwargs)
+[rank2]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/CT_CLIP/ct_clip/ct_clip.py", line 793, in forward
+[rank2]:     enc_image = self.visual_transformer(image, return_encoded_tokens=True)   # B*N 24 24 24 512(vis_dim)
+[rank2]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+[rank2]:     return self._call_impl(*args, **kwargs)
+[rank2]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+[rank2]:     return forward_call(*args, **kwargs)
+[rank2]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/transformer_maskgit/transformer_maskgit/ctvit.py", line 392, in forward
+[rank2]:     tokens = self.encode(tokens)
+[rank2]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/transformer_maskgit/transformer_maskgit/ctvit.py", line 295, in encode
+[rank2]:     tokens = self.enc_spatial_transformer(tokens, attn_bias = attn_bias, video_shape = video_shape)
+[rank2]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+[rank2]:     return self._call_impl(*args, **kwargs)
+[rank2]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+[rank2]:     return forward_call(*args, **kwargs)
+[rank2]:   File "<@beartype(transformer_maskgit.attention.Transformer.forward) at 0x7f15f7fafee0>", line 48, in forward
+[rank2]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/transformer_maskgit/transformer_maskgit/attention.py", line 326, in forward
+[rank2]:     x = self_attn(x, attn_bias = attn_bias, mask = self_attn_mask) + x
+[rank2]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+[rank2]:     return self._call_impl(*args, **kwargs)
+[rank2]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+[rank2]:     return forward_call(*args, **kwargs)
+[rank2]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/transformer_maskgit/transformer_maskgit/attention.py", line 156, in forward
+[rank2]:     sim = einsum('b h i d, b h j d -> b h i j', q, k) * self.scale
+[rank2]: RuntimeError: CUDA driver error: invalid argument
+[rank3]: Traceback (most recent call last):
+[rank3]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/scripts/run_train_CXR_CT.py", line 324, in <module>
+[rank3]:     trainer.train(config.evaluate_before_train)
+[rank3]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/scripts/CTCLIPTrainer_CXR_CT.py", line 893, in train
+[rank3]:     self.train_step()
+[rank3]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/scripts/CTCLIPTrainer_CXR_CT.py", line 743, in train_step
+[rank3]:     video=video.to(device)
+[rank3]: RuntimeError: CUDA driver error: invalid argument
+[rank0]:[W723 14:42:21.173883823 ProcessGroupNCCL.cpp:1496] Warning: WARNING: destroy_process_group() was not called before program exit, which can leak resources. For more info, please see https://pytorch.org/docs/stable/distributed.html#shutdown (function operator())
+[rank0]:[W723 14:42:22.427611145 ProcessGroupNCCL.cpp:1496] Warning: WARNING: destroy_process_group() was not called before program exit, which can leak resources. For more info, please see https://pytorch.org/docs/stable/distributed.html#shutdown (function operator())
+[rank0]:[E723 14:42:25.956381398 ProcessGroupGloo.cpp:3027] [Rank 0]: Rank 3 failed to pass monitoredBarrier in 36000000 ms
+[rank0]:[E723 14:42:25.956430866 ProcessGroupGloo.cpp:145] [Rank 0]: Ranks 3 failed to pass monitoredBarrier in 36000000 ms
+[rank0]: Traceback (most recent call last):
+[rank0]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/scripts/run_train_CXR_CT.py", line 324, in <module>
+[rank0]:     trainer.train(config.evaluate_before_train)
+[rank0]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/scripts/CTCLIPTrainer_CXR_CT.py", line 893, in train
+[rank0]:     self.train_step()
+[rank0]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/scripts/CTCLIPTrainer_CXR_CT.py", line 752, in train_step
+[rank0]:     loss, triplet_loss, infoNCE_loss, valid_triplet_count = self.CTClip(text_tokens, video, gt_similarity_matrix=similarity_tab, return_loss=True, device=device)
+[rank0]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+[rank0]:     return self._call_impl(*args, **kwargs)
+[rank0]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+[rank0]:     return forward_call(*args, **kwargs)
+[rank0]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/parallel/distributed.py", line 1639, in forward
+[rank0]:     inputs, kwargs = self._pre_forward(*inputs, **kwargs)
+[rank0]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/parallel/distributed.py", line 1535, in _pre_forward
+[rank0]:     self._sync_buffers()
+[rank0]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/parallel/distributed.py", line 2172, in _sync_buffers
+[rank0]:     self._sync_module_buffers(authoritative_rank)
+[rank0]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/parallel/distributed.py", line 2176, in _sync_module_buffers
+[rank0]:     self._default_broadcast_coalesced(authoritative_rank=authoritative_rank)
+[rank0]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/parallel/distributed.py", line 2198, in _default_broadcast_coalesced
+[rank0]:     self._distributed_broadcast_coalesced(bufs, bucket_size, authoritative_rank)
+[rank0]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/parallel/distributed.py", line 2113, in _distributed_broadcast_coalesced
+[rank0]:     dist._broadcast_coalesced(
+[rank0]: RuntimeError: [Rank 0]: Ranks 3 failed to pass monitoredBarrier in 36000000 ms
+[rank0]:[W723 14:42:30.025173670 ProcessGroupNCCL.cpp:1496] Warning: WARNING: destroy_process_group() was not called before program exit, which can leak resources. For more info, please see https://pytorch.org/docs/stable/distributed.html#shutdown (function operator())
+[rank1]:[E723 14:42:30.033577213 ProcessGroupGloo.cpp:145] Rank 1 successfully reached monitoredBarrier, but received errors while waiting for send/recv from rank 0. Please check rank 0 logs for faulty rank.
+[rank2]:[E723 14:42:30.085292458 ProcessGroupGloo.cpp:145] Rank 2 successfully reached monitoredBarrier, but received errors while waiting for send/recv from rank 0. Please check rank 0 logs for faulty rank.
+[rank2]: Traceback (most recent call last):
+[rank2]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/scripts/run_train_CXR_CT.py", line 324, in <module>
+[rank2]:     trainer.train(config.evaluate_before_train)
+[rank2]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/scripts/CTCLIPTrainer_CXR_CT.py", line 893, in train
+[rank2]:     self.train_step()
+[rank2]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/scripts/CTCLIPTrainer_CXR_CT.py", line 752, in train_step
+[rank2]:     loss, triplet_loss, infoNCE_loss, valid_triplet_count = self.CTClip(text_tokens, video, gt_similarity_matrix=similarity_tab, return_loss=True, device=device)
+[rank2]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+[rank2]:     return self._call_impl(*args, **kwargs)
+[rank2]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+[rank2]:     return forward_call(*args, **kwargs)
+[rank2]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/parallel/distributed.py", line 1639, in forward
+[rank2]:     inputs, kwargs = self._pre_forward(*inputs, **kwargs)
+[rank2]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/parallel/distributed.py", line 1535, in _pre_forward
+[rank2]:     self._sync_buffers()
+[rank2]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/parallel/distributed.py", line 2172, in _sync_buffers
+[rank2]:     self._sync_module_buffers(authoritative_rank)
+[rank2]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/parallel/distributed.py", line 2176, in _sync_module_buffers
+[rank2]:     self._default_broadcast_coalesced(authoritative_rank=authoritative_rank)
+[rank2]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/parallel/distributed.py", line 2198, in _default_broadcast_coalesced
+[rank2]:     self._distributed_broadcast_coalesced(bufs, bucket_size, authoritative_rank)
+[rank2]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/parallel/distributed.py", line 2113, in _distributed_broadcast_coalesced
+[rank2]:     dist._broadcast_coalesced(
+[rank2]: RuntimeError: Rank 2 successfully reached monitoredBarrier, but received errors while waiting for send/recv from rank 0. Please check rank 0 logs for faulty rank.
+[rank2]:  Original exception: 
+[rank2]: [/pytorch/third_party/gloo/gloo/transport/tcp/pair.cc:534] Connection closed by peer [10.140.54.25]:51637
+[rank1]: Traceback (most recent call last):
+[rank1]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/scripts/run_train_CXR_CT.py", line 324, in <module>
+[rank1]:     trainer.train(config.evaluate_before_train)
+[rank1]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/scripts/CTCLIPTrainer_CXR_CT.py", line 893, in train
+[rank1]:     self.train_step()
+[rank1]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/scripts/CTCLIPTrainer_CXR_CT.py", line 752, in train_step
+[rank1]:     loss, triplet_loss, infoNCE_loss, valid_triplet_count = self.CTClip(text_tokens, video, gt_similarity_matrix=similarity_tab, return_loss=True, device=device)
+[rank1]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+[rank1]:     return self._call_impl(*args, **kwargs)
+[rank1]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+[rank1]:     return forward_call(*args, **kwargs)
+[rank1]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/parallel/distributed.py", line 1639, in forward
+[rank1]:     inputs, kwargs = self._pre_forward(*inputs, **kwargs)
+[rank1]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/parallel/distributed.py", line 1535, in _pre_forward
+[rank1]:     self._sync_buffers()
+[rank1]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/parallel/distributed.py", line 2172, in _sync_buffers
+[rank1]:     self._sync_module_buffers(authoritative_rank)
+[rank1]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/parallel/distributed.py", line 2176, in _sync_module_buffers
+[rank1]:     self._default_broadcast_coalesced(authoritative_rank=authoritative_rank)
+[rank1]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/parallel/distributed.py", line 2198, in _default_broadcast_coalesced
+[rank1]:     self._distributed_broadcast_coalesced(bufs, bucket_size, authoritative_rank)
+[rank1]:   File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/nn/parallel/distributed.py", line 2113, in _distributed_broadcast_coalesced
+[rank1]:     dist._broadcast_coalesced(
+[rank1]: RuntimeError: Rank 1 successfully reached monitoredBarrier, but received errors while waiting for send/recv from rank 0. Please check rank 0 logs for faulty rank.
+[rank1]:  Original exception: 
+[rank1]: [/pytorch/third_party/gloo/gloo/transport/tcp/pair.cc:534] Connection closed by peer [10.140.54.25]:30431
+W0723 14:42:39.996969 116253 site-packages/torch/distributed/elastic/multiprocessing/api.py:897] Sending process 120054 closing signal SIGTERM
+W0723 14:42:40.059845 116253 site-packages/torch/distributed/elastic/multiprocessing/api.py:897] Sending process 120056 closing signal SIGTERM
+W0723 14:42:40.060631 116253 site-packages/torch/distributed/elastic/multiprocessing/api.py:897] Sending process 120058 closing signal SIGTERM
+W0723 14:42:40.647115 116254 site-packages/torch/distributed/elastic/multiprocessing/api.py:897] Sending process 120060 closing signal SIGTERM
+W0723 14:42:40.667385 116254 site-packages/torch/distributed/elastic/multiprocessing/api.py:897] Sending process 120064 closing signal SIGTERM
+W0723 14:42:40.668187 116254 site-packages/torch/distributed/elastic/multiprocessing/api.py:897] Sending process 120067 closing signal SIGTERM
+W0723 14:42:41.260703 116256 site-packages/torch/distributed/elastic/multiprocessing/api.py:897] Sending process 120078 closing signal SIGTERM
+W0723 14:42:41.298452 116256 site-packages/torch/distributed/elastic/multiprocessing/api.py:897] Sending process 120081 closing signal SIGTERM
+W0723 14:42:41.300269 116256 site-packages/torch/distributed/elastic/multiprocessing/api.py:897] Sending process 120082 closing signal SIGTERM
+E0723 14:42:45.806866 116256 site-packages/torch/distributed/elastic/multiprocessing/api.py:869] failed (exitcode: 1) local_rank: 3 (pid: 120098) of binary: /mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/bin/python3.9
+Traceback (most recent call last):
+  File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/bin/accelerate", line 8, in <module>
+    sys.exit(main())
+  File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/accelerate/commands/accelerate_cli.py", line 50, in main
+    args.func(args)
+  File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/accelerate/commands/launch.py", line 1190, in launch_command
+    multi_gpu_launcher(args)
+  File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/accelerate/commands/launch.py", line 815, in multi_gpu_launcher
+    distrib_run.run(args)
+  File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/distributed/run.py", line 909, in run
+    elastic_launch(
+  File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/distributed/launcher/api.py", line 138, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+  File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/distributed/launcher/api.py", line 269, in launch_agent
+    raise ChildFailedError(
+torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
+============================================================
+/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/scripts/run_train_CXR_CT.py FAILED
+------------------------------------------------------------
+Failures:
+  <NO_OTHER_FAILURES>
+------------------------------------------------------------
+Root Cause (first observed failure):
+[0]:
+  time      : 2025-07-23_14:42:41
+  host      : SH-IDCA1404-10-140-54-25
+  rank      : 3 (local_rank: 3)
+  exitcode  : 1 (pid: 120098)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+============================================================
+E0723 14:42:46.748733 116253 site-packages/torch/distributed/elastic/multiprocessing/api.py:869] failed (exitcode: 1) local_rank: 1 (pid: 120055) of binary: /mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/bin/python3.9
+Traceback (most recent call last):
+  File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/bin/accelerate", line 8, in <module>
+    sys.exit(main())
+  File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/accelerate/commands/accelerate_cli.py", line 50, in main
+    args.func(args)
+  File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/accelerate/commands/launch.py", line 1190, in launch_command
+    multi_gpu_launcher(args)
+  File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/accelerate/commands/launch.py", line 815, in multi_gpu_launcher
+    distrib_run.run(args)
+  File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/distributed/run.py", line 909, in run
+    elastic_launch(
+  File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/distributed/launcher/api.py", line 138, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+  File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/distributed/launcher/api.py", line 269, in launch_agent
+    raise ChildFailedError(
+torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
+============================================================
+/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/scripts/run_train_CXR_CT.py FAILED
+------------------------------------------------------------
+Failures:
+  <NO_OTHER_FAILURES>
+------------------------------------------------------------
+Root Cause (first observed failure):
+[0]:
+  time      : 2025-07-23_14:42:39
+  host      : SH-IDCA1404-10-140-54-25
+  rank      : 1 (local_rank: 1)
+  exitcode  : 1 (pid: 120055)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+============================================================
+E0723 14:42:47.835684 116254 site-packages/torch/distributed/elastic/multiprocessing/api.py:869] failed (exitcode: 1) local_rank: 3 (pid: 120068) of binary: /mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/bin/python3.9
+Traceback (most recent call last):
+  File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/bin/accelerate", line 8, in <module>
+    sys.exit(main())
+  File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/accelerate/commands/accelerate_cli.py", line 50, in main
+    args.func(args)
+  File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/accelerate/commands/launch.py", line 1190, in launch_command
+    multi_gpu_launcher(args)
+  File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/accelerate/commands/launch.py", line 815, in multi_gpu_launcher
+    distrib_run.run(args)
+  File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/distributed/run.py", line 909, in run
+    elastic_launch(
+  File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/distributed/launcher/api.py", line 138, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+  File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/distributed/launcher/api.py", line 269, in launch_agent
+    raise ChildFailedError(
+torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
+============================================================
+/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/scripts/run_train_CXR_CT.py FAILED
+------------------------------------------------------------
+Failures:
+  <NO_OTHER_FAILURES>
+------------------------------------------------------------
+Root Cause (first observed failure):
+[0]:
+  time      : 2025-07-23_14:42:40
+  host      : SH-IDCA1404-10-140-54-25
+  rank      : 3 (local_rank: 3)
+  exitcode  : 1 (pid: 120068)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+============================================================
+srun: error: SH-IDCA1404-10-140-54-25: task 3: Exited with exit code 1
+srun: error: SH-IDCA1404-10-140-54-25: task 0: Exited with exit code 1
+srun: error: SH-IDCA1404-10-140-54-25: task 2: Exited with exit code 1
+/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/autograd/graph.py:823: UserWarning: Grad strides do not match bucket view strides. This may indicate grad was not created according to the gradient layout contract, or that the param's strides changed since DDP was constructed.  This is not an error, but may impair performance.
+grad.sizes() = [512, 1, 3, 3, 3], strides() = [27, 1, 9, 3, 1]
+bucket_view.sizes() = [512, 1, 3, 3, 3], strides() = [27, 27, 9, 3, 1] (Triggered internally at /pytorch/torch/csrc/distributed/c10d/reducer.cpp:327.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+rank 2 dataset_name CT_RATE
+rank 3 dataset_name CT_RATE
+/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/autograd/graph.py:823: UserWarning: Grad strides do not match bucket view strides. This may indicate grad was not created according to the gradient layout contract, or that the param's strides changed since DDP was constructed.  This is not an error, but may impair performance.
+grad.sizes() = [512, 1, 3, 3, 3], strides() = [27, 1, 9, 3, 1]
+bucket_view.sizes() = [512, 1, 3, 3, 3], strides() = [27, 27, 9, 3, 1] (Triggered internally at /pytorch/torch/csrc/distributed/c10d/reducer.cpp:327.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/autograd/graph.py:823: UserWarning: Grad strides do not match bucket view strides. This may indicate grad was not created according to the gradient layout contract, or that the param's strides changed since DDP was constructed.  This is not an error, but may impair performance.
+grad.sizes() = [512, 1, 3, 3, 3], strides() = [27, 1, 9, 3, 1]
+bucket_view.sizes() = [512, 1, 3, 3, 3], strides() = [27, 27, 9, 3, 1] (Triggered internally at /pytorch/torch/csrc/distributed/c10d/reducer.cpp:327.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+rank 1 dataset_name CT_RATE
+/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/autograd/graph.py:823: UserWarning: Grad strides do not match bucket view strides. This may indicate grad was not created according to the gradient layout contract, or that the param's strides changed since DDP was constructed.  This is not an error, but may impair performance.
+grad.sizes() = [512, 1, 3, 3, 3], strides() = [27, 1, 9, 3, 1]
+bucket_view.sizes() = [512, 1, 3, 3, 3], strides() = [27, 27, 9, 3, 1] (Triggered internally at /pytorch/torch/csrc/distributed/c10d/reducer.cpp:327.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+rank 0 dataset_name CT_RATE
+rank 1 dataset_name MIMIC_CXR
+rank 2 dataset_name MIMIC_CXR
+rank 0 dataset_name MIMIC_CXR
+rank 3 dataset_name MIMIC_CXR
+rank 3 dataset_name CT_RATE
+rank 0 dataset_name CT_RATE
+rank 1 dataset_name CT_RATE
+rank 2 dataset_name CT_RATE
+rank 3 dataset_name MIMIC_CXR
+rank 2 dataset_name MIMIC_CXR
+rank 0 dataset_name MIMIC_CXR
+rank 1 dataset_name MIMIC_CXR
+rank 3 dataset_name CT_RATE
+rank 2 dataset_name CT_RATE
+rank 0 dataset_name CT_RATE
+rank 1 dataset_name CT_RATE
+rank 2 dataset_name MIMIC_CXR
+rank 0 dataset_name MIMIC_CXR
+rank 1 dataset_name MIMIC_CXR
+rank 3 dataset_name MIMIC_CXR
+rank 3 dataset_name CT_RATE
+rank 0 dataset_name CT_RATE
+rank 1 dataset_name CT_RATE
+rank 2 dataset_name CT_RATE
+rank 3 dataset_name MIMIC_CXR
+rank 2 dataset_name MIMIC_CXR
+rank 1 dataset_name MIMIC_CXR
+rank 0 dataset_name MIMIC_CXR
+rank 2 dataset_name CT_RATErank
+ 0 dataset_name CT_RATE
+rank 3 dataset_name CT_RATE
+rank 1 dataset_name CT_RATE
+rank 2 dataset_name MIMIC_CXR
+rank 1 dataset_name MIMIC_CXR
+rank 3 rankdataset_name MIMIC_CXR 0 dataset_name
+ MIMIC_CXR
+rank 2 dataset_name CT_RATE
+rank 1 dataset_name CT_RATE
+rank 0 dataset_name CT_RATE
+rank 3 dataset_name CT_RATE
+rank 1 dataset_name MIMIC_CXR
+rank 2 dataset_name MIMIC_CXR
+rank 3 dataset_name MIMIC_CXR
+rank 0 dataset_name MIMIC_CXR
+rankrank  32  dataset_namedataset_name  CT_RATECT_RATE
+
+rank 0 dataset_name CT_RATE
+rank 1 dataset_name CT_RATE
+rankrank  0 2dataset_name  dataset_nameMIMIC_CXR MIMIC_CXR
+
+rank 1 dataset_name MIMIC_CXR
+rank 3 dataset_name MIMIC_CXR
+rank 0 dataset_name CT_RATE
+rank 2 dataset_name CT_RATE
+rank 3 dataset_name CT_RATE
+rank 1 dataset_name CT_RATE
+rank 3 dataset_name MIMIC_CXR
+rank 1 dataset_name MIMIC_CXR
+rank 0 dataset_name MIMIC_CXR
+rank 2 dataset_name MIMIC_CXR
+rank 0 dataset_name CT_RATE
+rank 3 dataset_name CT_RATE
+rank 1 dataset_name CT_RATE
+rank 2 dataset_name CT_RATE
+rank 2 dataset_name MIMIC_CXR
+rank 3 dataset_name MIMIC_CXR
+rank 0 dataset_name MIMIC_CXR
+rank 1 dataset_name MIMIC_CXR
+W0723 16:08:21.443717 116255 site-packages/torch/distributed/elastic/multiprocessing/api.py:897] Sending process 120070 closing signal SIGTERM
+W0723 16:08:21.466457 116255 site-packages/torch/distributed/elastic/multiprocessing/api.py:897] Sending process 120071 closing signal SIGTERM
+W0723 16:08:21.468415 116255 site-packages/torch/distributed/elastic/multiprocessing/api.py:897] Sending process 120073 closing signal SIGTERM
+E0723 16:08:32.882299 116255 site-packages/torch/distributed/elastic/multiprocessing/api.py:869] failed (exitcode: -9) local_rank: 2 (pid: 120072) of binary: /mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/bin/python3.9
+Traceback (most recent call last):
+  File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/bin/accelerate", line 8, in <module>
+    sys.exit(main())
+  File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/accelerate/commands/accelerate_cli.py", line 50, in main
+    args.func(args)
+  File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/accelerate/commands/launch.py", line 1190, in launch_command
+    multi_gpu_launcher(args)
+  File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/accelerate/commands/launch.py", line 815, in multi_gpu_launcher
+    distrib_run.run(args)
+  File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/distributed/run.py", line 909, in run
+    elastic_launch(
+  File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/distributed/launcher/api.py", line 138, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+  File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT/lib/python3.9/site-packages/torch/distributed/launcher/api.py", line 269, in launch_agent
+    raise ChildFailedError(
+torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
+============================================================
+/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/scripts/run_train_CXR_CT.py FAILED
+------------------------------------------------------------
+Failures:
+  <NO_OTHER_FAILURES>
+------------------------------------------------------------
+Root Cause (first observed failure):
+[0]:
+  time      : 2025-07-23_16:08:21
+  host      : SH-IDCA1404-10-140-54-25
+  rank      : 2 (local_rank: 2)
+  exitcode  : -9 (pid: 120072)
+  error_file: <N/A>
+  traceback : Signal 9 (SIGKILL) received by PID 120072
+============================================================
+srun: error: SH-IDCA1404-10-140-54-25: task 1: Exited with exit code 1

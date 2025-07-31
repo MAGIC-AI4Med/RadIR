@@ -1,0 +1,29 @@
+#!/bin/bash
+#SBATCH --partition medai_p
+#SBATCH --gres gpu:4
+#SBATCH --quotatype auto
+#SBATCH --cpus-per-task 16
+#SBATCH --ntasks 4
+#SBATCH --nodes 1
+#SBATCH --mem-per-cpu 32G
+#SBATCH -o phoenix-slurm-%j.out
+# args: -p
+# args: medai_p
+# args: --gres=gpu:4
+# args: --quotatype=auto
+# args: --cpus-per-task=16
+# args: -n
+# args: 4
+# args: -N
+# args: 1
+# args: --mem-per-cpu=32G
+# args: bash
+# args: /mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/sbatch/train.sh
+argv=()
+while read -r line; do
+    if [[ $line == "# args: "* ]]; then
+        argv[${#argv[*]}]="${line:8}"
+    fi
+done < $0
+
+srun "${argv[@]}"
