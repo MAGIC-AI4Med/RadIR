@@ -16,7 +16,7 @@ import json
 if __name__ == '__main__':
     
     parser = argparse.ArgumentParser()
-    parser.add_argument('--name', type=str)
+    parser.add_argument('--name',required=True, type=str)
     parser.add_argument('--config_file', type=str, help='Path to the config file (YAML format)')
     parser.add_argument('--fusion_module', type=str, help='crossattn, no_img_latent, tengfei_crossattn, early_fusion, temporal_fusion, temporal_fusion_butCLS')
     parser.add_argument('--checkpoint', type=str)
@@ -25,6 +25,9 @@ if __name__ == '__main__':
     parser.add_argument('--evaluate_before_train', action='store_true')
     parser.add_argument('--use_triplet_loss', type=float, default=1)
     parser.add_argument('--use_infoNCE_loss', type=float, default=0)
+    parser.add_argument('--use_image2image_loss', type=float, default=1)
+    parser.add_argument('--use_uncon_triplet_loss', type=float, default=1)
+    parser.add_argument('--use_uncon_infoNCE_loss', type=float, default=1)
     parser.add_argument('--freeze_pretrained_encoders', action='store_true')
     parser.add_argument('--open_partial_pretrained_encoders', action='store_true')
     parser.add_argument('--open_pretrained_encoders', action='store_true')
@@ -46,6 +49,22 @@ if __name__ == '__main__':
     parser.add_argument('--data_valid_npy_dir', nargs='+',type=str, required=True)
     parser.add_argument('--local_batch_size', nargs='+',type=int, default=[64,8])
     parser.add_argument('--batch_size', nargs='+',type=int, default=[4,1])
+    
+    # Additional unconstrained dataset parameters
+    parser.add_argument('--uncon_batch_size', nargs='+', type=int, help='Batch size for unconstrained datasets')
+    parser.add_argument('--uncon_soft_label', action='store_true', help='Use soft labels for unconstrained datasets')
+    # 表示文件夹的路径，并不是实际文件的路径
+    parser.add_argument('--uncon_similarity_lookup_table_train', nargs='+', type=str, help='Similarity lookup tables for unconstrained training datasets')
+    parser.add_argument('--uncon_similarity_lookup_table_valid', nargs='+', type=str, help='Similarity lookup tables for unconstrained validation datasets')
+    parser.add_argument('--uncon_data_train_jsonl', nargs='+', type=str, help='JSONL files for unconstrained training datasets')
+    parser.add_argument('--uncon_data_valid_jsonl', nargs='+', type=str, help='JSONL files for unconstrained validation datasets')
+    parser.add_argument('--uncon_dataset_names', nargs='+', type=str, help='Names of unconstrained datasets')
+    parser.add_argument('--uncon_train_filter', type=str, help='2D list of training filters for unconstrained datasets')
+    parser.add_argument('--uncon_valid', nargs='+', type=str, help='List of validation dataset names for unconstrained datasets')
+    parser.add_argument('--uncon_modality', nargs='+', type=str, help='Modality types (2D/3D) for unconstrained datasets')
+    parser.add_argument('--stage1', action='store_true', help='Whether to run stage 1 training')
+    parser.add_argument('--stage2', action='store_true', help='Whether to run stage 2 training')
+    
     parser.add_argument('--lr', type=float, nargs='+', default=1e-4)
     parser.add_argument('--num_workers', type=int, default=16)
     parser.add_argument('--pin_memory', action='store_true')
@@ -257,7 +276,14 @@ if __name__ == '__main__':
         clip.open_vision_encoder()
     # 输出pid
     print(f"最开始 pid={os.getpid()} ",'rank', torch.distributed.get_rank() if torch.distributed.is_initialized() else 'not distributed')
-    
+    if config.stage1 and config.stage2:
+        print('同时开始两阶段的训练')
+    elif config.stage1:
+        print('开始第一阶段的训练')
+    elif config.stage2:
+        print('开始第二阶段的训练')
+    else:
+        raise ValueError('At least one of stage1 or stage2 must be True')
     trainer = CTClipTrainer(
         clip,
         tokenizer = tokenizer,
@@ -274,6 +300,19 @@ if __name__ == '__main__':
         negative_threshold = config.negative_threshold,
         batch_size = config.batch_size,
         local_batch_size = config.local_batch_size,
+        stage1= config.stage1,
+        stage2= config.stage2,
+        uncon_batch_size= config.uncon_batch_size,
+        uncon_soft_label = config.uncon_soft_label,
+        uncon_similarity_lookup_table_train = config.uncon_similarity_lookup_table_train,
+        uncon_similarity_lookup_table_valid = config.uncon_similarity_lookup_table_valid,
+        uncon_data_train_jsonl = config.uncon_data_train_jsonl,
+        uncon_data_valid_jsonl = config.uncon_data_valid_jsonl,
+        uncon_dataset_names = config.uncon_dataset_names,
+        uncon_train_filter = json.loads(config.uncon_train_filter) if config.uncon_train_filter else None,
+        uncon_valid = config.uncon_valid,
+        uncon_modality = config.uncon_modality,
+        
         results_folder = results_folder,
         lr = config.lr,
         num_train_steps = config.num_train_steps,

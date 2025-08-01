@@ -265,11 +265,11 @@ class CTReportDataset(Dataset):
         elif self.modality == '2D':
             try:
                 video_tensor = self.load_2d_image_to_tensor(nii_file, resize=True)
-                video_tensor = video_tensor.squeeze().unsqueeze(1)
+                video_tensor = video_tensor.squeeze().unsqueeze(0)
                 if self.augmentator is not None and self.is_train:
                     video_tensor = self.augmentator(video_tensor)
                 
-                video_tensor = video_tensor.unsqueeze(1)  # Add batch dimension
+                video_tensor = video_tensor.unsqueeze(0)  # Add batch dimension
             
             except Exception as e:
                 print(f"Error processing {nii_file} at index {index}: {e}. Skipping this sample.")
@@ -299,7 +299,7 @@ if __name__ == '__main__':
     """测试 CTReportDataset 类的功能"""
     
     # 初始化数据集
-    dataset_path = '/mnt/petrelfs/zhangtengfei/RadIR/dataset/CXR/MIMIC_CXR/all/train_0.jsonl'
+    dataset_path = '/mnt/petrelfs/zhangtengfei/RadIR/dataset/CXR/MIMIC_CXR/all/test.jsonl'
     dataset = CTReportDataset(dataset_path, need_aug=True, modality='2D', is_train=True)
     
     print(f"数据集大小: {len(dataset)} 样本")
@@ -327,7 +327,7 @@ if __name__ == '__main__':
                     if isinstance(item, torch.Tensor):
                         print(f"  - 项目 {i}: Tensor, 形状: {item.shape}, 类型: {item.dtype}")
                     elif isinstance(item, str):
-                        print(f"  - 项目 {i}: 字符串, 长度: {len(itkem)}")
+                        print(f"  - 项目 {i}: 字符串, 长度: {len(item)}")
                         print(f"    内容预览: {item[:100]}...")
                     else:
                         print(f"  - 项目 {i}: {type(item)}")
@@ -340,7 +340,7 @@ if __name__ == '__main__':
     # 测试 DataLoader
     print("\n3. 测试 DataLoader...")
     try:
-        dataloader = DataLoader(dataset, batch_size=2, shuffle=True, num_workers=0)
+        dataloader = DataLoader(dataset, batch_size=90, shuffle=True, num_workers=0)
         batch = next(iter(dataloader))
         
         print(f"成功加载批次数据")

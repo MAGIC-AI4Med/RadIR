@@ -18,8 +18,8 @@ from transformers import BertTokenizer, BertModel
 
 # NOTE: Import a Cross-Attn Module and PE Module
 from positional_encodings.torch_encodings import PositionalEncoding3D, PositionalEncoding1D
-# from ct_clip.transformer_decoder import TransformerDecoder, TransformerDecoderLayer
-from transformer_decoder import TransformerDecoder, TransformerDecoderLayer
+from ct_clip.transformer_decoder import TransformerDecoder, TransformerDecoderLayer
+# from transformer_decoder import TransformerDecoder, TransformerDecoderLayer
 
 # NOTE
 
@@ -418,6 +418,9 @@ class CTCLIP(nn.Module):
             *,
             use_triplet_loss = 1,
             use_infoNCE_loss = 1,
+            use_uncon_triplet_loss = 1,
+            use_uncon_infoNCE_loss = 1,
+            
             use_image2image_loss = 1,
             triplet_loss_margin = 0.1,
             positive_distance_threshold = 0.2,
@@ -474,7 +477,8 @@ class CTCLIP(nn.Module):
         self.positive_threshold = positive_threshold    # infoNCE中找到false negative
         self.negative_threshold = negative_threshold
         self.use_image2image_loss = use_image2image_loss
-        
+        self.use_uncon_triplet_loss = use_uncon_triplet_loss
+        self.use_uncon_infoNCE_loss = use_uncon_infoNCE_loss
         #assert use_all_token_embeds or (visual_has_cls_token or text_has_cls_token), 'CLS token must be included on both vision and text transformers if you are not using fine-grained contrastive learning loss'
         self.dtype=torch.float32
         # store some parameters for access
@@ -1008,12 +1012,12 @@ class CTCLIP(nn.Module):
             
             # gt_similarity_matrix = F.normalize(gt_similarity_matrix, dim=0) # B B
             
-            if not (self.use_infoNCE_loss > 0 or self.use_triplet_loss > 0 or self.use_image2image_loss > 0):
+            if not (self.use_uncon_infoNCE_loss > 0 or self.use_uncon_triplet_loss > 0 or self.use_image2image_loss > 0):
                 raise ValueError("To Calculate Loss, use_triplet_loss and use_infoNCE_loss and use_image2image_loss cannot all be False")
             
             text_to_image_triplet_loss = torch.zeros(1).to(device)
             image_to_text_triplet_loss = torch.zeros(1).to(device)
-            if self.use_triplet_loss > 0:
+            if self.use_uncon_triplet_loss > 0:
                 text_to_image_triplet_loss = self.triplet_loss_uncon(text_to_image, gt_similarity_matrix, margin=self.triplet_loss_margin, gt_threshold=self.positive_distance_threshold, positive_threshold=self.positive_threshold, negative_threshold=self.negative_threshold)
                 image_to_text_triplet_loss = self.triplet_loss_uncon(image_to_text, gt_similarity_matrix, margin=self.triplet_loss_margin, gt_threshold=self.positive_distance_threshold, positive_threshold=self.positive_threshold, negative_threshold=self.negative_threshold)
             image_text_triplet_loss = (text_to_image_triplet_loss + image_to_text_triplet_loss) / 2
@@ -1024,7 +1028,7 @@ class CTCLIP(nn.Module):
             
             text_to_image_infoNCE_loss = torch.zeros(1).to(device)
             image_to_text_infoNCE_loss = torch.zeros(1).to(device)
-            if self.use_infoNCE_loss > 0:
+            if self.use_uncon_infoNCE_loss > 0:
                 text_to_image_infoNCE_loss = self.multi_positive_infoNCE_loss_uncon(text_to_image, gt_similarity_matrix, positive_threshold=self.positive_threshold)
                 image_to_text_infoNCE_loss = self.multi_positive_infoNCE_loss_uncon(image_to_text, gt_similarity_matrix, positive_threshold=self.positive_threshold)
             image_text_infoNCE_loss = (text_to_image_infoNCE_loss + image_to_text_infoNCE_loss) / 2
@@ -1034,7 +1038,7 @@ class CTCLIP(nn.Module):
             cl_losses = torch.zeros(1).to(device)
             # cl_losses += self.use_triplet_loss * image_text_triplet_loss
             cl_losses += self.use_image2image_loss * image_to_image_triplet_loss
-            cl_losses += self.use_infoNCE_loss * image_text_infoNCE_loss
+            cl_losses += self.use_uncon_infoNCE_loss * image_text_infoNCE_loss
 
             return cl_losses, image_text_triplet_loss, image_text_infoNCE_loss, image_to_image_triplet_loss
 

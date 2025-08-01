@@ -271,7 +271,7 @@ class CTClipTrainer(nn.Module):
                 modality_type = uncon_modality[i]
                 train_split_name = uncon_train_filter[i][(local_rank) % len(uncon_train_filter[i])]  # 只取第一个训练分割
                 self.uncon_dss[uncon_dataset_name] = CTReportDataset(os.path.join(uncon_data_train_jsonl[i],train_split_name + '.jsonl'),need_aug=True,modality=uncon_modality[i],is_train=True)
-                self.uncon_valid_dss[uncon_dataset_name] = CTReportDataset(os.path.join(uncon_data_valid_jsonl[i], uncon_valid + '.jsonl'),need_aug=False,modality=uncon_modality[i],is_train=False)
+                self.uncon_valid_dss[uncon_dataset_name] = CTReportDataset(os.path.join(uncon_data_valid_jsonl[i], uncon_valid[i] + '.jsonl'),need_aug=False,modality=uncon_modality[i],is_train=False)
                 # 创建数据加载器
                 uncon_dl_i = DataLoader(
                     self.uncon_dss[uncon_dataset_name],
@@ -279,8 +279,7 @@ class CTClipTrainer(nn.Module):
                     batch_size = self.uncon_batch_size[i],
                     shuffle = True,
                     drop_last = True,
-                    pin_memory = pin_memory,
-                    collate_fn = collate_fn
+                    pin_memory = pin_memory
                 )
                 self.uncon_dls[uncon_dataset_name] = uncon_dl_i
                 
@@ -301,7 +300,7 @@ class CTClipTrainer(nn.Module):
                 
                 if self.soft_label:
                     self.uncon_similarity_lookup_table_train[uncon_dataset_name] = np.load(os.path.join(uncon_similarity_lookup_table_train[i], train_split_name + '.npy'))
-                    self.uncon_similarity_lookup_table_valid[uncon_dataset_name] = np.load(os.path.join(uncon_similarity_lookup_table_valid[i], uncon_valid + '.npy'))
+                    self.uncon_similarity_lookup_table_valid[uncon_dataset_name] = np.load(os.path.join(uncon_similarity_lookup_table_valid[i], uncon_valid[i] + '.npy'))
                     self.uncon_similarity_lookup_table_train[uncon_dataset_name] = np.clip(self.uncon_similarity_lookup_table_train[uncon_dataset_name],0,1)  # 已经转成了0-1之间的数值了，还要转为uint减少内存占用
                     self.uncon_similarity_lookup_table_valid[uncon_dataset_name] = np.clip(self.uncon_similarity_lookup_table_valid[uncon_dataset_name],0,1)  # 已经转成了0-1之间的数值了，还要转为uint减少内存占用
                     self.uncon_similarity_lookup_table_train[uncon_dataset_name] = np.round(self.uncon_similarity_lookup_table_train[uncon_dataset_name] * 100).astype(np.uint8)  # 转为0-100之间的uint8
@@ -660,7 +659,6 @@ class CTClipTrainer(nn.Module):
                         sample_index = self.anatomy2id_lss[dataset_name][anatomy].index(sample_id)
                         fused_latents_all[anatomy][sample_index] = fused_latents[i]
                     del fused_latents, video, text_tokens
-                    torch.cuda.empty_cache()  # 释放显存缓存
                     
                 # Now lets calculate the similarity matrix for each anatomy
                 for anatomy, fused_latents in fused_latents_all.items():
@@ -709,7 +707,6 @@ class CTClipTrainer(nn.Module):
                         # 清理显存，释放不再需要的变量
                     del image_to_image, similarity_tab, fused_latents
                 del fused_latents_all
-            torch.cuda.empty_cache()  # 释放显存缓存
 
 
             if torch.distributed.is_initialized():
@@ -932,7 +929,7 @@ class CTClipTrainer(nn.Module):
                     if self.debug:
                         print_gpu_memory_stats(self.accelerator,'Before video, similarity_tab, anatomy, _ = next(self.uncon_dl_iters[dataset_name])')
                     # ---- 数据准备 ----
-                    video, text, sample_idls, _ = next(dl_iter)
+                    video, text, sample_idls = next(dl_iter)
 
                     # 直接半精度进 GPU，减少显存与带宽
                     tgt_dtype = torch.float16 if mp == "fp16" else (
@@ -944,7 +941,9 @@ class CTClipTrainer(nn.Module):
                     with torch.no_grad():  # tokenizer不需要梯度
                         text_tokens = self.tokenizer(list(text),return_tensors="pt", padding="max_length", truncation=True, max_length=512).to(device, non_blocking=True)
                     if self.soft_label:
+                        sample_idls = sample_idls.cpu().numpy() if isinstance(sample_idls, torch.Tensor) else sample_idls
                         similarity_tab = self.uncon_similarity_lookup_table_train[dataset_name][np.ix_(sample_idls, sample_idls)]
+                        similarity_tab = torch.from_numpy(similarity_tab) if isinstance(similarity_tab, np.ndarray) else similarity_tab
                         similarity_tab = (similarity_tab.to(torch.float32) * 0.01).to(
                                     device, dtype=tgt_dtype, non_blocking=True)
                     else:
@@ -958,7 +957,6 @@ class CTClipTrainer(nn.Module):
                             device=device,
                             is_condition=False)
                     del video, text_tokens, similarity_tab
-                    torch.cuda.empty_cache()
                     self.accelerator.backward(loss)                 # 自动 / grad_acc_steps 
                     # ---- 立即把日志数据转到 CPU，释放 GPU 显存 ----
                     loss_val        = float(loss.detach().cpu())
@@ -970,7 +968,6 @@ class CTClipTrainer(nn.Module):
                     self.it_triplet_loss_m[dataset_name].update(image_text_triplet_mean, 1)
                     self.it_infoNCE_loss_m[dataset_name].update(image_text_infoNCE_mean, 1)
                     self.ii_triplet_loss_m[dataset_name].update(image_to_image_triplet_mean, 1)
-                torch.cuda.empty_cache()
                         
                 if stage == 'stage2':
                     print(f"pid={os.getpid()} ",'rank', torch.distributed.get_rank(),'dataset_name', dataset_name, 'step', current_step)
@@ -1018,7 +1015,6 @@ class CTClipTrainer(nn.Module):
                         print_gpu_memory_stats(self.accelerator,'after self.CTClip and before self.accelerator.backward')
                     
                     del video, similarity_tab, text_tokens
-                    torch.cuda.empty_cache()
                     
                     self.accelerator.backward(loss)                 # 自动 / grad_acc_steps
 
@@ -1092,7 +1088,8 @@ class CTClipTrainer(nn.Module):
             self.evaluate(current_step=current_step)
             if torch.distributed.is_initialized():
                 torch.distributed.barrier()     
-        elif not (current_step % 100):
+        elif not (current_step % 100):   # 每100个step统计一轮loss
+        
             if torch.distributed.is_initialized():
                 world_size = torch.distributed.get_world_size()
                 gathered_metrics = [None for _ in range(world_size)]
@@ -1167,28 +1164,55 @@ class CTClipTrainer(nn.Module):
                             self.print(f"[{dataset_name}] Step {self.current_step} at {current_time} | LR {lr} | "
                                 f"Con Loss {global_main_loss[dataset_name]:.4f} | Con InfoNCE {global_infoNCE_loss[dataset_name]:.4f} | "
                                 f"Con Triplet {global_triplet_loss[dataset_name]:.4f}")
-
-                    self.tb_writer.add_scalar('lr', lr, current_step)
+                    log_dict = {'lr': lr}
+                    # self.tb_writer.add_scalar('lr', lr, current_step)
+                    # if self.stage1:
+                    #     for dataset_name in self.uncon_dataset_names:
+                    #         self.tb_writer.add_scalar(f'{dataset_name}_uncon_train_loss', self.uncon_loss_m[dataset_name].avg, current_step)
+                    #         self.tb_writer.add_scalar(f'{dataset_name}_it_triplet_loss', self.it_triplet_loss_m[dataset_name].avg, current_step)
+                    #         self.tb_writer.add_scalar(f'{dataset_name}_it_infoNCE_loss', self.it_infoNCE_loss_m[dataset_name].avg, current_step)
+                    #         self.tb_writer.add_scalar(f'{dataset_name}_ii_triplet_loss', self.ii_triplet_loss_m[dataset_name].avg, current_step)
+                    # if self.stage2:
+                    #     for dataset_name in self.dataset_names:
+                    #         self.tb_writer.add_scalar(f'{dataset_name}_train_loss', self.loss_m[dataset_name].avg, current_step)
+                    #         self.tb_writer.add_scalar(f'{dataset_name}_infoNCE_loss', self.infoNCE_loss_m[dataset_name].avg, current_step)
+                    #         self.tb_writer.add_scalar(f'{dataset_name}_triplet_loss', self.triplet_loss_m[dataset_name].avg, current_step)
+                            
+                    #         # 记录解剖结构损失
+                    #         for anatomy, loss in global_anatomy_infoNCE[dataset_name].items():
+                    #             self.tb_writer.add_scalar(f'{dataset_name}_{anatomy}_infoNCE_loss', loss, current_step)
+                    #         for anatomy, loss in global_anatomy_triplet[dataset_name].items():
+                    #             self.tb_writer.add_scalar(f'{dataset_name}_{anatomy}_triplet_loss', loss, current_step)
+                    #         for anatomy, count in global_anatomy_valid_triplet[dataset_name].items():
+                    #             self.tb_writer.add_scalar(f'{dataset_name}_{anatomy}_valid_triplet', count, current_step)
                     if self.stage1:
                         for dataset_name in self.uncon_dataset_names:
-                            self.tb_writer.add_scalar(f'{dataset_name}_uncon_train_loss', self.uncon_loss_m[dataset_name].avg, current_step)
-                            self.tb_writer.add_scalar(f'{dataset_name}_it_triplet_loss', self.it_triplet_loss_m[dataset_name].avg, current_step)
-                            self.tb_writer.add_scalar(f'{dataset_name}_it_infoNCE_loss', self.it_infoNCE_loss_m[dataset_name].avg, current_step)
-                            self.tb_writer.add_scalar(f'{dataset_name}_ii_triplet_loss', self.ii_triplet_loss_m[dataset_name].avg, current_step)
+                            log_dict.update({
+                                f'{dataset_name}_uncon_train_loss': self.uncon_loss_m[dataset_name].avg,
+                                f'{dataset_name}_it_triplet_loss': self.it_triplet_loss_m[dataset_name].avg,
+                                f'{dataset_name}_it_infoNCE_loss': self.it_infoNCE_loss_m[dataset_name].avg,
+                                f'{dataset_name}_ii_triplet_loss': self.ii_triplet_loss_m[dataset_name].avg
+                            })
+                    
                     if self.stage2:
                         for dataset_name in self.dataset_names:
-                            self.tb_writer.add_scalar(f'{dataset_name}_train_loss', self.loss_m[dataset_name].avg, current_step)
-                            self.tb_writer.add_scalar(f'{dataset_name}_infoNCE_loss', self.infoNCE_loss_m[dataset_name].avg, current_step)
-                            self.tb_writer.add_scalar(f'{dataset_name}_triplet_loss', self.triplet_loss_m[dataset_name].avg, current_step)
+                            log_dict.update({
+                                f'{dataset_name}_train_loss': self.loss_m[dataset_name].avg,
+                                f'{dataset_name}_infoNCE_loss': self.infoNCE_loss_m[dataset_name].avg,
+                                f'{dataset_name}_triplet_loss': self.triplet_loss_m[dataset_name].avg
+                            })
                             
                             # 记录解剖结构损失
                             for anatomy, loss in global_anatomy_infoNCE[dataset_name].items():
-                                self.tb_writer.add_scalar(f'{dataset_name}_{anatomy}_infoNCE_loss', loss, current_step)
+                                log_dict[f'{dataset_name}_{anatomy}_infoNCE_loss'] = loss
+                            
                             for anatomy, loss in global_anatomy_triplet[dataset_name].items():
-                                self.tb_writer.add_scalar(f'{dataset_name}_{anatomy}_triplet_loss', loss, current_step)
+                                log_dict[f'{dataset_name}_{anatomy}_triplet_loss'] = loss
+                            
                             for anatomy, count in global_anatomy_valid_triplet[dataset_name].items():
-                                self.tb_writer.add_scalar(f'{dataset_name}_{anatomy}_valid_triplet', count, current_step)
-                                        
+                                log_dict[f'{dataset_name}_{anatomy}_valid_triplet'] = count
+                    # 使用wandb记录所有指标
+                self.wandb.log(log_dict, step=current_step)
                 self._reset_metrics()
                 self._reset_metrics_uncon()
         self.current_step += 1
