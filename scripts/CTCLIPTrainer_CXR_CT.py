@@ -18,6 +18,7 @@ from torch.utils.data.distributed import DistributedSampler
 from torch.utils.tensorboard import SummaryWriter
 from torch import cuda
 
+from data import CTReportDataset
 from conditional_dataset_train_all import Conditional_CTReportDataset_Train, collate_fn
 from conditional_dataset_evaluate import Conditional_CTReportDataset_Eval, custom_data_split
 
@@ -175,6 +176,9 @@ class CTClipTrainer(nn.Module):
         warmup_steps,
         local_batch_size,       # 也是一个list
         batch_size,             # 也是一个list
+        # 带上stage1与stage2分别表示是否做第一二个阶段
+        stage1,
+        stage2,
         data_train_npy_dir, # 也是一个列表，大小为K
         data_valid_npy_dir, # 也是一个列表，大小为K
         data_train_csv_dir, # 也是一个列表，大小为K
@@ -184,6 +188,16 @@ class CTClipTrainer(nn.Module):
         anatomy_filter, # 二维list，第一个维度是K，表示用了多少个数据集。维度内部就是对应的数据集数量['lungs']之类的
         dataset_names, # 是一个列表，大小是K,内容表示数据集['MIMIC'，'CT_RATE']
         modality, # 是一个列表，大小是K,内容表示是2D还是3D的数据集。['2D','3D']
+        uncon_batch_size,       # 也是一个list，大小均为k'
+        uncon_soft_label,        # 是一个值
+        uncon_similarity_lookup_table_train,  # 也是一个list，大小均为k'
+        uncon_similarity_lookup_table_valid,  # 也是一个list，大小均为k'
+        uncon_data_train_jsonl, # 也是一个list，大小均为k'
+        uncon_data_valid_jsonl,  # 也是一个list，大小均为k'
+        uncon_dataset_names, # 也是一个list，大小均为k'
+        uncon_train_filter, # 二维list，第一个维度是k'，表示用了多少个数据集。维度内部就是对应的数据集数量['train1,train2']之类的，可以避免单个GPU上存储过多的内容
+        uncon_valid, # 一维list，表示名字
+        uncon_modality, # 一维list，表示2D还是3D的数据集
         positive_threshold,
         negative_threshold,
         tokenizer = None,
@@ -201,6 +215,8 @@ class CTClipTrainer(nn.Module):
         accelerate_kwargs: dict = dict(),
         debug = False
     ):
+        self.stage1 = stage1
+        self.stage2 = stage2
         self.debug = debug
         print('num_workers:', num_workers)
         assert len(data_train_npy_dir) == len(data_valid_npy_dir) == len(data_train_csv_dir) == len(data_valid_csv_dir) == len(data_train_jsonl) == len(data_valid_jsonl) == len(anatomy_filter) == len(dataset_names) == len(modality) == len(local_batch_size) == len(batch_size), "All input lists must have the same length."
@@ -225,100 +241,160 @@ class CTClipTrainer(nn.Module):
         self.current_step = current_step
         self.batch_size = batch_size
         self.local_batch_size = local_batch_size
+        self.uncon_batch_size = uncon_batch_size
         
         self.positive_threshold = positive_threshold
         self.negative_threshold = negative_threshold
         self.dataset_names = dataset_names
+        self.uncon_dataset_names = uncon_dataset_names
         all_parameters = set(CTClip.parameters())
 
         if isinstance(lr, list):
             self.optim = get_optimizer(all_parameters, lr=lr[-1], wd=wd)
         else:
             self.optim = get_optimizer(all_parameters, lr=lr, wd=wd)
-
+        self.soft_label = uncon_soft_label
         self.max_grad_norm = max_grad_norm
-        
-        # Divide anatomies into different process
-        self.anatomy2id_lss = {}
-        self.dss = {}
-        self.dls = {}
-        self.valid_dss = {}
-        self.valid_dls = {}
-        self.dl_iters = {}
-        self.valid_dl_iters = {}
-        self.local_anatomy_filter_for_train = {}
-        self.local_anatomy_filter_for_valid = {}
-        # 这里要修改
-        for i in range(len(dataset_names)):
-            dataset_name = dataset_names[i]
-            modality_type = modality[i]
-
-            with open(f"/mnt/petrelfs/zhangtengfei/RadIR/dataset/all/{dataset_name}_anatomy_distribution.json", 'r') as f:
-                anatomy_distribution = json.load(f)
-            anatomy_samples = {anatomy:anatomy_distribution[anatomy]["train >0.9 links count"] for anatomy in anatomy_filter[i]}   # pos 样本越多，采样越多
-            
-            rank = torch.distributed.get_rank()  # 获取当前进程的 rank
-            world_size = torch.distributed.get_world_size()  # 获取总进程数
-
-            distribution_train_i, distribution_valid_i = self.distribute_equal_sample_num(anatomy_samples, world_size)
-            local_anatomy_filter_for_train_i, local_anatomy_filter_for_valid_i = distribution_train_i[rank], distribution_valid_i[rank]
-            self.local_anatomy_filter_for_train[dataset_name] = local_anatomy_filter_for_train_i
-            self.local_anatomy_filter_for_valid[dataset_name] = local_anatomy_filter_for_valid_i
-            # for training, allow repeat when processor > anatomy 
-            
-            # check split results
-            print(f"Rank {rank} anatomy subset for training: {local_anatomy_filter_for_train_i}")
-            print(f"Rank {rank} total samples: {sum(anatomy_samples[k] for k in local_anatomy_filter_for_train_i)}")
-            print(f"Rank {rank} anatomy subset for validation: {local_anatomy_filter_for_valid_i}")
-            print(f"Rank {rank} total samples: {sum(anatomy_samples[k] for k in local_anatomy_filter_for_valid_i)}")
-            ds_i = Conditional_CTReportDataset_Train(
-                modality=modality_type,
-                local_batch_size=local_batch_size[i], 
-                jsonl_file=data_train_jsonl[i], 
-                csv_file_dir=data_train_csv_dir[i], 
-                npy_file_dir=data_train_npy_dir[i], 
-                anatomy_filter=local_anatomy_filter_for_train_i,
-                positive_threshold=positive_threshold,
-                negative_threshold=negative_threshold,
-                max_samples=train_max_samples
+        local_rank = torch.distributed.get_rank()
+        # stage1和stage2可以同时成立
+        if self.stage1:
+            self.uncon_dss = {} 
+            self.uncon_dls = {}
+            self.uncon_valid_dss = {}
+            self.uncon_valid_dls = {}
+            self.uncon_dl_iters = {}
+            self.uncon_valid_dl_iters = {}
+            self.uncon_similarity_lookup_table_train = {}
+            self.uncon_similarity_lookup_table_valid = {}
+            for i in range(len(uncon_dataset_names)):
+                uncon_dataset_name = uncon_dataset_names[i]
+                modality_type = uncon_modality[i]
+                train_split_name = uncon_train_filter[i][(local_rank) % len(uncon_train_filter[i])]  # 只取第一个训练分割
+                self.uncon_dss[uncon_dataset_name] = CTReportDataset(os.path.join(uncon_data_train_jsonl[i],train_split_name + '.jsonl'),need_aug=True,modality=uncon_modality[i],is_train=True)
+                self.uncon_valid_dss[uncon_dataset_name] = CTReportDataset(os.path.join(uncon_data_valid_jsonl[i], uncon_valid + '.jsonl'),need_aug=False,modality=uncon_modality[i],is_train=False)
+                # 创建数据加载器
+                uncon_dl_i = DataLoader(
+                    self.uncon_dss[uncon_dataset_name],
+                    num_workers = num_workers,
+                    batch_size = self.uncon_batch_size[i],
+                    shuffle = True,
+                    drop_last = True,
+                    pin_memory = pin_memory,
+                    collate_fn = collate_fn
                 )
-            self.dss[dataset_name] = ds_i
-
-            valid_ds_i = Conditional_CTReportDataset_Eval(
-                modality=modality_type,
-                jsonl_file=data_valid_jsonl[i], 
-                csv_file_dir=data_valid_csv_dir[i], 
-                npy_file_dir=data_valid_npy_dir[i], 
-                anatomy_filter=local_anatomy_filter_for_valid_i,
-                max_samples=valid_max_samples
+                self.uncon_dls[uncon_dataset_name] = uncon_dl_i
+                
+                # 验证数据加载器
+                uncon_valid_dl_i = DataLoader(
+                    self.uncon_valid_dss[uncon_dataset_name],
+                    num_workers = num_workers,
+                    batch_size = (self.uncon_batch_size[i]) * local_batch_size[i],
+                    shuffle = False,
+                    pin_memory = pin_memory,
+                    drop_last = True,
                 )
-            self.valid_dss[dataset_name] = valid_ds_i
-            self.anatomy2id_lss[dataset_name] = self.valid_dss[dataset_name].get_anatomy2id_ls()
-            dl_i = DataLoader(
-                ds_i,
-                num_workers = num_workers,
-                batch_size = self.batch_size[i],
-                shuffle = True,
-                drop_last = True,
-                pin_memory = pin_memory,
-                collate_fn = collate_fn
-            )
-            self.dls[dataset_name] = dl_i
-            valid_dl_i = DataLoader(
-                valid_ds_i,
-                num_workers = num_workers,
-                batch_size = self.batch_size[i] * local_batch_size[i],
-                shuffle = False,
-                pin_memory = pin_memory,
-            )
+                self.uncon_valid_dls[uncon_dataset_name] = uncon_valid_dl_i
+                
+                # 准备迭代器
+                self.uncon_dl_iters[uncon_dataset_name] = cycle(self.accelerator.prepare(uncon_dl_i))
+                self.uncon_valid_dl_iters[uncon_dataset_name] = cycle(self.accelerator.prepare(uncon_valid_dl_i))
+                
+                if self.soft_label:
+                    self.uncon_similarity_lookup_table_train[uncon_dataset_name] = np.load(os.path.join(uncon_similarity_lookup_table_train[i], train_split_name + '.npy'))
+                    self.uncon_similarity_lookup_table_valid[uncon_dataset_name] = np.load(os.path.join(uncon_similarity_lookup_table_valid[i], uncon_valid + '.npy'))
+                    self.uncon_similarity_lookup_table_train[uncon_dataset_name] = np.clip(self.uncon_similarity_lookup_table_train[uncon_dataset_name],0,1)  # 已经转成了0-1之间的数值了，还要转为uint减少内存占用
+                    self.uncon_similarity_lookup_table_valid[uncon_dataset_name] = np.clip(self.uncon_similarity_lookup_table_valid[uncon_dataset_name],0,1)  # 已经转成了0-1之间的数值了，还要转为uint减少内存占用
+                    self.uncon_similarity_lookup_table_train[uncon_dataset_name] = np.round(self.uncon_similarity_lookup_table_train[uncon_dataset_name] * 100).astype(np.uint8)  # 转为0-100之间的uint8
+                    self.uncon_similarity_lookup_table_valid[uncon_dataset_name] = np.round(self.uncon_similarity_lookup_table_valid[uncon_dataset_name] * 100).astype(np.uint8)  # 转为0-100之间的uint8
+                    # 内容是np矩阵，使用的时候需要转换为tensor形式以及转回fp的格式
+                # 打印数据集信息
+                print(f"Rank {local_rank} unconditional dataset: {uncon_dataset_name}, split: {train_split_name}")
+                print(f"Rank {local_rank} train samples: {len(self.uncon_dss[uncon_dataset_name])}")
+                print(f"Rank {local_rank} valid samples: {len(self.uncon_valid_dss[uncon_dataset_name])}")
+        if self.stage2:
+            # Divide anatomies into different process
+            self.anatomy2id_lss = {}
+            self.dss = {}
+            self.dls = {}
+            self.valid_dss = {}
+            self.valid_dls = {}
+            self.dl_iters = {}
+            self.valid_dl_iters = {}
+            self.local_anatomy_filter_for_train = {}
+            self.local_anatomy_filter_for_valid = {}
+            # 这里要修改
+            for i in range(len(dataset_names)):
+                dataset_name = dataset_names[i]
+                modality_type = modality[i]
 
-            self.valid_dls[dataset_name] = valid_dl_i
-            self.dl_iters[dataset_name] = cycle(self.accelerator.prepare(dl_i))
-            self.valid_dl_iters[dataset_name] = cycle(self.accelerator.prepare(valid_dl_i))
+                with open(f"/mnt/petrelfs/zhangtengfei/RadIR/dataset/all/{dataset_name}_anatomy_distribution.json", 'r') as f:
+                    anatomy_distribution = json.load(f)
+                anatomy_samples = {anatomy:anatomy_distribution[anatomy]["train >0.9 links count"] for anatomy in anatomy_filter[i]}   # pos 样本越多，采样越多
+                
+                rank = torch.distributed.get_rank()  # 获取当前进程的 rank
+                world_size = torch.distributed.get_world_size()  # 获取总进程数
 
-            self.pin_memory = pin_memory
-            self.num_workers = num_workers
+                distribution_train_i, distribution_valid_i = self.distribute_equal_sample_num(anatomy_samples, world_size)
+                local_anatomy_filter_for_train_i, local_anatomy_filter_for_valid_i = distribution_train_i[rank], distribution_valid_i[rank]
+                self.local_anatomy_filter_for_train[dataset_name] = local_anatomy_filter_for_train_i
+                self.local_anatomy_filter_for_valid[dataset_name] = local_anatomy_filter_for_valid_i
+                # for training, allow repeat when processor > anatomy 
+                
+                # check split results
+                print(f"Rank {rank} anatomy subset for training: {local_anatomy_filter_for_train_i}")
+                print(f"Rank {rank} total samples: {sum(anatomy_samples[k] for k in local_anatomy_filter_for_train_i)}")
+                print(f"Rank {rank} anatomy subset for validation: {local_anatomy_filter_for_valid_i}")
+                print(f"Rank {rank} total samples: {sum(anatomy_samples[k] for k in local_anatomy_filter_for_valid_i)}")
+                ds_i = Conditional_CTReportDataset_Train(
+                    modality=modality_type,
+                    local_batch_size=local_batch_size[i], 
+                    jsonl_file=data_train_jsonl[i], 
+                    csv_file_dir=data_train_csv_dir[i], 
+                    npy_file_dir=data_train_npy_dir[i], 
+                    anatomy_filter=local_anatomy_filter_for_train_i,
+                    positive_threshold=positive_threshold,
+                    negative_threshold=negative_threshold,
+                    max_samples=train_max_samples
+                    )
+                self.dss[dataset_name] = ds_i
 
+                valid_ds_i = Conditional_CTReportDataset_Eval(
+                    modality=modality_type,
+                    jsonl_file=data_valid_jsonl[i], 
+                    csv_file_dir=data_valid_csv_dir[i], 
+                    npy_file_dir=data_valid_npy_dir[i], 
+                    anatomy_filter=local_anatomy_filter_for_valid_i,
+                    max_samples=valid_max_samples
+                    )
+                self.valid_dss[dataset_name] = valid_ds_i
+                self.anatomy2id_lss[dataset_name] = self.valid_dss[dataset_name].get_anatomy2id_ls()
+                dl_i = DataLoader(
+                    ds_i,
+                    num_workers = num_workers,
+                    batch_size = self.batch_size[i],
+                    shuffle = True,
+                    drop_last = True,
+                    pin_memory = pin_memory,
+                    collate_fn = collate_fn
+                )
+                self.dls[dataset_name] = dl_i
+                valid_dl_i = DataLoader(
+                    valid_ds_i,
+                    num_workers = num_workers,
+                    batch_size = self.batch_size[i] * local_batch_size[i],
+                    shuffle = False,
+                    pin_memory = pin_memory,
+                )
+
+                self.valid_dls[dataset_name] = valid_dl_i
+                self.dl_iters[dataset_name] = cycle(self.accelerator.prepare(dl_i))
+                self.valid_dl_iters[dataset_name] = cycle(self.accelerator.prepare(valid_dl_i))
+
+                self.pin_memory = pin_memory
+                self.num_workers = num_workers
+
+        self.batch_generators = []
+        self.gen_batch_generators()
         # prepare with accelerator
         self.device = self.accelerator.device
         self.CTClip.to(self.device)
@@ -332,14 +408,19 @@ class CTClipTrainer(nn.Module):
         )
         
         self.lr_scheduler = cosine_lr(self.optim, lr, warmup_steps, num_train_steps)
-        
-        self.loss_m = {dataset_name: AverageMeter() for dataset_name in dataset_names}
-        self.infoNCE_loss_m = {dataset_name: AverageMeter() for dataset_name in dataset_names}
-        self.triplet_loss_m = {dataset_name: AverageMeter() for dataset_name in dataset_names}
+        if self.stage1:
+            self.uncon_loss_m = {dataset_name: AverageMeter() for dataset_name in uncon_dataset_names}
+            self.it_triplet_loss_m = {dataset_name: AverageMeter() for dataset_name in uncon_dataset_names}
+            self.it_infoNCE_loss_m = {dataset_name: AverageMeter() for dataset_name in uncon_dataset_names}
+            self.ii_triplet_loss_m = {dataset_name: AverageMeter() for dataset_name in uncon_dataset_names}
+        if self.stage2:
+            self.loss_m = {dataset_name: AverageMeter() for dataset_name in dataset_names}
+            self.infoNCE_loss_m = {dataset_name: AverageMeter() for dataset_name in dataset_names}
+            self.triplet_loss_m = {dataset_name: AverageMeter() for dataset_name in dataset_names}
 
-        self.anatomy_infoNCE_loss_m = {dataset_name: dict() for dataset_name in dataset_names}
-        self.anatomy_triplet_loss_m = {dataset_name: dict() for dataset_name in dataset_names}
-        self.anatomy_valid_triplet_count_m = {dataset_name: dict() for dataset_name in dataset_names}
+            self.anatomy_infoNCE_loss_m = {dataset_name: dict() for dataset_name in dataset_names}
+            self.anatomy_triplet_loss_m = {dataset_name: dict() for dataset_name in dataset_names}
+            self.anatomy_valid_triplet_count_m = {dataset_name: dict() for dataset_name in dataset_names}
 
         self.save_model_every = save_model_every
         self.save_results_every = save_results_every
@@ -349,56 +430,59 @@ class CTClipTrainer(nn.Module):
         tensorboard_path = os.path.join(results_folder, 'tensorboard_log')
         self.tb_writer = SummaryWriter(tensorboard_path)
 
-        # if len([*self.results_folder.glob('**/*')]) > 0 and yes_or_no('do you want to clear previous experiment checkpoints and results?'):
-        #     rmtree(str(self.results_folder))
 
         self.results_folder.mkdir(parents=True, exist_ok=True)
         
-        # if you want to check the 'random' performance
-        # if self.is_main:
-        #     self.evaluate(0)
-        local_rank = torch.distributed.get_rank()
-        # run_name = f'CTClip-Train-{local_rank}-{datetime.now().strftime("%Y%m%d-%H%M%S")}'
-        visible = os.environ.get("CUDA_VISIBLE_DEVICES")
-        if visible:                              # 一般形如 "3,4,5,6"
+        if self.accelerator.is_local_main_process:
+            # local_rank = torch.distributed.get_rank()
+            # run_name = f'CTClip-Train-{local_rank}-{datetime.now().strftime("%Y%m%d-%H%M%S")}'
+            visible = os.environ.get("CUDA_VISIBLE_DEVICES")
+            
             physical_ids = [int(v) for v in visible.split(",")]
-            physical_id  = physical_ids[local_rank]
-        else:                                    # 没设，说明 0..N 就是物理编号
-            physical_id = local_rank
-        run_name = f'CTClip-Train-local-{local_rank}-phy-{physical_id}-7.30'
-        self.wandb = wandb.init(
-            project="CTClip-Train",
-            name=run_name,
-            group ='ddp_exp',
-            config={
-                "num_train_steps": self.num_train_steps,
-                "current_step": self.current_step,
-                "warmup_steps": warmup_steps,
-                "local_batch_size": self.local_batch_size,
-                "batch_size": self.batch_size,
-                "data_train_npy_dir": data_train_npy_dir,
-                "data_valid_npy_dir": data_valid_npy_dir,
-                "data_train_csv_dir": data_train_csv_dir,
-                "data_valid_csv_dir": data_valid_csv_dir,
-                "data_train_jsonl": data_train_jsonl,
-                "data_valid_jsonl": data_valid_jsonl,
-                "anatomy_filter": anatomy_filter,
-                "dataset_names": dataset_names,
-                "modality": modality,
-                "positive_threshold": positive_threshold,
-                "negative_threshold": negative_threshold,
-                "lr": lr,
-                "wd": wd,
-                "max_grad_norm": max_grad_norm,
-                "save_results_every": save_results_every,
-                "save_model_every": save_model_every,
-                "train_max_samples": train_max_samples,
-                "valid_max_samples": valid_max_samples,
-                "shuffle_train_samples_every": shuffle_train_samples_every
-            }
-        )
-        self.wandb.watch(self.CTClip.module, log='all', log_freq=10)
-        
+            
+            run_name = f'CTClip-Train-phy-{physical_ids}-7.30'
+            self.wandb = wandb.init(
+                project="CTClip-Train",
+                name=run_name,
+                group ='ddp_exp',
+                config={
+                    "num_train_steps": self.num_train_steps,
+                    "current_step": self.current_step,
+                    "warmup_steps": warmup_steps,
+                    "local_batch_size": self.local_batch_size,
+                    "batch_size": self.batch_size,
+                    "data_train_npy_dir": data_train_npy_dir,
+                    "data_valid_npy_dir": data_valid_npy_dir,
+                    "data_train_csv_dir": data_train_csv_dir,
+                    "data_valid_csv_dir": data_valid_csv_dir,
+                    "data_train_jsonl": data_train_jsonl,
+                    "data_valid_jsonl": data_valid_jsonl,
+                    "anatomy_filter": anatomy_filter,
+                    "dataset_names": dataset_names,
+                    "modality": modality,
+                    "positive_threshold": positive_threshold,
+                    "negative_threshold": negative_threshold,
+                    "lr": lr,
+                    "wd": wd,
+                    "max_grad_norm": max_grad_norm,
+                    "save_results_every": save_results_every,
+                    "save_model_every": save_model_every,
+                    "train_max_samples": train_max_samples,
+                    "valid_max_samples": valid_max_samples,
+                    "shuffle_train_samples_every": shuffle_train_samples_every
+                }
+            )
+            self.wandb.watch(self.CTClip.module, log='all', log_freq=10)
+            
+    def gen_batch_generators(self):
+        self.batch_generators = []
+        if self.stage1:
+            for dataset_name in self.uncon_dataset_names:
+                self.batch_generators.append(("stage1",dataset_name,self.uncon_dl_iters[dataset_name]))
+        if self.stage2:
+            for dataset_name in self.dataset_names:
+                self.batch_generators.append(("stage2",dataset_name,self.dl_iters[dataset_name]))
+                
     def _reset_metrics(self):
         for dataset_name in self.dataset_names:
             self.loss_m[dataset_name].reset()
@@ -410,6 +494,13 @@ class CTClipTrainer(nn.Module):
                 m.reset()
             for m in self.anatomy_valid_triplet_count_m[dataset_name].values():
                 m.reset()
+            # 重置统计的结果
+    def _reset_metrics_uncon(self):
+        for dataset_name in self.uncon_dataset_names:
+            self.uncon_loss_m[dataset_name].reset()
+            self.it_triplet_loss_m[dataset_name].reset()
+            self.it_infoNCE_loss_m[dataset_name].reset()
+            self.ii_triplet_loss_m[dataset_name].reset()
             # 重置统计的结果
 
     def distribute_equal_sample_num(self, anatomy_samples, num_processes):
@@ -833,91 +924,133 @@ class CTClipTrainer(nn.Module):
 
         # update CTClip model
         # 有两种方案，一个是每个step同时做2D和3D的训练。另一个是每个step只做2D或3D的训练，但是要用到梯度累积。
-        for dataset_name in self.dataset_names:
-            print(f"pid={os.getpid()} ",'rank', torch.distributed.get_rank(),'dataset_name', dataset_name, 'step', current_step)
-            # ▸ 让 Accelerate 决定什么时候同步梯度 / clip / step
+        for stage, dataset_name, dl_iter in self.batch_generators:
             with self.accelerator.accumulate(self.CTClip):
-                if self.debug:
-                    print_gpu_memory_stats(self.accelerator,'Before video, similarity_tab, anatomy, _ = next(self.dl_iters[dataset_name])')
-                # ---- 数据准备 ----
-                video, similarity_tab, anatomy, _ = next(self.dl_iters[dataset_name])
-
-                # 直接半精度进 GPU，减少显存与带宽
-                tgt_dtype = torch.float16 if mp == "fp16" else (
-                            torch.bfloat16 if mp == "bf16" else torch.float32)
-
-                video          = video.to(device, dtype=tgt_dtype, non_blocking=True)
-                similarity_tab = (similarity_tab.to(torch.float32) * 0.01).to(
-                                device, dtype=tgt_dtype, non_blocking=True)
-                if self.debug:
-                    print_gpu_memory_stats(self.accelerator,'before tokenizer')
-                # # tokenizer 仍在 CPU，之后再搬到 GPU
-                # text_tokens = self.tokenizer(
-                #     list(anatomy),
-                #     return_tensors="pt",
-                #     padding="max_length",
-                #     truncation=True,
-                #     max_length=512
-                # ).to(device, non_blocking=True)
-                with torch.no_grad():  # tokenizer不需要梯度
-                    text_tokens = self.tokenizer(
-                        list(anatomy),
-                        return_tensors="pt",
-                        padding="max_length",
-                        truncation=True,
-                        max_length=256  # 从512减少到256
-                    ).to(device, non_blocking=True)
-
-
-                # ---- 前向 & 反向 ----
-                with self.accelerator.autocast():
+                if stage == 'stage1':
+                    print(f"pid={os.getpid()} ",'rank', torch.distributed.get_rank(),'dataset_name', dataset_name, 'step', current_step)
+                    # ▸ 让 Accelerate 决定什么时候同步梯度 / clip / step
                     if self.debug:
-                        print_gpu_memory_stats(self.accelerator,'before self.CTClip')
-                    loss, triplet_loss, infoNCE_loss, valid_triplet_cnt = self.CTClip(
-                        text_tokens,
-                        video,
-                        gt_similarity_matrix=similarity_tab,
-                        return_loss=True,
-                        device=device
-                    )
-                print('rank: ', torch.distributed.get_rank()," loss: ", loss)
-                if self.debug:            
-                    print('rank: ', torch.distributed.get_rank(), "loss isnan:", torch.isnan(loss), "isinf:", torch.isinf(loss))
-                if self.debug:
-                    print_gpu_memory_stats(self.accelerator,'after self.CTClip and before self.accelerator.backward')
-                
-                del video, similarity_tab, text_tokens
+                        print_gpu_memory_stats(self.accelerator,'Before video, similarity_tab, anatomy, _ = next(self.uncon_dl_iters[dataset_name])')
+                    # ---- 数据准备 ----
+                    video, text, sample_idls, _ = next(dl_iter)
+
+                    # 直接半精度进 GPU，减少显存与带宽
+                    tgt_dtype = torch.float16 if mp == "fp16" else (
+                                torch.bfloat16 if mp == "bf16" else torch.float32)
+
+                    video          = video.to(device, dtype=tgt_dtype, non_blocking=True)
+                    if self.debug:
+                        print_gpu_memory_stats(self.accelerator,'before tokenizer')
+                    with torch.no_grad():  # tokenizer不需要梯度
+                        text_tokens = self.tokenizer(list(text),return_tensors="pt", padding="max_length", truncation=True, max_length=512).to(device, non_blocking=True)
+                    if self.soft_label:
+                        similarity_tab = self.uncon_similarity_lookup_table_train[dataset_name][np.ix_(sample_idls, sample_idls)]
+                        similarity_tab = (similarity_tab.to(torch.float32) * 0.01).to(
+                                    device, dtype=tgt_dtype, non_blocking=True)
+                    else:
+                        similarity_tab = torch.eye(len(sample_idls), dtype=tgt_dtype, device=device)
+                    with self.accelerator.autocast():
+                        loss, image_text_triplet_loss, image_text_infoNCE_loss, image_to_image_triplet_loss = self.CTClip(
+                            text_tokens,
+                            video,
+                            gt_similarity_matrix=similarity_tab,
+                            return_loss=True,
+                            device=device,
+                            is_condition=False)
+                    del video, text_tokens, similarity_tab
+                    torch.cuda.empty_cache()
+                    self.accelerator.backward(loss)                 # 自动 / grad_acc_steps 
+                    # ---- 立即把日志数据转到 CPU，释放 GPU 显存 ----
+                    loss_val        = float(loss.detach().cpu())
+                    image_text_triplet_mean = float(image_text_triplet_loss.mean().detach().cpu())
+                    image_text_infoNCE_mean = float(image_text_infoNCE_loss.mean().detach().cpu())
+                    image_to_image_triplet_mean = float(image_to_image_triplet_loss.mean().detach().cpu())
+                    del loss, image_text_triplet_loss, image_text_infoNCE_loss, image_to_image_triplet_loss
+                    self.uncon_loss_m[dataset_name].update(loss_val, 1)
+                    self.it_triplet_loss_m[dataset_name].update(image_text_triplet_mean, 1)
+                    self.it_infoNCE_loss_m[dataset_name].update(image_text_infoNCE_mean, 1)
+                    self.ii_triplet_loss_m[dataset_name].update(image_to_image_triplet_mean, 1)
                 torch.cuda.empty_cache()
-                
-                self.accelerator.backward(loss)                 # 自动 / grad_acc_steps
+                        
+                if stage == 'stage2':
+                    print(f"pid={os.getpid()} ",'rank', torch.distributed.get_rank(),'dataset_name', dataset_name, 'step', current_step)
+                    # ▸ 让 Accelerate 决定什么时候同步梯度 / clip / step
+                    if self.debug:
+                        print_gpu_memory_stats(self.accelerator,'Before video, similarity_tab, anatomy, _ = next(self.dl_iters[dataset_name])')
+                    # ---- 数据准备 ----
+                    video, similarity_tab, anatomy, _ = next(dl_iter)
 
-                # ---- 立即把日志数据转到 CPU，释放 GPU 显存 ----
-                loss_val        = float(loss.detach().cpu())
-                triplet_mean    = float(triplet_loss.mean().detach().cpu())
-                infoNCE_mean    = float(infoNCE_loss.mean().detach().cpu())
-                del loss
-                self.loss_m[dataset_name].update(loss_val, 1)
-                self.triplet_loss_m[dataset_name].update(triplet_mean, 1)
-                self.infoNCE_loss_m[dataset_name].update(infoNCE_mean, 1)
+                    # 直接半精度进 GPU，减少显存与带宽
+                    tgt_dtype = torch.float16 if mp == "fp16" else (
+                                torch.bfloat16 if mp == "bf16" else torch.float32)
 
-                for i, name in enumerate(anatomy):
-                    tl = float(triplet_loss[i].detach().cpu())
-                    il = float(infoNCE_loss[i].detach().cpu())
-                    vc = int(valid_triplet_cnt)
+                    video          = video.to(device, dtype=tgt_dtype, non_blocking=True)
+                    similarity_tab = (similarity_tab.to(torch.float32) * 0.01).to(
+                                    device, dtype=tgt_dtype, non_blocking=True)
+                    if self.debug:
+                        print_gpu_memory_stats(self.accelerator,'before tokenizer')
 
-                    if name not in self.anatomy_infoNCE_loss_m[dataset_name]:
-                        self.anatomy_infoNCE_loss_m[dataset_name][name]          = AverageMeter()
-                        self.anatomy_triplet_loss_m[dataset_name][name]          = AverageMeter()
-                        self.anatomy_valid_triplet_count_m[dataset_name][name]   = AverageMeter()
+                    with torch.no_grad():  # tokenizer不需要梯度
+                        text_tokens = self.tokenizer(
+                            list(anatomy),
+                            return_tensors="pt",
+                            padding="max_length",
+                            truncation=True,
+                            max_length=256  # 从512减少到256
+                        ).to(device, non_blocking=True)
 
-                    if il > 0:
-                        self.anatomy_infoNCE_loss_m[dataset_name][name].update(il, 1)
-                    if tl > 0:
-                        self.anatomy_triplet_loss_m[dataset_name][name].update(tl, 1)
-                        self.anatomy_valid_triplet_count_m[dataset_name][name].update(vc, 1)
 
-                
-                
+                    # ---- 前向 & 反向 ----
+                    with self.accelerator.autocast():
+                        if self.debug:
+                            print_gpu_memory_stats(self.accelerator,'before self.CTClip')
+                        loss, triplet_loss, infoNCE_loss, valid_triplet_cnt = self.CTClip(
+                            text_tokens,
+                            video,
+                            gt_similarity_matrix=similarity_tab,
+                            return_loss=True,
+                            device=device
+                        )
+                    print('rank: ', torch.distributed.get_rank()," loss: ", loss)
+                    if self.debug:            
+                        print('rank: ', torch.distributed.get_rank(), "loss isnan:", torch.isnan(loss), "isinf:", torch.isinf(loss))
+                    if self.debug:
+                        print_gpu_memory_stats(self.accelerator,'after self.CTClip and before self.accelerator.backward')
+                    
+                    del video, similarity_tab, text_tokens
+                    torch.cuda.empty_cache()
+                    
+                    self.accelerator.backward(loss)                 # 自动 / grad_acc_steps
+
+                    # ---- 立即把日志数据转到 CPU，释放 GPU 显存 ----
+                    loss_val        = float(loss.detach().cpu())
+                    triplet_mean    = float(triplet_loss.mean().detach().cpu())
+                    infoNCE_mean    = float(infoNCE_loss.mean().detach().cpu())
+                    del loss
+                    self.loss_m[dataset_name].update(loss_val, 1)
+                    self.triplet_loss_m[dataset_name].update(triplet_mean, 1)
+                    self.infoNCE_loss_m[dataset_name].update(infoNCE_mean, 1)
+
+                    for i, name in enumerate(anatomy):
+                        tl = float(triplet_loss[i].detach().cpu())
+                        il = float(infoNCE_loss[i].detach().cpu())
+                        vc = int(valid_triplet_cnt)
+
+                        if name not in self.anatomy_infoNCE_loss_m[dataset_name]:
+                            self.anatomy_infoNCE_loss_m[dataset_name][name]          = AverageMeter()
+                            self.anatomy_triplet_loss_m[dataset_name][name]          = AverageMeter()
+                            self.anatomy_valid_triplet_count_m[dataset_name][name]   = AverageMeter()
+
+                        if il > 0:
+                            self.anatomy_infoNCE_loss_m[dataset_name][name].update(il, 1)
+                        if tl > 0:
+                            self.anatomy_triplet_loss_m[dataset_name][name].update(tl, 1)
+                            self.anatomy_valid_triplet_count_m[dataset_name][name].update(vc, 1)
+
+                    # 显式删除局部大张量，帮助 Python 及时回收
+                    del triplet_loss, infoNCE_loss
+            
+                torch.cuda.empty_cache()
                 # ---- 梯度同步步：clip / step / zero_grad ----
                 if self.accelerator.sync_gradients:
                     if self.max_grad_norm is not None:
@@ -928,36 +1061,31 @@ class CTClipTrainer(nn.Module):
                     self.optim.zero_grad(set_to_none=True)  # 清除梯度，避免内存泄漏
                     torch.cuda.empty_cache()
 
-                # 显式删除局部大张量，帮助 Python 及时回收
-                del triplet_loss, infoNCE_loss
-        
-            torch.cuda.empty_cache()
-
         # save model every so often
         if not (current_step % self.save_model_every) and self.is_main:
             model_path = self.results_folder / f'CTClip.{current_step}.pt'
             self.save(model_path)
             self.print(f'Saving model to {str(self.results_folder)}')
+        if self.stage2:
+            if not (current_step % self.shuffle_train_samples_every):
+                for i in range(len(self.dataset_names)):
+                    dataset_name = self.dataset_names[i]
+                    print(f"Rank {torch.distributed.get_rank()} | Step {current_step} | Shuffle Training Samples")
+                    self.dss[dataset_name].prepare_anatomy_data()
+                    # 重新创建 DataLoader
+                    self.dls[dataset_name] = DataLoader(
+                        self.dss[dataset_name],
+                        num_workers=self.num_workers,
+                        batch_size=self.batch_size[i],
+                        shuffle=False,
+                        drop_last=False,
+                        pin_memory=self.pin_memory,
+                        collate_fn=collate_fn
+                    )
+                    # 重新准备迭代器
+                    self.dl_iters[dataset_name] = cycle(self.accelerator.prepare(self.dls[dataset_name]))
+                self.gen_batch_generators()  # 重新生成 batch_generators
         
-        if not (current_step % self.shuffle_train_samples_every):
-            for i in range(len(self.dataset_names)):
-                dataset_name = self.dataset_names[i]
-                print(f"Rank {torch.distributed.get_rank()} | Step {current_step} | Shuffle Training Samples")
-                self.dss[dataset_name].prepare_anatomy_data()
-                # 重新创建 DataLoader
-                self.dls[dataset_name] = DataLoader(
-                    self.dss[dataset_name],
-                    num_workers=self.num_workers,
-                    batch_size=self.batch_size[i],
-                    shuffle=False,
-                    drop_last=False,
-                    pin_memory=self.pin_memory,
-                    collate_fn=collate_fn
-                )
-                # 重新准备迭代器
-                # self.dl_iters[dataset_name] = cycle(self.dls[dataset_name])
-                # self.dl_iters[dataset_name] = self.accelerator.prepare(self.dl_iters[dataset_name])
-                self.dl_iters[dataset_name] = cycle(self.accelerator.prepare(self.dls[dataset_name]))
         # evaluate model every so often (ddp)
         if not (current_step % self.save_results_every):
             
@@ -969,15 +1097,24 @@ class CTClipTrainer(nn.Module):
                 world_size = torch.distributed.get_world_size()
                 gathered_metrics = [None for _ in range(world_size)]
                 losses = {}
-                for dataset_name in self.dataset_names:
+                if self.stage1:
                     losses.update({
-                        f'{dataset_name}_main': (self.loss_m[dataset_name].sum, self.loss_m[dataset_name].count),
-                        f'{dataset_name}_triplet': (self.triplet_loss_m[dataset_name].sum, self.triplet_loss_m[dataset_name].count),
-                        f'{dataset_name}_infoNCE': (self.infoNCE_loss_m[dataset_name].sum, self.infoNCE_loss_m[dataset_name].count),
-                        f'{dataset_name}_anatomy_infoNCE': {k: (v.sum, v.count) for k, v in self.anatomy_infoNCE_loss_m[dataset_name].items()},
-                        f'{dataset_name}_anatomy_triplet': {k: (v.sum, v.count) for k, v in self.anatomy_triplet_loss_m[dataset_name].items()},
-                        f'{dataset_name}_anatomy_valid_triplet': {k: (v.sum, v.count) for k, v in self.anatomy_valid_triplet_count_m[dataset_name].items()}
-                    })
+                        f'{dataset_name}_uncon_main': (self.uncon_loss_m[dataset_name].sum, self.uncon_loss_m[dataset_name].count),
+                        f'{dataset_name}_it_triplet': (self.it_triplet_loss_m[dataset_name].sum, self.it_triplet_loss_m[dataset_name].count),
+                        f'{dataset_name}_it_infoNCE': (self.it_infoNCE_loss_m[dataset_name].sum, self.it_infoNCE_loss_m[dataset_name].count),
+                        f'{dataset_name}_ii_triplet': (self.ii_triplet_loss_m[dataset_name].sum, self.ii_triplet_loss_m[dataset_name].count)
+                    } for dataset_name in self.uncon_dataset_names
+                )
+                if self.stage2:
+                    for dataset_name in self.dataset_names:
+                        losses.update({
+                            f'{dataset_name}_main': (self.loss_m[dataset_name].sum, self.loss_m[dataset_name].count),
+                            f'{dataset_name}_con_triplet': (self.triplet_loss_m[dataset_name].sum, self.triplet_loss_m[dataset_name].count),
+                            f'{dataset_name}_con_infoNCE': (self.infoNCE_loss_m[dataset_name].sum, self.infoNCE_loss_m[dataset_name].count),
+                            f'{dataset_name}_anatomy_infoNCE': {k: (v.sum, v.count) for k, v in self.anatomy_infoNCE_loss_m[dataset_name].items()},
+                            f'{dataset_name}_anatomy_triplet': {k: (v.sum, v.count) for k, v in self.anatomy_triplet_loss_m[dataset_name].items()},
+                            f'{dataset_name}_anatomy_valid_triplet': {k: (v.sum, v.count) for k, v in self.anatomy_valid_triplet_count_m[dataset_name].items()}
+                        })
 
                 gathered_data = {
                     'losses': losses
@@ -1001,38 +1138,59 @@ class CTClipTrainer(nn.Module):
                         return {k: (v[0]/v[1] if v[1]>0 else 0) for k, v in merged.items()}
                     
                     # 计算全局平均损失
-                    global_main_loss = {dataset_name: merge_loss(f'{dataset_name}_main') for dataset_name in self.dataset_names}
-                    global_triplet_loss = {dataset_name: merge_loss(f'{dataset_name}_triplet') for dataset_name in self.dataset_names}
-                    global_infoNCE_loss = {dataset_name: merge_loss(f'{dataset_name}_infoNCE') for dataset_name in self.dataset_names}
-                    global_anatomy_infoNCE = {dataset_name: merge_anatomy_loss(f'{dataset_name}_anatomy_infoNCE') for dataset_name in self.dataset_names}
-                    global_anatomy_triplet = {dataset_name: merge_anatomy_loss(f'{dataset_name}_anatomy_triplet') for dataset_name in self.dataset_names}
-                    global_anatomy_valid_triplet = {dataset_name: merge_anatomy_loss(f'{dataset_name}_anatomy_valid_triplet') for dataset_name in self.dataset_names}
+                    if self.stage1:
+                        global_uncon_loss = {dataset_name: merge_loss(f'{dataset_name}_uncon_main') for dataset_name in self.uncon_dataset_names}
+                        global_it_triplet_loss = {dataset_name: merge_loss(f'{dataset_name}_it_triplet') for dataset_name in self.uncon_dataset_names}
+                        global_it_infoNCE_loss = {dataset_name: merge_loss(f'{dataset_name}_it_infoNCE') for dataset_name in self.uncon_dataset_names}
+                        global_ii_triplet_loss = {dataset_name: merge_loss(f'{dataset_name}_ii_triplet') for dataset_name in self.uncon_dataset_names} 
+                        
+                    if self.stage2:
+                        global_main_loss = {dataset_name: merge_loss(f'{dataset_name}_main') for dataset_name in self.dataset_names}
+                        global_triplet_loss = {dataset_name: merge_loss(f'{dataset_name}_con_triplet') for dataset_name in self.dataset_names}
+                        global_infoNCE_loss = {dataset_name: merge_loss(f'{dataset_name}_con_infoNCE') for dataset_name in self.dataset_names}
+                        global_anatomy_infoNCE = {dataset_name: merge_anatomy_loss(f'{dataset_name}_anatomy_infoNCE') for dataset_name in self.dataset_names}
+                        global_anatomy_triplet = {dataset_name: merge_anatomy_loss(f'{dataset_name}_anatomy_triplet') for dataset_name in self.dataset_names}
+                        global_anatomy_valid_triplet = {dataset_name: merge_anatomy_loss(f'{dataset_name}_anatomy_valid_triplet') for dataset_name in self.dataset_names}
 
                     # ==== 日志记录 ====
                     lr = self.optim.param_groups[0]['lr']
                     current_time = datetime.now().strftime("%m-%d %H:%M")
-                    
-                    for dataset_name in self.dataset_names:
-                        self.print(f"[{dataset_name}] Step {self.current_step} at {current_time} | LR {lr} | "
-                            f"Loss {global_main_loss[dataset_name]:.4f} | InfoNCE {global_infoNCE_loss[dataset_name]:.4f} | "
-                            f"Triplet {global_triplet_loss[dataset_name]:.4f}")
+                    if self.stage1:
+                        for dataset_name in self.uncon_dataset_names:
+                            self.print(f"[{dataset_name}] Step {self.current_step} at {current_time} | LR {lr} | "
+                                f"Uncon Loss {global_uncon_loss[dataset_name]:.4f} | "
+                                f"Image-Text Triplet {global_it_triplet_loss[dataset_name]:.4f} | "
+                                f"Image-Text InfoNCE {global_it_infoNCE_loss[dataset_name]:.4f} | "
+                                f"Image-Image Triplet {global_ii_triplet_loss[dataset_name]:.4f}")
+                    if self.stage2:
+                        for dataset_name in self.dataset_names:
+                            self.print(f"[{dataset_name}] Step {self.current_step} at {current_time} | LR {lr} | "
+                                f"Con Loss {global_main_loss[dataset_name]:.4f} | Con InfoNCE {global_infoNCE_loss[dataset_name]:.4f} | "
+                                f"Con Triplet {global_triplet_loss[dataset_name]:.4f}")
 
                     self.tb_writer.add_scalar('lr', lr, current_step)
-                    for dataset_name in self.dataset_names:
-                        self.tb_writer.add_scalar(f'{dataset_name}_train_loss', self.loss_m[dataset_name].avg, current_step)
-                        self.tb_writer.add_scalar(f'{dataset_name}_infoNCE_loss', self.infoNCE_loss_m[dataset_name].avg, current_step)
-                        self.tb_writer.add_scalar(f'{dataset_name}_triplet_loss', self.triplet_loss_m[dataset_name].avg, current_step)
-                        
-                        # 记录解剖结构损失
-                        for anatomy, loss in global_anatomy_infoNCE[dataset_name].items():
-                            self.tb_writer.add_scalar(f'{dataset_name}_{anatomy}_infoNCE_loss', loss, current_step)
-                        for anatomy, loss in global_anatomy_triplet[dataset_name].items():
-                            self.tb_writer.add_scalar(f'{dataset_name}_{anatomy}_triplet_loss', loss, current_step)
-                        for anatomy, count in global_anatomy_valid_triplet[dataset_name].items():
-                            self.tb_writer.add_scalar(f'{dataset_name}_{anatomy}_valid_triplet', count, current_step)
-                                    
+                    if self.stage1:
+                        for dataset_name in self.uncon_dataset_names:
+                            self.tb_writer.add_scalar(f'{dataset_name}_uncon_train_loss', self.uncon_loss_m[dataset_name].avg, current_step)
+                            self.tb_writer.add_scalar(f'{dataset_name}_it_triplet_loss', self.it_triplet_loss_m[dataset_name].avg, current_step)
+                            self.tb_writer.add_scalar(f'{dataset_name}_it_infoNCE_loss', self.it_infoNCE_loss_m[dataset_name].avg, current_step)
+                            self.tb_writer.add_scalar(f'{dataset_name}_ii_triplet_loss', self.ii_triplet_loss_m[dataset_name].avg, current_step)
+                    if self.stage2:
+                        for dataset_name in self.dataset_names:
+                            self.tb_writer.add_scalar(f'{dataset_name}_train_loss', self.loss_m[dataset_name].avg, current_step)
+                            self.tb_writer.add_scalar(f'{dataset_name}_infoNCE_loss', self.infoNCE_loss_m[dataset_name].avg, current_step)
+                            self.tb_writer.add_scalar(f'{dataset_name}_triplet_loss', self.triplet_loss_m[dataset_name].avg, current_step)
+                            
+                            # 记录解剖结构损失
+                            for anatomy, loss in global_anatomy_infoNCE[dataset_name].items():
+                                self.tb_writer.add_scalar(f'{dataset_name}_{anatomy}_infoNCE_loss', loss, current_step)
+                            for anatomy, loss in global_anatomy_triplet[dataset_name].items():
+                                self.tb_writer.add_scalar(f'{dataset_name}_{anatomy}_triplet_loss', loss, current_step)
+                            for anatomy, count in global_anatomy_valid_triplet[dataset_name].items():
+                                self.tb_writer.add_scalar(f'{dataset_name}_{anatomy}_valid_triplet', count, current_step)
+                                        
                 self._reset_metrics()
-
+                self._reset_metrics_uncon()
         self.current_step += 1
 
     def train(self, evaluate_before_train):

@@ -643,7 +643,14 @@ class CTCLIP(nn.Module):
             param.requires_grad = True
         for param in self.to_visual_latent.parameters():
             param.requires_grad = True
-
+    
+    def open_fusion_module(self):
+        for param in self.fusion_module.parameters():
+            param.requires_grad = True
+            
+    def freeze_fusion_module(self):
+        for param in self.fusion_module.parameters():
+            param.requires_grad = False
     def tokenize(self, prompt):
         text_tokens=self.tokenizer(prompt, return_tensors="pt", padding="max_length", truncation=True, max_length=512).to(torch.cuda)
         return text_tokens
