@@ -18,8 +18,8 @@ from transformers import BertTokenizer, BertModel
 
 # NOTE: Import a Cross-Attn Module and PE Module
 from positional_encodings.torch_encodings import PositionalEncoding3D, PositionalEncoding1D
-from ct_clip.transformer_decoder import TransformerDecoder, TransformerDecoderLayer
-# from transformer_decoder import TransformerDecoder, TransformerDecoderLayer
+# from ct_clip.transformer_decoder import TransformerDecoder, TransformerDecoderLayer
+from transformer_decoder import TransformerDecoder, TransformerDecoderLayer
 
 # NOTE
 
@@ -418,6 +418,7 @@ class CTCLIP(nn.Module):
             *,
             use_triplet_loss = 1,
             use_infoNCE_loss = 1,
+            use_image2image_loss = 1,
             triplet_loss_margin = 0.1,
             positive_distance_threshold = 0.2,
             positive_threshold = 0.7,   # ON default, >0.7 can be positive
@@ -472,6 +473,7 @@ class CTCLIP(nn.Module):
         self.use_infoNCE_loss = use_infoNCE_loss
         self.positive_threshold = positive_threshold    # infoNCE中找到false negative
         self.negative_threshold = negative_threshold
+        self.use_image2image_loss = use_image2image_loss
         
         #assert use_all_token_embeds or (visual_has_cls_token or text_has_cls_token), 'CLS token must be included on both vision and text transformers if you are not using fine-grained contrastive learning loss'
         self.dtype=torch.float32
@@ -547,37 +549,10 @@ class CTCLIP(nn.Module):
         self.use_mlm = use_mlm
         self.text_ssl_loss_weight = text_ssl_loss_weight if use_mlm else 0
 
-        # if use_mlm:
-        #     mlm_kwargs, kwargs = groupby_prefix_and_trim('mlm_', kwargs)
-        #     self.mlm = MLM(
-        #         self.text_transformer,
-        #         dim = dim_text,
-        #         num_tokens = num_text_tokens,
-        #         **mlm_kwargs
-        #     )
-
         # image ssl
 
         self.use_visual_ssl = use_visual_ssl or exists(visual_ssl)
         self.image_ssl_loss_weight = image_ssl_loss_weight if use_visual_ssl else 0
-
-        # if self.use_visual_ssl:
-        #     if exists(visual_ssl):
-        #         self.visual_ssl = visual_ssl
-
-        #     elif use_visual_ssl:
-        #         if visual_ssl_type == 'simsiam':
-        #             ssl_type = partial(SimSiam, channels = channels)
-        #         elif visual_ssl_type == 'simclr':
-        #             ssl_type = partial(SimCLR, temperature = simclr_temperature, channels = channels)
-        #         else:
-        #             raise ValueError(f'unknown visual_ssl_type')
-
-        #         self.visual_ssl = ssl_type(
-        #             self.visual_transformer,
-        #             image_size = visual_image_size,
-        #             hidden_layer = visual_ssl_hidden_layer
-        #         )
 
         # text latent projection
 
@@ -763,6 +738,66 @@ class CTCLIP(nn.Module):
 
         return avg_valid_loss, torch.sum(mask).item()
 
+    def multi_positive_infoNCE_loss_uncon(self, pred_sim, true_sim, positive_threshold=0.7):
+        """
+        infoNCE改进版本，分母去掉positive的元素（除了对角线）
+        """
+        true_sim[true_sim>=positive_threshold] = 1
+        true_sim[true_sim<positive_threshold] = 0
+        
+        diag_mask = torch.eye(true_sim.shape[0]).to(true_sim.device)
+        undiag_mask = torch.zeros_like(true_sim)
+        undiag_mask[true_sim==0] = 1
+        mask = undiag_mask + diag_mask
+
+        logits_sum = torch.exp(pred_sim).mul(mask).sum(1)
+        logits_norm = torch.exp(torch.diag(pred_sim)) / logits_sum
+        loss = -1 * torch.log(logits_norm)
+        loss = loss.mean()
+        
+        return loss
+    
+    def triplet_loss_uncon(self, pred_sim, true_sim, margin=0.2, gt_threshold=0.3, positive_threshold=0.7, negative_threshold=0.4, temp=0.07):
+        """
+        计算Triplet Loss，用于排序模型的训练。
+
+        参数：
+            pred_sim (torch.Tensor): 预测的相似度矩阵，形状为(n, m)，n为query数量，m为每个query的样本数。
+            true_sim (torch.Tensor): 真实的相似度矩阵，形状与pred_sim相同。
+            margin (float): 正负样本之间的最小间隔。
+            gt_threshold (float): 定义正负样本
+
+        返回：
+            torch.Tensor: 计算得到的Triplet Loss标量值。
+        """
+        # 确保输入张量的形状一致
+        assert pred_sim.shape == true_sim.shape, "预测矩阵和真实矩阵形状不一致"
+        n, m = pred_sim.shape
+        # 生成三维掩码矩阵，标记所有满足 true_sim[i]-true_sim[j] > true_sim[i] - true_sim[k] 的位置
+        # true_sim.unsqueeze(2) 形状为(n, m, 1), true_sim.unsqueeze(1) 形状为(n, 1, m)
+        mask = (true_sim.unsqueeze(2) - true_sim.unsqueeze(1)) > gt_threshold  # 形状(n, m, m)
+        abs_mask =(true_sim > positive_threshold).unsqueeze(2) # 同时满足ij>0.7
+        mask = mask & abs_mask
+        abs_mask =(true_sim < negative_threshold).unsqueeze(1) # 同时满足ik<0.4
+        mask = mask & abs_mask
+        # 计算预测相似度的差值矩阵 pred_sim[j] - pred_sim[i]
+        diff = - pred_sim.unsqueeze(2) + pred_sim.unsqueeze(1)  # 形状(n, m, m)
+        # 计算Triplet Loss各项：max(0, diff + margin)
+        losses = torch.clamp_min(diff + margin, 1e-8)
+        # softplus : log(1+exp(.../temp))
+        losses = F.softplus(losses / temp) # torch.log(1 + torch.exp(losses / temp))
+        # 应用掩码，仅保留有效正负对
+        masked_losses = losses * mask.float()
+        # 计算每个query的总损失和有效对数量
+        sum_per_query = masked_losses.sum(dim=(1, 2))  # 形状(n,)
+        num_pairs_per_query = mask.sum(dim=(1, 2)) + 1e-14     # 形状(n,)   # 避免分母为0（全部满足）
+        # 处理无有效对的情况，避免除零
+        avg_loss_per_query = sum_per_query / num_pairs_per_query.clamp(min=1)
+        avg_loss_per_query[num_pairs_per_query == 0] = 0  # 无有效对的query损失置零
+        # 返回batch平均损失
+        return avg_loss_per_query.mean()
+
+
     def forward(
             self,
             text,   # B
@@ -771,137 +806,230 @@ class CTCLIP(nn.Module):
             gt_similarity_matrix=None,  # B local_B local_B
             return_loss = False,
             return_latents = False,
+            is_condition = True
     ):
-        B, device = text.input_ids.shape[0], device
-
-        # derive text mask
-
-        text_mask =text.attention_mask
-
-        if return_loss:
-            assert gt_similarity_matrix is not None, 'calculate loss but ground truth similarity matrix is not given'
-
-        # get encoded text
-
-        text_args = (text.input_ids,text.attention_mask)
-
-        if not self.text_encode_without_mask:
-            text_args = (*text_args, text_mask)
-
-        text_embeddings = self.text_transformer(text.input_ids, attention_mask = text.attention_mask )
-        enc_text = text_embeddings[0]   # B 512(token_len) 768
-        
-        # NOTE: need to flatten B local_B ahead
-        B, local_B, _, D, H, W = image.shape
-        image = rearrange(image, 'B N O D H W -> (B N) O D H W')
-        # NOTE
-        
-        enc_image = self.visual_transformer(image, return_encoded_tokens=True)   # B*N 24 24 24 512(vis_dim)
-
         global h_r, w_r, z_r
-        h_r, w_r, z_r = enc_image.shape[1], enc_image.shape[2], enc_image.shape[3]
+        if is_condition:
+            B, device = text.input_ids.shape[0], device
 
-        # NOTE: Do NOT Pooling. Instead, reshape to B (HWD) Dim
-        # enc_image = torch.mean(enc_image, dim=1)    # B 24 24 512 (avg over z-axis)
-        # enc_image = enc_image.view(enc_image.shape[0], -1)  # B 24*24*512
+            # derive text mask
 
-        image_embeds = rearrange(enc_image, 'b h w d dim -> h b (w d dim)')   # 24, B*N, (24*24*512)
-        # 这里有问题，实际上是B T H W Dim，不过结果没有问题，就是 T B (H W Dim)
+            text_mask =text.attention_mask
 
-        # image_embeds = rearrange(enc_image, 'b h w d dim -> b (h w d) dim')   # B*N, 24*24*24, 512
-        # NOTE
+            if return_loss:
+                assert gt_similarity_matrix is not None, 'calculate loss but ground truth similarity matrix is not given'
 
-        # project to latents
-        text_embeds = enc_text[:,0,:] # B 768
+            # get encoded text
 
-        text_latents = self.to_text_latent(text_embeds) # B 512
+            text_args = (text.input_ids,text.attention_mask)
 
-        image_latents = self.to_visual_latent(image_embeds) # 24 B*N 512
+            if not self.text_encode_without_mask:
+                text_args = (*text_args, text_mask)
 
-        # NOTE: Add a Cross-Attn here 
-        # WARNING Batchsize on the 2nd dim, Squence_len on the 1st dim
-        # text_latents, image_latents = map(l2norm, (text_latents, image_latents))
-        text_latents = repeat(text_latents, 'b dim -> one (b n) dim', one=1, n=local_B) # 1 B*N 512
-        # pos = repeat(self.pos_embedding, 'one h w d dim -> (one b) h w d dim', b=text_latents.shape[0]) # B*N H W D 512
-        # pos = rearrange(self.pos_embedding, 'b h w d dim -> (h w d) b dim')  # B*N (HWD) 512
-        # 修改
-        
-        # print('text_latents:',' isnan: ',torch.isnan(text_latents).any(), ' isinf ' ,torch.isinf(text_latents).any())
-        # print('image_latents:',' isnan: ', torch.isnan(image_latents).any(),' isinf: ', torch.isinf(image_latents).any())
-        t = image_latents.shape[0]
-        temp_pos_embedding = self.pos_embedding[:,:t, :]  # 1 t 512
-
-        pos = repeat(temp_pos_embedding, 'one d dim -> d (one bn) dim', bn=image_latents.shape[1]).to(device)  # 24, B*N, (24*24*512)
-        fused_latents, _ = self.fusion_module(text_latents, image_latents, pos=pos) # 1 B*N 512
-        
-        # Check for NaN or infinite values in fused latents
-        # print('fused_latents.shape', fused_latents.shape)
-        
-        fused_latents = fused_latents[0]
-        
-        norms = torch.norm(fused_latents, dim=-1)
-        # print('fused_latents范数:', '最小值:', norms.min(), '最大值:', norms.max(), '存在零:', (norms == 0).any())
-        if (norms < 1e-6).any():
-            print('警告：检测到极小范数')
-            # 可选：添加微小噪声避免零范数问题
-            fused_latents = fused_latents + torch.randn_like(fused_latents) * 1e-8
-        if torch.isnan(fused_latents).any() or torch.isinf(fused_latents).any():
-            print('NaN/Inf in vec **before** l2norm')
-    
-        fused_latents = l2norm(fused_latents) # B*N 512
-        
-        
-        if fused_latents.isnan().any() or fused_latents.isinf().any():
-            print('NaN/Inf in vec **after** l2norm')
-        if (fused_latents == 0).any():
-            print('Zero in vec **after** l2norm')
-        
-        fused_latents = rearrange(fused_latents, '(b n) dim -> b n dim', n=local_B)
-        # NOTE
-
-        # calculate another set of latents for image to text (vs text to image)
-        # proposed by CLOOB
-
-        if return_latents:
-            return text_latents, image_latents, fused_latents, self.temperature.exp()
-
-        
-        # pred similarity matrix
-        # print('fused_latents', 'isnan',torch.isnan(fused_latents).any(), 'is_inf',torch.isinf(fused_latents).any(), 'min',fused_latents.min(),'max', fused_latents.max())
-        pred_similarity_matrix = einsum('b n d, k m d -> b k n m', (fused_latents, fused_latents))   # B B local_B local_B
-        batch_indices = torch.arange(B)
-        pred_similarity_matrix = pred_similarity_matrix[batch_indices, batch_indices, :, :] # B local_B local_B
-        
-        # early return, if needed
-
-        if not return_loss:
-            return pred_similarity_matrix
-
-        # contrastive loss
-
-        loss = 0
-        
-        if not (self.use_infoNCE_loss > 0 or self.use_triplet_loss > 0):
-            raise ValueError("To Calculate Loss, use_triplet_loss and use_infoNCE_loss cannot both be False")
-        
-        if self.use_triplet_loss > 0:
-            triplet_loss, valid_triplet_count = self.triplet_loss(pred_similarity_matrix, gt_similarity_matrix, margin=self.triplet_loss_margin, gt_threshold=self.positive_distance_threshold, positive_threshold=self.positive_threshold, negative_threshold=self.negative_threshold)
-            # b
-            loss += self.use_triplet_loss * triplet_loss.mean()
-        else:
-            triplet_loss = torch.zeros(B)
-            valid_triplet_count = 0
+            text_embeddings = self.text_transformer(text.input_ids, attention_mask = text.attention_mask )
+            enc_text = text_embeddings[0]   # B 512(token_len) 768
             
-        if self.use_infoNCE_loss > 0:
-            infoNCE_loss = self.multi_positive_infoNCE_loss(pred_similarity_matrix, gt_similarity_matrix, positive_threshold=self.positive_threshold)
-            # b
-            loss += self.use_infoNCE_loss * infoNCE_loss.mean()
+            # NOTE: need to flatten B local_B ahead
+            B, local_B, _, D, H, W = image.shape
+            image = rearrange(image, 'B N O D H W -> (B N) O D H W')
+            # NOTE
+            
+            enc_image = self.visual_transformer(image, return_encoded_tokens=True)   # B*N 24 24 24 512(vis_dim)
+
+            h_r, w_r, z_r = enc_image.shape[1], enc_image.shape[2], enc_image.shape[3]
+
+            # NOTE: Do NOT Pooling. Instead, reshape to B (HWD) Dim
+
+            image_embeds = rearrange(enc_image, 'b h w d dim -> h b (w d dim)')   # 24, B*N, (24*24*512)
+            # 这里有问题，实际上是B T H W Dim，不过结果没有问题，就是 T B (H W Dim)
+
+            # image_embeds = rearrange(enc_image, 'b h w d dim -> b (h w d) dim')   # B*N, 24*24*24, 512
+            # NOTE
+
+            # project to latents
+            text_embeds = enc_text[:,0,:] # B 768
+
+            text_latents = self.to_text_latent(text_embeds) # B 512
+
+            image_latents = self.to_visual_latent(image_embeds) # 24 B*N 512
+
+            # NOTE: Add a Cross-Attn here 
+            # WARNING Batchsize on the 2nd dim, Squence_len on the 1st dim
+            # text_latents, image_latents = map(l2norm, (text_latents, image_latents))
+            text_latents = repeat(text_latents, 'b dim -> one (b n) dim', one=1, n=local_B) # 1 B*N 512
+
+            t = image_latents.shape[0]
+            temp_pos_embedding = self.pos_embedding[:,:t, :]  # 1 t 512
+
+            pos = repeat(temp_pos_embedding, 'one d dim -> d (one bn) dim', bn=image_latents.shape[1]).to(device)  # 24, B*N, (24*24*512)
+            fused_latents, _ = self.fusion_module(text_latents, image_latents, pos=pos) # 1 B*N 512
+
+            
+            fused_latents = fused_latents[0]
+            
+            norms = torch.norm(fused_latents, dim=-1)
+            # print('fused_latents范数:', '最小值:', norms.min(), '最大值:', norms.max(), '存在零:', (norms == 0).any())
+            if (norms < 1e-6).any():
+                print('警告：检测到极小范数')
+                # 可选：添加微小噪声避免零范数问题
+                fused_latents = fused_latents + torch.randn_like(fused_latents) * 1e-8
+            if torch.isnan(fused_latents).any() or torch.isinf(fused_latents).any():
+                print('NaN/Inf in vec **before** l2norm')
+        
+            fused_latents = l2norm(fused_latents) # B*N 512
+            
+            
+            if fused_latents.isnan().any() or fused_latents.isinf().any():
+                print('NaN/Inf in vec **after** l2norm')
+            if (fused_latents == 0).any():
+                print('Zero in vec **after** l2norm')
+            
+            fused_latents = rearrange(fused_latents, '(b n) dim -> b n dim', n=local_B)
+            # NOTE
+
+
+            if return_latents:
+                return text_latents, image_latents, fused_latents, self.temperature.exp()
+
+            
+            pred_similarity_matrix = einsum('b n d, k m d -> b k n m', (fused_latents, fused_latents))   # B B local_B local_B
+            batch_indices = torch.arange(B)
+            pred_similarity_matrix = pred_similarity_matrix[batch_indices, batch_indices, :, :] # B local_B local_B
+            
+            # early return, if needed
+
+            if not return_loss:
+                return pred_similarity_matrix
+
+            # contrastive loss
+
+            loss = 0
+            
+            if not (self.use_infoNCE_loss > 0 or self.use_triplet_loss > 0):
+                raise ValueError("To Calculate Loss, use_triplet_loss and use_infoNCE_loss cannot both be False")
+            
+            if self.use_triplet_loss > 0:
+                triplet_loss, valid_triplet_count = self.triplet_loss(pred_similarity_matrix, gt_similarity_matrix, margin=self.triplet_loss_margin, gt_threshold=self.positive_distance_threshold, positive_threshold=self.positive_threshold, negative_threshold=self.negative_threshold)
+                # b
+                loss += self.use_triplet_loss * triplet_loss.mean()
+            else:
+                triplet_loss = torch.zeros(B)
+                valid_triplet_count = 0
+                
+            if self.use_infoNCE_loss > 0:
+                infoNCE_loss = self.multi_positive_infoNCE_loss(pred_similarity_matrix, gt_similarity_matrix, positive_threshold=self.positive_threshold)
+                # b
+                loss += self.use_infoNCE_loss * infoNCE_loss.mean()
+            else:
+                infoNCE_loss = torch.zeros(B)
+
+            # calculate CL loss
+
+            return loss, triplet_loss, infoNCE_loss, valid_triplet_count
         else:
-            infoNCE_loss = torch.zeros(B)
+            b, device = text.input_ids.shape[0], device
+                # derive text mask
 
-        # calculate CL loss
+            text_mask =text.attention_mask
 
-        return loss, triplet_loss, infoNCE_loss, valid_triplet_count
+            if return_loss:
+                assert gt_similarity_matrix is not None, 'calculate loss but ground truth similarity matrix is not given'
+
+            # concat augmented texts and images and do some asserts
+
+            num_batch_texts = num_batch_images = 1
+            text_args = (text.input_ids,text.attention_mask)
+
+            if not self.text_encode_without_mask:
+                text_args = (*text_args, text_mask)
+
+            text_embeddings = self.text_transformer(text.input_ids, attention_mask = text.attention_mask )
+            enc_text = text_embeddings[0]   # B 512(token_len) 768
+            enc_image= self.visual_transformer(image, return_encoded_tokens=True)   # B 24 24 24 512(vis_dim)
+
+    
+            h_r, w_r, z_r = enc_image.shape[1], enc_image.shape[2], enc_image.shape[3]
+
+            enc_image_send = enc_image
+
+            enc_image = torch.mean(enc_image, dim=1)    # B 24 24 512 (avg over z-axis)
+
+            enc_image = enc_image.view(enc_image.shape[0], -1)  # B 24*24*512
+            # project to latents
+            if self.use_all_token_embeds:
+                assert enc_text.ndim == 3, 'encoded text must have 3 dimensions (batch, seq, features)'
+                assert enc_image.ndim == 3, 'encoded image must have 3 dimensions (batch, seq [height x width], features)'
+                text_embeds = enc_text[:, 1:] if self.text_has_cls_token else enc_text
+                image_embeds = enc_image[:, 1:] if self.visual_has_cls_token else enc_image
+            else:
+                text_embeds = enc_text[:, :] if enc_text.ndim == 3 else enc_text # B 512(token_len) 768
+                image_embeds = enc_image[:, :] if enc_image.ndim == 3 else enc_image # B 24*24*512
+
+            text_embeds = text_embeds[:,0,:] # B 768
+
+            text_latents = self.to_text_latent(text_embeds) # B 512
+
+            image_latents = self.to_visual_latent(image_embeds) # B 512
+
+            text_latents, image_latents = map(l2norm, (text_latents, image_latents))
+
+            # whether to early return latents
+
+            if return_latents:
+                return text_latents, image_latents, enc_image_send, self.temperature.exp()
+
+            # get temperature
+
+            temp = self.temperature.exp()
+            text_latents = rearrange(text_latents, '(m b) ... -> m b ...', m = num_batch_texts) # 1 B 512
+            image_latents = rearrange(image_latents, '(m b) ... -> m b ...', m = num_batch_images) # 1 B 512
+            
+            text_to_image = einsum('m t d, n i d -> m n t i', text_latents, image_latents) * temp   # 1 1 B B
+            image_to_text = rearrange(text_to_image, '... t i -> ... i t')
+            
+            if self.use_image2image_loss:
+                image_to_image = einsum('m t d, n i d -> m n t i', image_latents, image_latents) * temp   # 1 1 B B
+                image_to_image = image_to_image.squeeze()
+                
+            # calculate loss
+
+            text_to_image = rearrange(text_to_image, 'm n ... -> (m n) ...').squeeze()    # 1 B B -> B B
+            image_to_text = rearrange(image_to_text, 'm n ... -> (m n) ...').squeeze()    # 1 B B -> B B
+            
+            # NOTE: Official loss calculation only treat diagonal as positive samples (1), others as negative (0)
+            # NOTE: Our implementation with soft similarity between each sample pair
+            
+            # gt_similarity_matrix = F.normalize(gt_similarity_matrix, dim=0) # B B
+            
+            if not (self.use_infoNCE_loss > 0 or self.use_triplet_loss > 0 or self.use_image2image_loss > 0):
+                raise ValueError("To Calculate Loss, use_triplet_loss and use_infoNCE_loss and use_image2image_loss cannot all be False")
+            
+            text_to_image_triplet_loss = torch.zeros(1).to(device)
+            image_to_text_triplet_loss = torch.zeros(1).to(device)
+            if self.use_triplet_loss > 0:
+                text_to_image_triplet_loss = self.triplet_loss_uncon(text_to_image, gt_similarity_matrix, margin=self.triplet_loss_margin, gt_threshold=self.positive_distance_threshold, positive_threshold=self.positive_threshold, negative_threshold=self.negative_threshold)
+                image_to_text_triplet_loss = self.triplet_loss_uncon(image_to_text, gt_similarity_matrix, margin=self.triplet_loss_margin, gt_threshold=self.positive_distance_threshold, positive_threshold=self.positive_threshold, negative_threshold=self.negative_threshold)
+            image_text_triplet_loss = (text_to_image_triplet_loss + image_to_text_triplet_loss) / 2
+            
+            image_to_image_triplet_loss = torch.zeros(1).to(device)
+            if self.use_image2image_loss > 0:
+                image_to_image_triplet_loss = self.triplet_loss_uncon(image_to_image, gt_similarity_matrix, margin=self.triplet_loss_margin, gt_threshold=self.positive_distance_threshold, positive_threshold=self.positive_threshold, negative_threshold=self.negative_threshold)
+            
+            text_to_image_infoNCE_loss = torch.zeros(1).to(device)
+            image_to_text_infoNCE_loss = torch.zeros(1).to(device)
+            if self.use_infoNCE_loss > 0:
+                text_to_image_infoNCE_loss = self.multi_positive_infoNCE_loss_uncon(text_to_image, gt_similarity_matrix, positive_threshold=self.positive_threshold)
+                image_to_text_infoNCE_loss = self.multi_positive_infoNCE_loss_uncon(image_to_text, gt_similarity_matrix, positive_threshold=self.positive_threshold)
+            image_text_infoNCE_loss = (text_to_image_infoNCE_loss + image_to_text_infoNCE_loss) / 2
+
+            # calculate CL loss
+            
+            cl_losses = torch.zeros(1).to(device)
+            # cl_losses += self.use_triplet_loss * image_text_triplet_loss
+            cl_losses += self.use_image2image_loss * image_to_image_triplet_loss
+            cl_losses += self.use_infoNCE_loss * image_text_infoNCE_loss
+
+            return cl_losses, image_text_triplet_loss, image_text_infoNCE_loss, image_to_image_triplet_loss
 
 if __name__ == '__main__':
     
@@ -937,35 +1065,83 @@ if __name__ == '__main__':
         downsample_image_embeds = False,
         use_all_token_embeds = False
     ).to(device)
-    print('3D')
-    video = torch.ones(size=(2, 1 , 1 , 240, 480, 480)).to(device) # 依次表示batchsize，channels,D ,H , W
-    gt_similarity_matrix = torch.ones((2 ,2)).to(device)
     
-    text = ['text1 and text 1', 'text2']
+    gt_similarity_matrix = torch.eye(3).to(device)
+    gt_similarity_matrix[0,2] = 1
+    gt_similarity_matrix[2,0] = 1
+    print('Condition 3D')
+    video = torch.ones(size=(3, 1 , 1 , 240, 480, 480)).to(device) # 依次表示batchsize，channels,D ,H , W
+    
+    
+    text = ['text1 and text 1', 'text2','text3']
     text_tokens = tokenizer(text, return_tensors="pt", padding="max_length", truncation=True, max_length=512).to(device)
     
     # loss = clip(text_tokens, video, gt_similarity_matrix, gt_similarity_matrix=gt_similarity_matrix, return_loss=True, device=device)
     text_latents, image_latents, enc_image_send,_ = clip(text_tokens, video, return_latents=True, device=device)
     print(text_latents.shape, image_latents.shape, enc_image_send.shape)
+    # loss, triplet_loss, infoNCE_loss, valid_triplet_count = clip(text_tokens, video, gt_similarity_matrix =  gt_similarity_matrix, return_loss=True, device=device)
+    # print('Loss:', loss.item(), 'Triplet Loss:', triplet_loss.item(), 'InfoNCE Loss:', infoNCE_loss.item(), 'Valid Triplet Count:', valid_triplet_count)
 
-    print('3D')
-    video = torch.ones(size=(2, 1 , 1 , 120, 480, 480)).to(device) # 依次表示batchsize，channels,D ,H , W
-    gt_similarity_matrix = torch.ones((2 ,2)).to(device)
-    
-    text = ['text1 and text 1', 'text2']
+
+    print('Condition 3D')
+    video = torch.ones(size=(3, 1 , 1 , 120, 480, 480)).to(device) # 依次表示batchsize，channels,D ,H , W
+
+    text = ['text1 and text 1', 'text2','text3']
     text_tokens = tokenizer(text, return_tensors="pt", padding="max_length", truncation=True, max_length=512).to(device)
     
     # loss = clip(text_tokens, video, gt_similarity_matrix, gt_similarity_matrix=gt_similarity_matrix, return_loss=True, device=device)
     text_latents, image_latents, enc_image_send,_ = clip(text_tokens, video, return_latents=True, device=device)
     print(text_latents.shape, image_latents.shape, enc_image_send.shape)
+    # loss, triplet_loss, infoNCE_loss, valid_triplet_count = clip(text_tokens, video, gt_similarity_matrix = gt_similarity_matrix, return_loss=True, device=device)
+    # print('Loss:', loss.item(), 'Triplet Loss:', triplet_loss.item(), 'InfoNCE Loss:', infoNCE_loss.item(), 'Valid Triplet Count:', valid_triplet_count)
 
-    print('2D')
-    video = torch.ones(size=(2, 1, 1, 1, 480, 480)).to(device)
-    gt_similarity_matrix = torch.ones((2 ,2)).to(device)
-    
-    text = ['text1 and text 1', 'text2']
+    print('Condition 2D')
+    video = torch.ones(size=(3, 1, 1, 1, 480, 480)).to(device)
+
+    text = ['text1 and text 1', 'text2','text3']
     text_tokens = tokenizer(text, return_tensors="pt", padding="max_length", truncation=True, max_length=512).to(device)
 
     # loss = clip(text_tokens, video, gt_similarity_matrix, gt_similarity_matrix=gt_similarity_matrix, return_loss=True, device=device)
     text_latents, image_latents, enc_image_send,_ = clip(text_tokens, video, return_latents=True, device=device)
     print(text_latents.shape, image_latents.shape, enc_image_send.shape)
+    
+    # loss, triplet_loss, infoNCE_loss, valid_triplet_count = clip(text_tokens, video, gt_similarity_matrix = gt_similarity_matrix, return_loss=True, device=device)
+    # print('Loss:', loss.item(), 'Triplet Loss:', triplet_loss.item(), 'InfoNCE Loss:', infoNCE_loss.item(), 'Valid Triplet Count:', valid_triplet_count)
+
+    print('Uncondition 3D')
+    video = torch.ones(size=(3,  1 , 240, 480, 480)).to(device) # 依次表示batchsize，channels,D ,H , W
+
+    text = ['text1 and text 1', 'text2','text3']
+    text_tokens = tokenizer(text, return_tensors="pt", padding="max_length", truncation=True, max_length=512).to(device)
+    
+    text_latents, image_latents, enc_image_send,_ = clip(text_tokens, video, return_latents=True, device=device,is_condition=False)
+    print(text_latents.shape, image_latents.shape, enc_image_send.shape)
+
+    cl_losses, image_text_triplet_loss, image_text_infoNCE_loss, image_to_image_triplet_loss = clip(text_tokens, video, gt_similarity_matrix = gt_similarity_matrix, return_loss=True, device=device, is_condition=False)
+    print('CL Loss:', cl_losses.item(), 'Image-Text Triplet Loss:', image_text_triplet_loss.item(), 'Image-Text InfoNCE Loss:', image_text_infoNCE_loss.item(), 'Image-to-Image Triplet Loss:', image_to_image_triplet_loss.item())
+
+    print('Uncondition 3D')
+    video = torch.ones(size=(3,  1 , 120, 480, 480)).to(device) # 依次表示batchsize，channels,D ,H , W
+
+    text = ['text1 and text 1', 'text2','text3']
+    text_tokens = tokenizer(text, return_tensors="pt", padding="max_length", truncation=True, max_length=512).to(device)
+
+    text_latents, image_latents, enc_image_send,_ = clip(text_tokens, video, return_latents=True, device=device,is_condition=False)
+    print(text_latents.shape, image_latents.shape, enc_image_send.shape)
+
+    cl_losses, image_text_triplet_loss, image_text_infoNCE_loss, image_to_image_triplet_loss = clip(text_tokens, video, gt_similarity_matrix = gt_similarity_matrix, return_loss=True, device=device, is_condition=False)
+    print('CL Loss:', cl_losses.item(), 'Image-Text Triplet Loss:', image_text_triplet_loss.item(), 'Image-Text InfoNCE Loss:', image_text_infoNCE_loss.item(), 'Image-to-Image Triplet Loss:', image_to_image_triplet_loss.item())
+
+
+    print('Uncondition 2D')
+    video = torch.ones(size=(3,  1 , 1, 480, 480)).to(device) # 依次表示batchsize，channels,D ,H , W
+
+    text = ['text1 and text 1', 'text2','text3']
+    text_tokens = tokenizer(text, return_tensors="pt", padding="max_length", truncation=True, max_length=512).to(device)
+
+    text_latents, image_latents, enc_image_send,_ = clip(text_tokens, video, return_latents=True, device=device,is_condition=False)
+    print(text_latents.shape, image_latents.shape, enc_image_send.shape)
+
+    cl_losses, image_text_triplet_loss, image_text_infoNCE_loss, image_to_image_triplet_loss = clip(text_tokens, video, gt_similarity_matrix = gt_similarity_matrix, return_loss=True, device=device, is_condition=False)
+    print('CL Loss:', cl_losses.item(), 'Image-Text Triplet Loss:', image_text_triplet_loss.item(), 'Image-Text InfoNCE Loss:', image_text_infoNCE_loss.item(), 'Image-to-Image Triplet Loss:', image_to_image_triplet_loss.item())
+    

@@ -40,7 +40,7 @@ def resize_array(array, current_spacing, target_spacing):
     return resized_array
 
 class Conditional_CTReportDataset_Train(Dataset):
-    def __init__(self, local_batch_size, jsonl_file, csv_file_dir, npy_file_dir, anatomy_filter, positive_threshold, negative_threshold, max_samples=30000,modality='CT', need_aug=True):
+    def __init__(self, local_batch_size, jsonl_file, csv_file_dir, npy_file_dir, anatomy_filter, positive_threshold, negative_threshold, max_samples=30000,modality='3D', need_aug=True):
         self.anatomy_filter = anatomy_filter
         self.csv_file_dir = csv_file_dir
         self.npy_file_dir = npy_file_dir
