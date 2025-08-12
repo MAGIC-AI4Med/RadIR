@@ -1618,7 +1618,13 @@ class CTClipTrainer(nn.Module):
                         print('stage', stage, 'dataset_name', dataset_name, 'model_forward_time', time_stats['model_forward'])
                     
                     del video, text_tokens, similarity_tab
-                    self.accelerator.backward(loss)                 # 自动 / grad_acc_steps 
+                    if dataset_name == 'CT_RATE':
+                        weight_loss = 2
+                    elif dataset_name == 'MIMIC-CXR':
+                        weight_loss = 1
+                    else:
+                        weight_loss =1 
+                    self.accelerator.backward(loss*weight_loss)                 # 自动 / grad_acc_steps 
                     
                     if self.is_main:
                         time_stats['backward'] += time.time() - backward_start

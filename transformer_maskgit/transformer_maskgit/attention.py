@@ -103,7 +103,7 @@ class Attention(nn.Module):
         num_null_kv = 0,
         norm_context = True,
         dropout = 0.,
-        scale = None
+        scale = 8
     ):
         super().__init__()
         self.heads = heads
