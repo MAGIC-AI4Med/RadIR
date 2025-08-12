@@ -1,0 +1,22 @@
+2025-08-01 19:12:18,965 INFO    MainThread:124644 [wandb_setup.py:_flush():80] Current SDK version is 0.21.0
+2025-08-01 19:12:18,967 INFO    MainThread:124644 [wandb_setup.py:_flush():80] Configure stats pid to 124644
+2025-08-01 19:12:18,967 INFO    MainThread:124644 [wandb_setup.py:_flush():80] Loading settings from /mnt/petrelfs/zhangtengfei/.config/wandb/settings
+2025-08-01 19:12:18,968 INFO    MainThread:124644 [wandb_setup.py:_flush():80] Loading settings from /mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-UNI-Image-Retrieval-CXR_CT/wandb/settings
+2025-08-01 19:12:18,968 INFO    MainThread:124644 [wandb_setup.py:_flush():80] Loading settings from environment variables
+2025-08-01 19:12:18,969 INFO    MainThread:124644 [wandb_init.py:setup_run_log_directory():703] Logging user logs to /mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-UNI-Image-Retrieval-CXR_CT/wandb/run-20250801_191218-j8dpbnbf/logs/debug.log
+2025-08-01 19:12:18,969 INFO    MainThread:124644 [wandb_init.py:setup_run_log_directory():704] Logging internal logs to /mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-UNI-Image-Retrieval-CXR_CT/wandb/run-20250801_191218-j8dpbnbf/logs/debug-internal.log
+2025-08-01 19:12:18,970 INFO    MainThread:124644 [wandb_init.py:init():830] calling init triggers
+2025-08-01 19:12:18,970 INFO    MainThread:124644 [wandb_init.py:init():835] wandb.init called with sweep_config: {}
+config: {'num_train_steps': 5000, 'current_step': 1, 'warmup_steps': [50], 'local_batch_size': [10, 48], 'batch_size': [1, 2], 'data_train_npy_dir': ['/mnt/petrelfs/zhangtengfei/RadIR/dataset/CT_RATE/anatomy/train_ratescore', '/mnt/petrelfs/zhangtengfei/RadIR/dataset/CXR/MIMIC_CXR/train_ratescore'], 'data_valid_npy_dir': ['/mnt/petrelfs/zhangtengfei/RadIR/dataset/CT_RATE/anatomy/val_ratescore', '/mnt/petrelfs/zhangtengfei/RadIR/dataset/CXR/MIMIC_CXR/test_ratescore'], 'data_train_csv_dir': ['/mnt/petrelfs/zhangtengfei/RadIR/dataset/CT_RATE/anatomy/train_entity', '/mnt/petrelfs/zhangtengfei/RadIR/dataset/CXR/MIMIC_CXR/train_entity'], 'data_valid_csv_dir': ['/mnt/petrelfs/zhangtengfei/RadIR/dataset/CT_RATE/anatomy/val_entity', '/mnt/petrelfs/zhangtengfei/RadIR/dataset/CXR/MIMIC_CXR/test_entity'], 'data_train_jsonl': ['/mnt/petrelfs/zhangtengfei/RadIR/dataset/CT_RATE/train_replaced.jsonl', '/mnt/petrelfs/zhangtengfei/RadIR/dataset/CXR/MIMIC_CXR/train.jsonl'], 'data_valid_jsonl': ['/mnt/petrelfs/zhangtengfei/RadIR/dataset/CT_RATE/test_replaced.jsonl', '/mnt/petrelfs/zhangtengfei/RadIR/dataset/CXR/MIMIC_CXR/test.jsonl'], 'anatomy_filter': [['pancreas', 'stomach', 'pulmonary artery', 'breast'], ['aortic valve', 'pericardium', 'pulmonary artery', 'aortic arch']], 'dataset_names': ['CT_RATE', 'MIMIC_CXR'], 'modality': ['3D', '2D'], 'positive_threshold': 0.75, 'negative_threshold': 1, 'lr': [1e-06], 'wd': 0.0, 'max_grad_norm': 0.5, 'save_results_every': 100, 'save_model_every': 1000, 'train_max_samples': 12000, 'valid_max_samples': 2000, 'shuffle_train_samples_every': 100000, '_wandb': {}}
+2025-08-01 19:12:18,971 INFO    MainThread:124644 [wandb_init.py:init():871] starting backend
+2025-08-01 19:12:19,286 INFO    MainThread:124644 [wandb_init.py:init():874] sending inform_init request
+2025-08-01 19:12:19,296 INFO    MainThread:124644 [wandb_init.py:init():882] backend started and connected
+2025-08-01 19:12:19,302 INFO    MainThread:124644 [wandb_init.py:init():953] updated telemetry
+2025-08-01 19:12:19,427 INFO    MainThread:124644 [wandb_init.py:init():977] communicating run to backend with 90.0 second timeout
+2025-08-01 19:12:20,076 INFO    MainThread:124644 [wandb_init.py:init():1029] starting run threads in backend
+2025-08-01 19:12:20,433 INFO    MainThread:124644 [wandb_run.py:_console_start():2458] atexit reg
+2025-08-01 19:12:20,434 INFO    MainThread:124644 [wandb_run.py:_redirect():2306] redirect: wrap_raw
+2025-08-01 19:12:20,434 INFO    MainThread:124644 [wandb_run.py:_redirect():2375] Wrapping output streams.
+2025-08-01 19:12:20,435 INFO    MainThread:124644 [wandb_run.py:_redirect():2398] Redirects installed.
+2025-08-01 19:12:20,441 INFO    MainThread:124644 [wandb_init.py:init():1075] run started, returning control to user process
+2025-08-01 19:12:20,442 INFO    MainThread:124644 [wandb_watch.py:_watch():70] Watching

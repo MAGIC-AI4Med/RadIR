@@ -55,7 +55,7 @@ def log(t, eps = 1e-20):
 
 def l2norm(t):
     
-    return F.normalize(t, dim = -1,eps=1e-6)
+    return F.normalize(t, dim = -1)
 
 def matrix_diag(t):
     device = t.device

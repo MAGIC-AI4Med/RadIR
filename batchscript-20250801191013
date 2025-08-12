@@ -1,0 +1,17 @@
+#!/bin/bash
+#SBATCH --partition medai_p
+#SBATCH --gres gpu:2
+#SBATCH -o phoenix-slurm-%j.out
+# args: -p
+# args: medai_p
+# args: --gres=gpu:2
+# args: bash
+# args: /mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-UNI-Image-Retrieval-CXR_CT/sbatch/train_UNI124.sh
+argv=()
+while read -r line; do
+    if [[ $line == "# args: "* ]]; then
+        argv[${#argv[*]}]="${line:8}"
+    fi
+done < $0
+
+srun "${argv[@]}"

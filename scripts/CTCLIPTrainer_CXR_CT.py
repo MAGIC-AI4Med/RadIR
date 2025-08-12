@@ -39,7 +39,7 @@ import os
 
 from scheduler import cosine_lr
 
-from retrieval_metric import compute_ndcg, hard_retrieval_exclude_self, soft_retrieval
+from retrieval_metric import compute_ndcg, hard_retrieval, hard_retrieval_exclude_self, soft_retrieval,compute_ndcg_exclude_self, soft_retrieval_exclude_self, RateScore_retrieval, compute_ndcg_uncon,soft_retrieval_uncon
 from datetime import datetime
 import heapq
 
@@ -189,6 +189,7 @@ class CTClipTrainer(nn.Module):
         dataset_names, # 是一个列表，大小是K,内容表示数据集['MIMIC'，'CT_RATE']
         modality, # 是一个列表，大小是K,内容表示是2D还是3D的数据集。['2D','3D']
         uncon_batch_size,       # 也是一个list，大小均为k'
+        uncon_batch_size_valid,
         uncon_soft_label,        # 是一个值
         uncon_similarity_lookup_table_train,  # 也是一个list，大小均为k'
         uncon_similarity_lookup_table_valid,  # 也是一个list，大小均为k'
@@ -242,7 +243,7 @@ class CTClipTrainer(nn.Module):
         self.batch_size = batch_size
         self.local_batch_size = local_batch_size
         self.uncon_batch_size = uncon_batch_size
-        
+        self.uncon_batch_size_valid = uncon_batch_size_valid
         self.positive_threshold = positive_threshold
         self.negative_threshold = negative_threshold
         self.dataset_names = dataset_names
@@ -270,7 +271,9 @@ class CTClipTrainer(nn.Module):
                 uncon_dataset_name = uncon_dataset_names[i]
                 modality_type = uncon_modality[i]
                 train_split_name = uncon_train_filter[i][(local_rank) % len(uncon_train_filter[i])]  # 只取第一个训练分割
+                # self.uncon_dss[uncon_dataset_name] = CTReportDataset(os.path.join(uncon_data_train_jsonl[i],train_split_name + '.jsonl'),need_aug=True,modality=uncon_modality[i],is_train=True)
                 self.uncon_dss[uncon_dataset_name] = CTReportDataset(os.path.join(uncon_data_train_jsonl[i],train_split_name + '.jsonl'),need_aug=True,modality=uncon_modality[i],is_train=True)
+                
                 self.uncon_valid_dss[uncon_dataset_name] = CTReportDataset(os.path.join(uncon_data_valid_jsonl[i], uncon_valid[i] + '.jsonl'),need_aug=False,modality=uncon_modality[i],is_train=False)
                 # 创建数据加载器
                 uncon_dl_i = DataLoader(
@@ -287,10 +290,9 @@ class CTClipTrainer(nn.Module):
                 uncon_valid_dl_i = DataLoader(
                     self.uncon_valid_dss[uncon_dataset_name],
                     num_workers = num_workers,
-                    batch_size = (self.uncon_batch_size[i]) * local_batch_size[i],
+                    batch_size = self.uncon_batch_size_valid[i],
                     shuffle = False,
-                    pin_memory = pin_memory,
-                    drop_last = True,
+                    pin_memory = pin_memory
                 )
                 self.uncon_valid_dls[uncon_dataset_name] = uncon_valid_dl_i
                 
@@ -441,7 +443,7 @@ class CTClipTrainer(nn.Module):
             
             run_name = f'CTClip-Train-phy-{physical_ids}-7.30'
             self.wandb = wandb.init(
-                project="CTClip-Train",
+                project="CTClip-Train_overfit",
                 name=run_name,
                 group ='ddp_exp',
                 config={
@@ -672,11 +674,6 @@ class CTClipTrainer(nn.Module):
                     similarity_tab = torch.tensor(similarity_tab)
                     similarity_tab = similarity_tab.to(dtype=torch.float32) * 0.01    # 0~100 uint8 -> 0~1 float32
                     
-                    # DEBUG
-                    # image_to_image_np = image_to_image.cpu().numpy()
-                    # np.savez_compressed(f'/DB/data/haoningwu-1/zihengzhao/Ours-Testset({anatomy})-Image2Image.npz', image=image_to_image_np)
-                    # DEBUG
-                    
                     assert image_to_image.shape == similarity_tab.shape, f'image_to_image {image_to_image.shape} != similarity_tab {similarity_tab.shape}'
                     
                     # now calculate the ndcg
@@ -773,23 +770,27 @@ class CTClipTrainer(nn.Module):
                         info += f"{dataset_name} Loss {global_main_loss[dataset_name]:.4f} | "\
                                 f"{dataset_name} Triplet Loss {global_triplet_loss[dataset_name]:.4f} | "\
                                 f"{dataset_name} InfoNCE Loss {global_infoNCE_loss[dataset_name]:.4f} | "
-
-
+                    # 创建Wandb日志字典
+                    wandb_log_dict = {'lr': lr}
+                    
                     if current_step > 0:
+                        # 使用wandb替代tensorboard
+                        # self.tb_writer.add_scalar('lr', lr, current_step)
+                        wandb_log_dict['lr'] = lr
                         
-                        self.tb_writer.add_scalar('lr', lr, current_step)
                         for dataset_name in self.dataset_names:
-                            self.tb_writer.add_scalar(f'{dataset_name}_train_loss', self.loss_m[dataset_name].avg, current_step)
-                            self.tb_writer.add_scalar(f'{dataset_name}_infoNCE_loss', self.infoNCE_loss_m[dataset_name].avg, current_step)
-                            self.tb_writer.add_scalar(f'{dataset_name}_triplet_loss', self.triplet_loss_m[dataset_name].avg, current_step)
+                            # 记录训练损失
+                            wandb_log_dict[f'{dataset_name}_train_loss'] = self.loss_m[dataset_name].avg
+                            wandb_log_dict[f'{dataset_name}_infoNCE_loss'] = self.infoNCE_loss_m[dataset_name].avg
+                            wandb_log_dict[f'{dataset_name}_triplet_loss'] = self.triplet_loss_m[dataset_name].avg
                             
                             # 记录解剖结构损失
                             for anatomy, loss in global_anatomy_infoNCE[dataset_name].items():
-                                self.tb_writer.add_scalar(f'{dataset_name}_{anatomy}_infoNCE_loss', loss, current_step)
+                                wandb_log_dict[f'{dataset_name}_{anatomy}_infoNCE_loss'] = loss
                             for anatomy, loss in global_anatomy_triplet[dataset_name].items():
-                                self.tb_writer.add_scalar(f'{dataset_name}_{anatomy}_triplet_loss', loss, current_step)
+                                wandb_log_dict[f'{dataset_name}_{anatomy}_triplet_loss'] = loss
                             for anatomy, count in global_anatomy_valid_triplet[dataset_name].items():
-                                self.tb_writer.add_scalar(f'{dataset_name}_{anatomy}_valid_triplet', count, current_step)
+                                wandb_log_dict[f'{dataset_name}_{anatomy}_valid_triplet'] = count
                                     
                     merged_metrics = {}
                     for metric_name in all_metrics.keys():
@@ -805,13 +806,57 @@ class CTClipTrainer(nn.Module):
                             for k in [3, 5, 10, 20, 50, 100]:
                                 avg_results = sum(all_metrics[f'{dataset_name}_{metrics_name}@{k}'].values()) / len(all_metrics[f'{dataset_name}_{metrics_name}@{k}'])
                                 info += f' {dataset_name}_{metrics_name}@{k} {avg_results} |'
-                                self.tb_writer.add_scalar(f'{dataset_name}_{metrics_name}@{k}', avg_results, current_step)
+                                
+                                # 记录到wandb
+                                wandb_log_dict[f'{dataset_name}_{metrics_name}@{k}'] = avg_results
                                 
                                 write_info += info   # the following details will be written but not displayed
                                 
                                 for key, value in all_metrics[f'{dataset_name}_{metrics_name}@{k}'].items():
-                                    self.tb_writer.add_scalar(f'{dataset_name}_{key}_{metrics_name}@{k}', value, current_step)
+                                    # 记录详细指标到wandb
+                                    wandb_log_dict[f'{dataset_name}_{key}_{metrics_name}@{k}'] = value
                                     write_info += f"{dataset_name}_{key}_{metrics_name}@{k}: {value} | "
+                            
+                    # 使用wandb记录所有指标，step参数用于标识当前步骤
+                    self.wandb.log(wandb_log_dict, step=current_step)
+
+                    # if current_step > 0:
+                        
+                    #     self.tb_writer.add_scalar('lr', lr, current_step)
+                    #     for dataset_name in self.dataset_names:
+                    #         self.tb_writer.add_scalar(f'{dataset_name}_train_loss', self.loss_m[dataset_name].avg, current_step)
+                    #         self.tb_writer.add_scalar(f'{dataset_name}_infoNCE_loss', self.infoNCE_loss_m[dataset_name].avg, current_step)
+                    #         self.tb_writer.add_scalar(f'{dataset_name}_triplet_loss', self.triplet_loss_m[dataset_name].avg, current_step)
+                            
+                    #         # 记录解剖结构损失
+                    #         for anatomy, loss in global_anatomy_infoNCE[dataset_name].items():
+                    #             self.tb_writer.add_scalar(f'{dataset_name}_{anatomy}_infoNCE_loss', loss, current_step)
+                    #         for anatomy, loss in global_anatomy_triplet[dataset_name].items():
+                    #             self.tb_writer.add_scalar(f'{dataset_name}_{anatomy}_triplet_loss', loss, current_step)
+                    #         for anatomy, count in global_anatomy_valid_triplet[dataset_name].items():
+                    #             self.tb_writer.add_scalar(f'{dataset_name}_{anatomy}_valid_triplet', count, current_step)
+                                    
+                    # merged_metrics = {}
+                    # for metric_name in all_metrics.keys():
+                    #     merged_metrics[metric_name] = {}
+                    # for gathered_data in gathered_metrics:
+                    #     for metric_name, subdict in gathered_data['metrics'].items():   # metric_name: 'Recall@5' ...
+                    #         for key, value in subdict.items():  # pancreas: 0.8
+                    #             merged_metrics[metric_name][key] = value
+                    # all_metrics = merged_metrics
+                    # write_info = ''
+                    # for dataset_name in self.dataset_names:
+                    #     for metrics_name in ['NDCG', 'Recall', 'RateScore', 'UpperBound_RateScore']:
+                    #         for k in [3, 5, 10, 20, 50, 100]:
+                    #             avg_results = sum(all_metrics[f'{dataset_name}_{metrics_name}@{k}'].values()) / len(all_metrics[f'{dataset_name}_{metrics_name}@{k}'])
+                    #             info += f' {dataset_name}_{metrics_name}@{k} {avg_results} |'
+                    #             self.tb_writer.add_scalar(f'{dataset_name}_{metrics_name}@{k}', avg_results, current_step)
+                                
+                    #             write_info += info   # the following details will be written but not displayed
+                                
+                    #             for key, value in all_metrics[f'{dataset_name}_{metrics_name}@{k}'].items():
+                    #                 self.tb_writer.add_scalar(f'{dataset_name}_{key}_{metrics_name}@{k}', value, current_step)
+                    #                 write_info += f"{dataset_name}_{key}_{metrics_name}@{k}: {value} | "
                             
                     info += '\n'
                     write_info += '\n'
@@ -845,6 +890,277 @@ class CTClipTrainer(nn.Module):
                     
                 self._reset_metrics()
 
+    def evaluate_uncon(self, current_step):
+        
+        accelerator = self.accelerator  # 假设你已经有accelerator
+        device = accelerator.device
+        self.CTClip.eval()
+
+
+        for i,dataset_name in enumerate(self.uncon_dataset_names):
+            text_latents_all = []
+            image_latents_all = []
+            all_sample_idls = []
+            # valid_dl = self.uncon_valid_dls[dataset_name]
+            valid_sampler = DistributedSampler(self.uncon_valid_dss[dataset_name], shuffle=False)
+            valid_dl  = DataLoader(
+                    self.uncon_valid_dss[dataset_name], 
+                    sampler=valid_sampler,
+                    num_workers = 8,
+                    batch_size = self.uncon_batch_size_valid[i],
+                    shuffle = False,
+                    drop_last = True,
+                )
+            with torch.no_grad(), torch.cuda.amp.autocast():
+                print('开始加载无条件数据集:', dataset_name)
+                for video, text, sample_idls in tqdm(valid_dl, disable=not accelerator.is_local_main_process):
+                    video = video.to(device)
+                    text = list(text)
+                    text_tokens = self.tokenizer(
+                        text,
+                        return_tensors="pt",
+                        padding="max_length",
+                        truncation=True,
+                        max_length=512
+                    ).to(device)
+                    # print('video',video[:,:,0,:1,:10])
+                    text_latents, image_latents, _, temp = self.CTClip(
+                        text_tokens, video, return_latents=True, device=device,is_condition=False
+                    )
+                    # print(f'video shape: {video.shape}, text shape: {text_tokens.input_ids.shape}, text_latents shape: {text_latents.shape}, image_latents shape: {image_latents.shape}')
+                    text_latents_all.append(text_latents.detach())
+                    image_latents_all.append(image_latents.detach())
+                    # print('sample_idls:', sample_idls)
+                    # print('image_latents:', image_latents)
+                    # print('text_latents:',text_latents)
+                    all_sample_idls.append(sample_idls.detach())
+            # 拼接本地的latents
+            text_latents_all = torch.cat(text_latents_all, dim=0)
+            image_latents_all = torch.cat(image_latents_all, dim=0)
+            all_sample_idls = torch.cat(all_sample_idls)
+            # print('all_sample_idls:', all_sample_idls)
+            if not isinstance(all_sample_idls, torch.Tensor):
+                all_sample_idls = torch.tensor(all_sample_idls, device=self.accelerator.device)
+            elif all_sample_idls.device.type != 'cuda':
+                all_sample_idls = all_sample_idls.to(self.accelerator.device)
+
+            # 确保是密集张量
+            if all_sample_idls.is_sparse:
+                all_sample_idls = all_sample_idls.to_dense()
+            # print(all_sample_idls)
+            # 收集所有进程的latents
+            text_latents_gathered = accelerator.gather_for_metrics(text_latents_all)
+            image_latents_gathered = accelerator.gather_for_metrics(image_latents_all)
+            all_sample_idls = accelerator.gather_for_metrics(all_sample_idls)
+            # print('all_sample_idls', all_sample_idls)
+            
+            # print('text_latents_gathered', text_latents_gathered[0:5])
+            # print('image_latents_gathered', image_latents_gathered[0:5])
+            # 只在主进程上做日志和评测
+            if accelerator.is_local_main_process:
+                lr = self.optim.param_groups[0]['lr']
+                info = f"Unconditio Step {current_step} | LR {lr} | Loss {self.uncon_loss_m[dataset_name].val:.4f}({self.uncon_loss_m[dataset_name].avg:.4f}) | IT Triplet Loss {self.it_triplet_loss_m[dataset_name].val:.4f}({self.it_triplet_loss_m[dataset_name].avg:.4f}) | II Triplet Loss {self.ii_triplet_loss_m[dataset_name].val:.4f}({self.ii_triplet_loss_m[dataset_name].avg:.4f}) | IT infoNCE Loss {self.it_infoNCE_loss_m[dataset_name].val:.4f}({self.it_infoNCE_loss_m[dataset_name].avg:.4f})\n"
+                
+                # 创建wandb日志字典
+                wandb_log_dict = {
+                    'lr': lr,
+                    'uncon_train_loss': self.uncon_loss_m[dataset_name].avg,
+                    'uncon_image_text_triplet_loss': self.it_triplet_loss_m[dataset_name].avg,
+                    'uncon_image_image_triplet_loss': self.ii_triplet_loss_m[dataset_name].avg,
+                    'uncon_image_text_infoNCE_loss': self.it_infoNCE_loss_m[dataset_name].avg
+                }
+                
+                if current_step > 0:
+                    # 使用wandb替代tensorboard
+                    pass  # 已经将要记录的指标添加到了wandb_log_dict中
+                    
+                self.uncon_loss_m[dataset_name].reset()
+                self.it_triplet_loss_m[dataset_name].reset()
+                self.ii_triplet_loss_m[dataset_name].reset()
+                self.it_infoNCE_loss_m[dataset_name].reset()
+
+                # image-report hard retrieval
+                image_to_text = einsum('m d, n d -> m n', image_latents_gathered, text_latents_gathered)
+                image_to_text = image_to_text.cpu()
+                gt_matrix = torch.eye(image_to_text.shape[0])
+                results = hard_retrieval(image_to_text, gt_matrix, k=[1, 5, 10, 20, 50, 100])
+                for k, v in zip([1, 5, 10, 20, 50, 100], results):
+                    info += f'{dataset_name}_(I2T)Hard_R@{k}: {v*100:.2f} | '
+                    wandb_log_dict[f'{dataset_name}_R@{k}'] = v
+                info += '\n'
+                print('image_to_text shape:', image_to_text.shape)
+                sample_idls = all_sample_idls.cpu().numpy() if isinstance(all_sample_idls, torch.Tensor) else all_sample_idls
+                similarity_tab = self.uncon_similarity_lookup_table_valid[dataset_name][np.ix_(sample_idls, sample_idls)]
+                similarity_tab = torch.from_numpy(similarity_tab) if isinstance(similarity_tab, np.ndarray) else similarity_tab
+                similarity_tab = (similarity_tab.to(torch.float32) * 0.01).to(device, non_blocking=True)
+                print('similarity_tab shape:', similarity_tab.shape)
+                results = compute_ndcg_uncon(image_to_text, similarity_tab, k=[1, 5, 10, 20, 50, 100])
+                for k, v in zip([1, 5, 10, 20, 50, 100], results):
+                    info += f'{dataset_name}_(I2T)NDCG@{k}: {v*100:.2f} | '
+                    wandb_log_dict[f'{dataset_name}_(I2T)NDCG@{k}'] = v
+                info += '\n'
+
+                results = soft_retrieval_uncon(image_to_text,similarity_tab, k=[1, 5, 10, 20, 50, 100])
+                for k, v in zip([1, 5, 10, 20, 50, 100], results):
+                    info += f'{dataset_name}_(I2T)Soft_R@{k}: {v*100:.2f} | '
+                    wandb_log_dict[f'{dataset_name}_(I2T)Soft_R@{k}'] = v
+                info += '\n'
+
+                # image-image
+                if self.soft_label:
+                    image_to_image = einsum('m d, n d -> m n', image_latents_gathered, image_latents_gathered)
+                    image_to_image = image_to_image.cpu()
+
+                    pred_score, upperbound_score = RateScore_retrieval(image_to_image, similarity_tab, k=[1, 5, 10, 20, 50, 100])
+                    for k, v in zip([1, 5, 10, 20, 50, 100], pred_score):
+                        info += f'Uncon_{dataset_name}_RateScore@{k}: {v*100:.2f} | '
+                        wandb_log_dict[f'Uncon_{dataset_name}_RateScore@{k}'] = v
+                    for k, v in zip([1, 5, 10, 20, 50, 100], upperbound_score):
+                        info += f'Uncon_{dataset_name}_Upperbound_RateScore@{k}: {v*100:.2f} | '
+                        wandb_log_dict[f'Uncon_{dataset_name}_Upperbound_RateScore@{k}'] = v
+                    info += '\n'
+
+                    index_list = [i for i in range(similarity_tab.shape[0])]
+                    ndcg_scores = compute_ndcg_exclude_self(image_to_image, similarity_tab, index_list, k=[1, 5, 10, 20, 50, 100])
+                    for k, v in zip([1, 5, 10, 20, 50, 100], ndcg_scores):
+                        info += f'{dataset_name}_(I2I)NDCG@{k}: {v*100:.2f} | '
+                        wandb_log_dict[f'Uncon_{dataset_name}_NDCG@{k}'] = v
+                    info += '\n'
+
+                    recall_scores = soft_retrieval_exclude_self(image_to_image, similarity_tab, index_list, k=[1, 5, 10, 20, 50, 100])
+                    for k, v in zip([1, 5, 10, 20, 50, 100], recall_scores):
+                        info += f'{dataset_name}_(I2I)Soft_R@{k}: {v*100:.2f} | '
+                        wandb_log_dict[f'{dataset_name}_Uncon_(I2I)Soft_R@{k}'] = v
+                    info += '\n'
+
+                # 使用wandb记录所有指标
+                self.wandb.log(wandb_log_dict, step=current_step)
+                    
+                self.print(info)
+                with open(self.results_folder / 'log.txt', 'a') as f:
+                    f.write(info)
+            # 清理显存
+            del text_latents_all, image_latents_all, text_latents_gathered, image_latents_gathered
+            torch.cuda.empty_cache()
+            self._reset_metrics_uncon()
+
+
+
+    # def evaluate_uncon(self, current_step):
+
+    #     accelerator = self.accelerator  # 假设你已经有accelerator
+    #     device = accelerator.device
+
+    #     self.CTClip.eval()
+
+    #     for dataset_name in self.uncon_dataset_names:
+    #         text_latents_all = []
+    #         image_latents_all = []
+    #         all_sample_idls = []
+    #         valid_dl = self.uncon_valid_dls[dataset_name]
+    #         with torch.no_grad(), torch.cuda.amp.autocast():
+    #             for video, text, sample_idls in tqdm(valid_dl, disable=not accelerator.is_main_process):
+    #                 video = video.to(device)
+    #                 text = list(text)
+    #                 text_tokens = self.tokenizer(
+    #                     text,
+    #                     return_tensors="pt",
+    #                     padding="max_length",
+    #                     truncation=True,
+    #                     max_length=512
+    #                 ).to(device)
+    #                 text_latents, image_latents, _, temp = self.CTClip(
+    #                     text_tokens, video, return_latents=True, device=device
+    #                 )
+    #                 text_latents_all.append(text_latents.detach())
+    #                 image_latents_all.append(image_latents.detach())
+    #                 all_sample_idls.extend(sample_idls.detach())
+    #         # 拼接本地的latents
+    #         text_latents_all = torch.cat(text_latents_all, dim=0)
+    #         image_latents_all = torch.cat(image_latents_all, dim=0)
+    #         all_sample_idls = torch.cat(all_sample_idls)
+
+    #         # 收集所有进程的latents
+    #         text_latents_gathered = accelerator.gather_for_metrics(text_latents_all)
+    #         image_latents_gathered = accelerator.gather_for_metrics(image_latents_all)
+
+    #         # 只在主进程上做日志和评测
+    #         if accelerator.is_main_process:
+    #             lr = self.optim.param_groups[0]['lr']
+    #             info = f"Unconditio Step {current_step} | LR {lr} | Loss {self.loss_m.val:.4f}({self.loss_m.avg:.4f}) | IT Triplet Loss {self.it_triplet_loss_m.val:.4f}({self.it_triplet_loss_m.avg:.4f}) | II Triplet Loss {self.ii_triplet_loss_m.val:.4f}({self.ii_triplet_loss_m.avg:.4f}) | IT infoNCE Loss {self.it_infoNCE_loss_m.val:.4f}({self.it_infoNCE_loss_m.avg:.4f})\n"
+    #             if current_step > 0:
+    #                 self.tb_writer.add_scalar('lr', lr, current_step)
+    #                 self.tb_writer.add_scalar('uncon_train_loss', self.loss_m.avg, current_step)
+    #                 self.tb_writer.add_scalar('uncon_image_text_triplet_loss', self.it_triplet_loss_m.avg, current_step)
+    #                 self.tb_writer.add_scalar('uncon_image_image_triplet_loss', self.ii_triplet_loss_m.avg, current_step)
+    #                 self.tb_writer.add_scalar('uncon_image_text_infoNCE_loss', self.it_infoNCE_loss_m.avg, current_step)
+    #             self.loss_m.reset()
+    #             self.it_triplet_loss_m.reset()
+    #             self.ii_triplet_loss_m.reset()
+    #             self.it_infoNCE_loss_m.reset()
+
+    #             # image-report hard retrieval
+    #             image_to_text = einsum('m d, n d -> m n', image_latents_gathered, text_latents_gathered)
+    #             image_to_text = image_to_text.cpu()
+    #             gt_matrix = torch.eye(image_to_text.shape[0])
+    #             results = hard_retrieval(image_to_text, gt_matrix, k=[1, 5, 10, 20, 50, 100])
+    #             for k, v in zip([1, 5, 10, 20, 50, 100], results):
+    #                 info += f'{dataset_name}_(I2T)Hard_R@{k}: {v*100:.2f} | '
+    #                 self.tb_writer.add_scalar(f'{dataset_name}_R@{k}', v, current_step)
+    #             info += '\n'
+                
+    #             sample_idls = all_sample_idls.cpu().numpy() if isinstance(all_sample_idls, torch.Tensor) else all_sample_idls
+    #             similarity_tab = self.uncon_similarity_lookup_table_train[dataset_name][np.ix_(sample_idls, sample_idls)]
+    #             similarity_tab = torch.from_numpy(similarity_tab) if isinstance(similarity_tab, np.ndarray) else similarity_tab
+    #             similarity_tab = (similarity_tab.to(torch.float32) * 0.01).to(device, non_blocking=True)
+                
+    #             results = compute_ndcg(image_to_text, similarity_tab, k=[1, 5, 10, 20, 50, 100])
+    #             for k, v in zip([1, 5, 10, 20, 50, 100], results):
+    #                 info += f'{dataset_name}_(I2T)NDCG@{k}: {v*100:.2f} | '
+    #                 self.tb_writer.add_scalar(f'{dataset_name}_(I2T)NDCG@{k}', v, current_step)
+    #             info += '\n'
+
+    #             results = soft_retrieval(image_to_text,similarity_tab, k=[1, 5, 10, 20, 50, 100])
+    #             for k, v in zip([1, 5, 10, 20, 50, 100], results):
+    #                 info += f'{dataset_name}_(I2T)Soft_R@{k}: {v*100:.2f} | '
+    #                 self.tb_writer.add_scalar(f'{dataset_name}_(I2T)Soft_R@{k}', v, current_step)
+    #             info += '\n'
+
+    #             # image-image
+    #             if self.soft_label:
+    #                 image_to_image = einsum('m d, n d -> m n', image_latents_gathered, image_latents_gathered)
+    #                 image_to_image = image_to_image.cpu()
+
+    #                 pred_score, upperbound_score = RateScore_retrieval(image_to_image, similarity_tab, k=[1, 5, 10, 20, 50, 100])
+    #                 for k, v in zip([1, 5, 10, 20, 50, 100], pred_score):
+    #                     info += f'Uncon_{dataset_name}_RateScore@{k}: {v*100:.2f} | '
+    #                     self.tb_writer.add_scalar(f'Uncon_{dataset_name}_RateScore@{k}', v, current_step)
+    #                 for k, v in zip([1, 5, 10, 20, 50, 100], upperbound_score):
+    #                     info += f'Uncon_{dataset_name}_Upperbound_RateScore@{k}: {v*100:.2f} | '
+    #                     self.tb_writer.add_scalar(f'Uncon_{dataset_name}_Upperbound_RateScore@{k}', v, current_step)
+    #                 info += '\n'
+
+    #                 index_list = [i for i in range(similarity_tab.shape[0])]
+    #                 ndcg_scores = compute_ndcg_exclude_self(image_to_image, similarity_tab, index_list, k=[1, 5, 10, 20, 50, 100])
+    #                 for k, v in zip([1, 5, 10, 20, 50, 100], ndcg_scores):
+    #                     info += f'{dataset_name}_(I2I)NDCG@{k}: {v*100:.2f} | '
+    #                     self.tb_writer.add_scalar(f'Uncon_{dataset_name}_NDCG@{k}', v, current_step)
+    #                 info += '\n'
+
+    #                 recall_scores = soft_retrieval_exclude_self(image_to_image, similarity_tab, index_list, k=[1, 5, 10, 20, 50, 100])
+    #                 for k, v in zip([1, 5, 10, 20, 50, 100], recall_scores):
+    #                     info += f'{dataset_name}_(I2I)Soft_R@{k}: {v*100:.2f} | '
+    #                     self.tb_writer.add_scalar(f'{dataset_name}_Uncon_(I2I)Soft_R@{k}', v, current_step)
+    #                 info += '\n'
+
+    #             self.print(info)
+    #             with open(self.results_folder / 'log.txt', 'a') as f:
+    #                 f.write(info)
+
+    #         # 清理显存
+    #         del text_latents_all, image_latents_all, text_latents_gathered, image_latents_gathered
+    #         torch.cuda.empty_cache()
+
     def save(self, path):
         if not self.accelerator.is_local_main_process:
             return
@@ -873,14 +1189,16 @@ class CTClipTrainer(nn.Module):
             
         path = Path(path)
         assert path.exists()
-        pkg = torch.load(path, map_location='cpu')
+        pkg = torch.load(path, map_location='cpu', weights_only=False)
 
         CTClip = self.accelerator.unwrap_model(self.CTClip)
         
         if allow_partial_load:
             model_dict = CTClip.state_dict()
-            pkg_state_dict = pkg['model']  # 假设 pkg['model'] 是模型的状态字典
-
+            if 'model' in pkg:
+                pkg_state_dict = pkg['model']  # 假设 pkg['model'] 是模型的状态字典
+            else:
+                pkg_state_dict = pkg
             # 检查差异
             unexpected_state_dict = [k for k in pkg_state_dict.keys() if k not in model_dict.keys()]
             missing_state_dict = [k for k in model_dict.keys() if k not in pkg_state_dict.keys()]
@@ -907,10 +1225,336 @@ class CTClipTrainer(nn.Module):
 
     @property
     def is_main(self):
-        return self.accelerator.is_main_process
+        # return self.accelerator.is_main_process
+        return self.accelerator.is_local_main_process
+
+    # def train_step(self):
+    #     # torch.autograd.set_detect_anomaly(True)  # 7.24 增加的一部分，无bug的时候试试删除。很容易增加内存。再7.28删除
+    #     device = self.device
+    #     mp = self.accelerator.mixed_precision
+        
+    #     current_step = self.current_step
+    #     self.lr_scheduler(current_step)
+
+    #     self.CTClip.train()
+
+    #     # update CTClip model
+    #     # 有两种方案，一个是每个step同时做2D和3D的训练。另一个是每个step只做2D或3D的训练，但是要用到梯度累积。
+    #     for stage, dataset_name, dl_iter in self.batch_generators:
+    #         with self.accelerator.accumulate(self.CTClip):
+    #             if stage == 'stage1':
+    #                 print(f"pid={os.getpid()} ",'rank', torch.distributed.get_rank(),'dataset_name', dataset_name, 'step', current_step)
+    #                 # ▸ 让 Accelerate 决定什么时候同步梯度 / clip / step
+    #                 if self.debug:
+    #                     print_gpu_memory_stats(self.accelerator,'Before video, similarity_tab, anatomy, _ = next(self.uncon_dl_iters[dataset_name])')
+    #                 # ---- 数据准备 ----
+    #                 video, text, sample_idls = next(dl_iter)
+
+    #                 # 直接半精度进 GPU，减少显存与带宽
+    #                 tgt_dtype = torch.float16 if mp == "fp16" else (
+    #                             torch.bfloat16 if mp == "bf16" else torch.float32)
+
+    #                 video          = video.to(device, dtype=tgt_dtype, non_blocking=True)
+    #                 if self.debug:
+    #                     print_gpu_memory_stats(self.accelerator,'before tokenizer')
+    #                 with torch.no_grad():  # tokenizer不需要梯度
+    #                     text_tokens = self.tokenizer(list(text),return_tensors="pt", padding="max_length", truncation=True, max_length=512).to(device, non_blocking=True)
+    #                 if self.soft_label:
+    #                     sample_idls = sample_idls.cpu().numpy() if isinstance(sample_idls, torch.Tensor) else sample_idls
+    #                     similarity_tab = self.uncon_similarity_lookup_table_train[dataset_name][np.ix_(sample_idls, sample_idls)]
+    #                     similarity_tab = torch.from_numpy(similarity_tab) if isinstance(similarity_tab, np.ndarray) else similarity_tab
+    #                     similarity_tab = (similarity_tab.to(torch.float32) * 0.01).to(
+    #                                 device, dtype=tgt_dtype, non_blocking=True)
+    #                     # print('similarity_tab [:10,:10]', similarity_tab[:10,:10])
+    #                     # print('text[:10]', text[:10])
+    #                     # print('video', video[0,0,0,:10,:10])
+    #                 else:
+    #                     similarity_tab = torch.eye(len(sample_idls), dtype=tgt_dtype, device=device)
+    #                 with self.accelerator.autocast():
+    #                     loss, image_text_triplet_loss, image_text_infoNCE_loss, image_to_image_triplet_loss = self.CTClip(
+    #                         text_tokens,
+    #                         video,
+    #                         gt_similarity_matrix=similarity_tab,
+    #                         return_loss=True,
+    #                         device=device,
+    #                         is_condition=False)
+    #                     print('rank: ', torch.distributed.get_rank(),'dataset_name:' , dataset_name," loss: ", loss)
+    #                 del video, text_tokens, similarity_tab
+    #                 self.accelerator.backward(loss)                 # 自动 / grad_acc_steps 
+    #                 # ---- 立即把日志数据转到 CPU，释放 GPU 显存 ----
+    #                 loss_val        = float(loss.detach().cpu())
+    #                 image_text_triplet_mean = float(image_text_triplet_loss.mean().detach().cpu())
+    #                 image_text_infoNCE_mean = float(image_text_infoNCE_loss.mean().detach().cpu())
+    #                 image_to_image_triplet_mean = float(image_to_image_triplet_loss.mean().detach().cpu())
+    #                 del loss, image_text_triplet_loss, image_text_infoNCE_loss, image_to_image_triplet_loss
+    #                 self.uncon_loss_m[dataset_name].update(loss_val, 1)
+    #                 self.it_triplet_loss_m[dataset_name].update(image_text_triplet_mean, 1)
+    #                 self.it_infoNCE_loss_m[dataset_name].update(image_text_infoNCE_mean, 1)
+    #                 self.ii_triplet_loss_m[dataset_name].update(image_to_image_triplet_mean, 1)
+                        
+    #             if stage == 'stage2':
+    #                 print(f"pid={os.getpid()} ",'rank', torch.distributed.get_rank(),'dataset_name', dataset_name, 'step', current_step)
+    #                 # ▸ 让 Accelerate 决定什么时候同步梯度 / clip / step
+    #                 if self.debug:
+    #                     print_gpu_memory_stats(self.accelerator,'Before video, similarity_tab, anatomy, _ = next(self.dl_iters[dataset_name])')
+    #                 # ---- 数据准备 ----
+    #                 video, similarity_tab, anatomy, _ = next(dl_iter)
+
+    #                 # 直接半精度进 GPU，减少显存与带宽
+    #                 tgt_dtype = torch.float16 if mp == "fp16" else (
+    #                             torch.bfloat16 if mp == "bf16" else torch.float32)
+
+    #                 video          = video.to(device, dtype=tgt_dtype, non_blocking=True)
+    #                 similarity_tab = (similarity_tab.to(torch.float32) * 0.01).to(
+    #                                 device, dtype=tgt_dtype, non_blocking=True)
+    #                 if self.debug:
+    #                     print_gpu_memory_stats(self.accelerator,'before tokenizer')
+
+    #                 with torch.no_grad():  # tokenizer不需要梯度
+    #                     text_tokens = self.tokenizer(
+    #                         list(anatomy),
+    #                         return_tensors="pt",
+    #                         padding="max_length",
+    #                         truncation=True,
+    #                         max_length=256  # 从512减少到256
+    #                     ).to(device, non_blocking=True)
+
+
+    #                 # ---- 前向 & 反向 ----
+    #                 with self.accelerator.autocast():
+    #                     if self.debug:
+    #                         print_gpu_memory_stats(self.accelerator,'before self.CTClip')
+    #                     loss, triplet_loss, infoNCE_loss, valid_triplet_cnt = self.CTClip(
+    #                         text_tokens,
+    #                         video,
+    #                         gt_similarity_matrix=similarity_tab,
+    #                         return_loss=True,
+    #                         device=device
+    #                     )
+    #                 print('rank: ', torch.distributed.get_rank()," loss: ", loss)
+    #                 if self.debug:            
+    #                     print('rank: ', torch.distributed.get_rank(), "loss isnan:", torch.isnan(loss), "isinf:", torch.isinf(loss))
+    #                 if self.debug:
+    #                     print_gpu_memory_stats(self.accelerator,'after self.CTClip and before self.accelerator.backward')
+                    
+    #                 del video, similarity_tab, text_tokens
+                    
+    #                 self.accelerator.backward(loss)                 # 自动 / grad_acc_steps
+
+    #                 # ---- 立即把日志数据转到 CPU，释放 GPU 显存 ----
+    #                 loss_val        = float(loss.detach().cpu())
+    #                 triplet_mean    = float(triplet_loss.mean().detach().cpu())
+    #                 infoNCE_mean    = float(infoNCE_loss.mean().detach().cpu())
+    #                 del loss
+    #                 self.loss_m[dataset_name].update(loss_val, 1)
+    #                 self.triplet_loss_m[dataset_name].update(triplet_mean, 1)
+    #                 self.infoNCE_loss_m[dataset_name].update(infoNCE_mean, 1)
+
+    #                 for i, name in enumerate(anatomy):
+    #                     tl = float(triplet_loss[i].detach().cpu())
+    #                     il = float(infoNCE_loss[i].detach().cpu())
+    #                     vc = int(valid_triplet_cnt)
+
+    #                     if name not in self.anatomy_infoNCE_loss_m[dataset_name]:
+    #                         self.anatomy_infoNCE_loss_m[dataset_name][name]          = AverageMeter()
+    #                         self.anatomy_triplet_loss_m[dataset_name][name]          = AverageMeter()
+    #                         self.anatomy_valid_triplet_count_m[dataset_name][name]   = AverageMeter()
+
+    #                     if il > 0:
+    #                         self.anatomy_infoNCE_loss_m[dataset_name][name].update(il, 1)
+    #                     if tl > 0:
+    #                         self.anatomy_triplet_loss_m[dataset_name][name].update(tl, 1)
+    #                         self.anatomy_valid_triplet_count_m[dataset_name][name].update(vc, 1)
+
+    #                 # 显式删除局部大张量，帮助 Python 及时回收
+    #                 del triplet_loss, infoNCE_loss
+            
+    #             torch.cuda.empty_cache()
+    #             # ---- 梯度同步步：clip / step / zero_grad ----
+    #             if self.accelerator.sync_gradients:
+    #                 if self.max_grad_norm is not None:
+    #                     self.accelerator.clip_grad_norm_(self.CTClip.parameters(), self.max_grad_norm)
+    #                 if self.debug:
+    #                     print_gpu_memory_stats(self.accelerator,'before self.optim.step')
+    #                 self.optim.step()
+    #                 self.optim.zero_grad(set_to_none=True)  # 清除梯度，避免内存泄漏
+    #                 torch.cuda.empty_cache()
+
+    #     # save model every so often
+    #     if not (current_step % self.save_model_every) and self.is_main:
+    #         model_path = self.results_folder / f'CTClip.{current_step}.pt'
+    #         self.save(model_path)
+    #         self.print(f'Saving model to {str(self.results_folder)}')
+    #     if self.stage2:
+    #         if not (current_step % self.shuffle_train_samples_every):
+    #             for i in range(len(self.dataset_names)):
+    #                 dataset_name = self.dataset_names[i]
+    #                 print(f"Rank {torch.distributed.get_rank()} | Step {current_step} | Shuffle Training Samples")
+    #                 self.dss[dataset_name].prepare_anatomy_data()
+    #                 # 重新创建 DataLoader
+    #                 self.dls[dataset_name] = DataLoader(
+    #                     self.dss[dataset_name],
+    #                     num_workers=self.num_workers,
+    #                     batch_size=self.batch_size[i],
+    #                     shuffle=False,
+    #                     drop_last=False,
+    #                     pin_memory=self.pin_memory,
+    #                     collate_fn=collate_fn
+    #                 )
+    #                 # 重新准备迭代器
+    #                 self.dl_iters[dataset_name] = cycle(self.accelerator.prepare(self.dls[dataset_name]))
+    #             self.gen_batch_generators()  # 重新生成 batch_generators
+        
+    #     # evaluate model every so often (ddp)
+    #     if not (current_step % self.save_results_every):
+    #         if self.stage1:
+    #             self.evaluate_uncon(current_step=current_step)
+    #         if self.stage2:
+    #             self.evaluate(current_step=current_step)
+    #         if torch.distributed.is_initialized():
+    #             torch.distributed.barrier()     
+    #     elif not (current_step % 100):   # 每100个step统计一轮loss
+        
+    #         if torch.distributed.is_initialized():
+    #             world_size = torch.distributed.get_world_size()
+    #             gathered_metrics = [None for _ in range(world_size)]
+    #             losses = {}
+    #             if self.stage1:
+    #                 losses.update({
+    #                     f'{dataset_name}_uncon_main': (self.uncon_loss_m[dataset_name].sum, self.uncon_loss_m[dataset_name].count),
+    #                     f'{dataset_name}_it_triplet': (self.it_triplet_loss_m[dataset_name].sum, self.it_triplet_loss_m[dataset_name].count),
+    #                     f'{dataset_name}_it_infoNCE': (self.it_infoNCE_loss_m[dataset_name].sum, self.it_infoNCE_loss_m[dataset_name].count),
+    #                     f'{dataset_name}_ii_triplet': (self.ii_triplet_loss_m[dataset_name].sum, self.ii_triplet_loss_m[dataset_name].count)
+    #                 } for dataset_name in self.uncon_dataset_names
+    #             )
+    #             if self.stage2:
+    #                 for dataset_name in self.dataset_names:
+    #                     losses.update({
+    #                         f'{dataset_name}_main': (self.loss_m[dataset_name].sum, self.loss_m[dataset_name].count),
+    #                         f'{dataset_name}_con_triplet': (self.triplet_loss_m[dataset_name].sum, self.triplet_loss_m[dataset_name].count),
+    #                         f'{dataset_name}_con_infoNCE': (self.infoNCE_loss_m[dataset_name].sum, self.infoNCE_loss_m[dataset_name].count),
+    #                         f'{dataset_name}_anatomy_infoNCE': {k: (v.sum, v.count) for k, v in self.anatomy_infoNCE_loss_m[dataset_name].items()},
+    #                         f'{dataset_name}_anatomy_triplet': {k: (v.sum, v.count) for k, v in self.anatomy_triplet_loss_m[dataset_name].items()},
+    #                         f'{dataset_name}_anatomy_valid_triplet': {k: (v.sum, v.count) for k, v in self.anatomy_valid_triplet_count_m[dataset_name].items()}
+    #                     })
+
+    #             gathered_data = {
+    #                 'losses': losses
+    #             }
+    #             torch.distributed.all_gather_object(gathered_metrics, gathered_data)
+    #             torch.distributed.barrier()
+                
+    #             if self.is_main:
+    #                 # ==== 合并损失统计量 ====
+    #                 def merge_loss(metric_name):
+    #                     total_sum = sum(data['losses'][metric_name][0] for data in gathered_metrics)
+    #                     total_count = sum(data['losses'][metric_name][1] for data in gathered_metrics)
+    #                     return total_sum / total_count if total_count > 0 else 0
+
+    #                 def merge_anatomy_loss(metric_name):
+    #                     merged = defaultdict(lambda: [0, 0])  # [sum, count]
+    #                     for data in gathered_metrics:
+    #                         for anatomy, (s, c) in data['losses'][metric_name].items():
+    #                             merged[anatomy][0] += s
+    #                             merged[anatomy][1] += c
+    #                     return {k: (v[0]/v[1] if v[1]>0 else 0) for k, v in merged.items()}
+                    
+    #                 # 计算全局平均损失
+    #                 if self.stage1:
+    #                     global_uncon_loss = {dataset_name: merge_loss(f'{dataset_name}_uncon_main') for dataset_name in self.uncon_dataset_names}
+    #                     global_it_triplet_loss = {dataset_name: merge_loss(f'{dataset_name}_it_triplet') for dataset_name in self.uncon_dataset_names}
+    #                     global_it_infoNCE_loss = {dataset_name: merge_loss(f'{dataset_name}_it_infoNCE') for dataset_name in self.uncon_dataset_names}
+    #                     global_ii_triplet_loss = {dataset_name: merge_loss(f'{dataset_name}_ii_triplet') for dataset_name in self.uncon_dataset_names} 
+                        
+    #                 if self.stage2:
+    #                     global_main_loss = {dataset_name: merge_loss(f'{dataset_name}_main') for dataset_name in self.dataset_names}
+    #                     global_triplet_loss = {dataset_name: merge_loss(f'{dataset_name}_con_triplet') for dataset_name in self.dataset_names}
+    #                     global_infoNCE_loss = {dataset_name: merge_loss(f'{dataset_name}_con_infoNCE') for dataset_name in self.dataset_names}
+    #                     global_anatomy_infoNCE = {dataset_name: merge_anatomy_loss(f'{dataset_name}_anatomy_infoNCE') for dataset_name in self.dataset_names}
+    #                     global_anatomy_triplet = {dataset_name: merge_anatomy_loss(f'{dataset_name}_anatomy_triplet') for dataset_name in self.dataset_names}
+    #                     global_anatomy_valid_triplet = {dataset_name: merge_anatomy_loss(f'{dataset_name}_anatomy_valid_triplet') for dataset_name in self.dataset_names}
+
+    #                 # ==== 日志记录 ====
+    #                 lr = self.optim.param_groups[0]['lr']
+    #                 current_time = datetime.now().strftime("%m-%d %H:%M")
+    #                 if self.stage1:
+    #                     for dataset_name in self.uncon_dataset_names:
+    #                         self.print(f"[{dataset_name}] Step {self.current_step} at {current_time} | LR {lr} | "
+    #                             f"Uncon Loss {global_uncon_loss[dataset_name]:.4f} | "
+    #                             f"Image-Text Triplet {global_it_triplet_loss[dataset_name]:.4f} | "
+    #                             f"Image-Text InfoNCE {global_it_infoNCE_loss[dataset_name]:.4f} | "
+    #                             f"Image-Image Triplet {global_ii_triplet_loss[dataset_name]:.4f}")
+    #                 if self.stage2:
+    #                     for dataset_name in self.dataset_names:
+    #                         self.print(f"[{dataset_name}] Step {self.current_step} at {current_time} | LR {lr} | "
+    #                             f"Con Loss {global_main_loss[dataset_name]:.4f} | Con InfoNCE {global_infoNCE_loss[dataset_name]:.4f} | "
+    #                             f"Con Triplet {global_triplet_loss[dataset_name]:.4f}")
+    #                 log_dict = {'lr': lr}
+    #                 # self.tb_writer.add_scalar('lr', lr, current_step)
+    #                 # if self.stage1:
+    #                 #     for dataset_name in self.uncon_dataset_names:
+    #                 #         self.tb_writer.add_scalar(f'{dataset_name}_uncon_train_loss', self.uncon_loss_m[dataset_name].avg, current_step)
+    #                 #         self.tb_writer.add_scalar(f'{dataset_name}_it_triplet_loss', self.it_triplet_loss_m[dataset_name].avg, current_step)
+    #                 #         self.tb_writer.add_scalar(f'{dataset_name}_it_infoNCE_loss', self.it_infoNCE_loss_m[dataset_name].avg, current_step)
+    #                 #         self.tb_writer.add_scalar(f'{dataset_name}_ii_triplet_loss', self.ii_triplet_loss_m[dataset_name].avg, current_step)
+    #                 # if self.stage2:
+    #                 #     for dataset_name in self.dataset_names:
+    #                 #         self.tb_writer.add_scalar(f'{dataset_name}_train_loss', self.loss_m[dataset_name].avg, current_step)
+    #                 #         self.tb_writer.add_scalar(f'{dataset_name}_infoNCE_loss', self.infoNCE_loss_m[dataset_name].avg, current_step)
+    #                 #         self.tb_writer.add_scalar(f'{dataset_name}_triplet_loss', self.triplet_loss_m[dataset_name].avg, current_step)
+                            
+    #                 #         # 记录解剖结构损失
+    #                 #         for anatomy, loss in global_anatomy_infoNCE[dataset_name].items():
+    #                 #             self.tb_writer.add_scalar(f'{dataset_name}_{anatomy}_infoNCE_loss', loss, current_step)
+    #                 #         for anatomy, loss in global_anatomy_triplet[dataset_name].items():
+    #                 #             self.tb_writer.add_scalar(f'{dataset_name}_{anatomy}_triplet_loss', loss, current_step)
+    #                 #         for anatomy, count in global_anatomy_valid_triplet[dataset_name].items():
+    #                 #             self.tb_writer.add_scalar(f'{dataset_name}_{anatomy}_valid_triplet', count, current_step)
+    #                 if self.stage1:
+    #                     for dataset_name in self.uncon_dataset_names:
+    #                         log_dict.update({
+    #                             f'{dataset_name}_uncon_train_loss': self.uncon_loss_m[dataset_name].avg,
+    #                             f'{dataset_name}_it_triplet_loss': self.it_triplet_loss_m[dataset_name].avg,
+    #                             f'{dataset_name}_it_infoNCE_loss': self.it_infoNCE_loss_m[dataset_name].avg,
+    #                             f'{dataset_name}_ii_triplet_loss': self.ii_triplet_loss_m[dataset_name].avg
+    #                         })
+                    
+    #                 if self.stage2:
+    #                     for dataset_name in self.dataset_names:
+    #                         log_dict.update({
+    #                             f'{dataset_name}_train_loss': self.loss_m[dataset_name].avg,
+    #                             f'{dataset_name}_infoNCE_loss': self.infoNCE_loss_m[dataset_name].avg,
+    #                             f'{dataset_name}_triplet_loss': self.triplet_loss_m[dataset_name].avg
+    #                         })
+                            
+    #                         # 记录解剖结构损失
+    #                         for anatomy, loss in global_anatomy_infoNCE[dataset_name].items():
+    #                             log_dict[f'{dataset_name}_{anatomy}_infoNCE_loss'] = loss
+                            
+    #                         for anatomy, loss in global_anatomy_triplet[dataset_name].items():
+    #                             log_dict[f'{dataset_name}_{anatomy}_triplet_loss'] = loss
+                            
+    #                         for anatomy, count in global_anatomy_valid_triplet[dataset_name].items():
+    #                             log_dict[f'{dataset_name}_{anatomy}_valid_triplet'] = count
+    #                 # 使用wandb记录所有指标
+    #             self.wandb.log(log_dict, step=current_step)
+    #             self._reset_metrics()
+    #             self._reset_metrics_uncon()
+    #     self.current_step += 1
 
     def train_step(self):
-        # torch.autograd.set_detect_anomaly(True)  # 7.24 增加的一部分，无bug的时候试试删除。很容易增加内存。再7.28删除
+        # 添加时间统计
+        if self.is_main:
+            import time
+            step_start_time = time.time()
+            time_stats = {
+                'data_loading': 0.0,
+                'model_forward': 0.0,
+                'backward': 0.0,
+                'optimizer_step': 0.0,
+                'total': 0.0
+            }
+
         device = self.device
         mp = self.accelerator.mixed_precision
         
@@ -928,14 +1572,18 @@ class CTClipTrainer(nn.Module):
                     # ▸ 让 Accelerate 决定什么时候同步梯度 / clip / step
                     if self.debug:
                         print_gpu_memory_stats(self.accelerator,'Before video, similarity_tab, anatomy, _ = next(self.uncon_dl_iters[dataset_name])')
+                    
                     # ---- 数据准备 ----
+                    if self.is_main:
+                        data_load_start = time.time()
+                    
                     video, text, sample_idls = next(dl_iter)
 
                     # 直接半精度进 GPU，减少显存与带宽
                     tgt_dtype = torch.float16 if mp == "fp16" else (
                                 torch.bfloat16 if mp == "bf16" else torch.float32)
 
-                    video          = video.to(device, dtype=tgt_dtype, non_blocking=True)
+                    video = video.to(device, dtype=tgt_dtype, non_blocking=True)
                     if self.debug:
                         print_gpu_memory_stats(self.accelerator,'before tokenizer')
                     with torch.no_grad():  # tokenizer不需要梯度
@@ -948,6 +1596,12 @@ class CTClipTrainer(nn.Module):
                                     device, dtype=tgt_dtype, non_blocking=True)
                     else:
                         similarity_tab = torch.eye(len(sample_idls), dtype=tgt_dtype, device=device)
+                    
+                    if self.is_main:
+                        time_stats['data_loading'] += time.time() - data_load_start
+                        model_forward_start = time.time()
+                        print('stage', stage, 'dataset_name', dataset_name, 'data_load_time', time_stats['data_loading'])
+                    
                     with self.accelerator.autocast():
                         loss, image_text_triplet_loss, image_text_infoNCE_loss, image_to_image_triplet_loss = self.CTClip(
                             text_tokens,
@@ -956,8 +1610,20 @@ class CTClipTrainer(nn.Module):
                             return_loss=True,
                             device=device,
                             is_condition=False)
+                        print('rank: ', torch.distributed.get_rank(),'dataset_name:' , dataset_name," loss: ", loss)
+                    
+                    if self.is_main:
+                        time_stats['model_forward'] += time.time() - model_forward_start
+                        backward_start = time.time()
+                        print('stage', stage, 'dataset_name', dataset_name, 'model_forward_time', time_stats['model_forward'])
+                    
                     del video, text_tokens, similarity_tab
                     self.accelerator.backward(loss)                 # 自动 / grad_acc_steps 
+                    
+                    if self.is_main:
+                        time_stats['backward'] += time.time() - backward_start
+                        print('stage', stage, 'dataset_name', dataset_name, 'backward_time', time_stats['backward'])
+                    
                     # ---- 立即把日志数据转到 CPU，释放 GPU 显存 ----
                     loss_val        = float(loss.detach().cpu())
                     image_text_triplet_mean = float(image_text_triplet_loss.mean().detach().cpu())
@@ -974,7 +1640,11 @@ class CTClipTrainer(nn.Module):
                     # ▸ 让 Accelerate 决定什么时候同步梯度 / clip / step
                     if self.debug:
                         print_gpu_memory_stats(self.accelerator,'Before video, similarity_tab, anatomy, _ = next(self.dl_iters[dataset_name])')
+                    
                     # ---- 数据准备 ----
+                    if self.is_main:
+                        data_load_start = time.time()
+                    
                     video, similarity_tab, anatomy, _ = next(dl_iter)
 
                     # 直接半精度进 GPU，减少显存与带宽
@@ -996,6 +1666,9 @@ class CTClipTrainer(nn.Module):
                             max_length=256  # 从512减少到256
                         ).to(device, non_blocking=True)
 
+                    if self.is_main:
+                        time_stats['data_loading'] += time.time() - data_load_start
+                        model_forward_start = time.time()
 
                     # ---- 前向 & 反向 ----
                     with self.accelerator.autocast():
@@ -1008,6 +1681,10 @@ class CTClipTrainer(nn.Module):
                             return_loss=True,
                             device=device
                         )
+                    
+                    if self.is_main:
+                        time_stats['model_forward'] += time.time() - model_forward_start
+                    
                     print('rank: ', torch.distributed.get_rank()," loss: ", loss)
                     if self.debug:            
                         print('rank: ', torch.distributed.get_rank(), "loss isnan:", torch.isnan(loss), "isinf:", torch.isinf(loss))
@@ -1016,7 +1693,13 @@ class CTClipTrainer(nn.Module):
                     
                     del video, similarity_tab, text_tokens
                     
+                    if self.is_main:
+                        backward_start = time.time()
+                    
                     self.accelerator.backward(loss)                 # 自动 / grad_acc_steps
+                    
+                    if self.is_main:
+                        time_stats['backward'] += time.time() - backward_start
 
                     # ---- 立即把日志数据转到 CPU，释放 GPU 显存 ----
                     loss_val        = float(loss.detach().cpu())
@@ -1051,11 +1734,20 @@ class CTClipTrainer(nn.Module):
                 if self.accelerator.sync_gradients:
                     if self.max_grad_norm is not None:
                         self.accelerator.clip_grad_norm_(self.CTClip.parameters(), self.max_grad_norm)
+                    
+                    if self.is_main:
+                        optimizer_step_start = time.time()
+                    
                     if self.debug:
                         print_gpu_memory_stats(self.accelerator,'before self.optim.step')
                     self.optim.step()
                     self.optim.zero_grad(set_to_none=True)  # 清除梯度，避免内存泄漏
+                    
+                    if self.is_main:
+                        time_stats['optimizer_step'] += time.time() - optimizer_step_start
+                    
                     torch.cuda.empty_cache()
+
 
         # save model every so often
         if not (current_step % self.save_model_every) and self.is_main:
@@ -1084,8 +1776,10 @@ class CTClipTrainer(nn.Module):
         
         # evaluate model every so often (ddp)
         if not (current_step % self.save_results_every):
-            
-            self.evaluate(current_step=current_step)
+            if self.stage1:
+                self.evaluate_uncon(current_step=current_step)
+            if self.stage2:
+                self.evaluate(current_step=current_step)
             if torch.distributed.is_initialized():
                 torch.distributed.barrier()     
         elif not (current_step % 100):   # 每100个step统计一轮loss
@@ -1095,13 +1789,13 @@ class CTClipTrainer(nn.Module):
                 gathered_metrics = [None for _ in range(world_size)]
                 losses = {}
                 if self.stage1:
-                    losses.update({
-                        f'{dataset_name}_uncon_main': (self.uncon_loss_m[dataset_name].sum, self.uncon_loss_m[dataset_name].count),
-                        f'{dataset_name}_it_triplet': (self.it_triplet_loss_m[dataset_name].sum, self.it_triplet_loss_m[dataset_name].count),
-                        f'{dataset_name}_it_infoNCE': (self.it_infoNCE_loss_m[dataset_name].sum, self.it_infoNCE_loss_m[dataset_name].count),
-                        f'{dataset_name}_ii_triplet': (self.ii_triplet_loss_m[dataset_name].sum, self.ii_triplet_loss_m[dataset_name].count)
-                    } for dataset_name in self.uncon_dataset_names
-                )
+                    for dataset_name in self.uncon_dataset_names:
+                        losses.update({
+                            f'{dataset_name}_uncon_main': (self.uncon_loss_m[dataset_name].sum, self.uncon_loss_m[dataset_name].count),
+                            f'{dataset_name}_it_triplet': (self.it_triplet_loss_m[dataset_name].sum, self.it_triplet_loss_m[dataset_name].count),
+                            f'{dataset_name}_it_infoNCE': (self.it_infoNCE_loss_m[dataset_name].sum, self.it_infoNCE_loss_m[dataset_name].count),
+                            f'{dataset_name}_ii_triplet': (self.ii_triplet_loss_m[dataset_name].sum, self.ii_triplet_loss_m[dataset_name].count)
+                        })
                 if self.stage2:
                     for dataset_name in self.dataset_names:
                         losses.update({
@@ -1152,6 +1846,7 @@ class CTClipTrainer(nn.Module):
                     # ==== 日志记录 ====
                     lr = self.optim.param_groups[0]['lr']
                     current_time = datetime.now().strftime("%m-%d %H:%M")
+        
                     if self.stage1:
                         for dataset_name in self.uncon_dataset_names:
                             self.print(f"[{dataset_name}] Step {self.current_step} at {current_time} | LR {lr} | "
@@ -1165,26 +1860,8 @@ class CTClipTrainer(nn.Module):
                                 f"Con Loss {global_main_loss[dataset_name]:.4f} | Con InfoNCE {global_infoNCE_loss[dataset_name]:.4f} | "
                                 f"Con Triplet {global_triplet_loss[dataset_name]:.4f}")
                     log_dict = {'lr': lr}
-                    # self.tb_writer.add_scalar('lr', lr, current_step)
-                    # if self.stage1:
-                    #     for dataset_name in self.uncon_dataset_names:
-                    #         self.tb_writer.add_scalar(f'{dataset_name}_uncon_train_loss', self.uncon_loss_m[dataset_name].avg, current_step)
-                    #         self.tb_writer.add_scalar(f'{dataset_name}_it_triplet_loss', self.it_triplet_loss_m[dataset_name].avg, current_step)
-                    #         self.tb_writer.add_scalar(f'{dataset_name}_it_infoNCE_loss', self.it_infoNCE_loss_m[dataset_name].avg, current_step)
-                    #         self.tb_writer.add_scalar(f'{dataset_name}_ii_triplet_loss', self.ii_triplet_loss_m[dataset_name].avg, current_step)
-                    # if self.stage2:
-                    #     for dataset_name in self.dataset_names:
-                    #         self.tb_writer.add_scalar(f'{dataset_name}_train_loss', self.loss_m[dataset_name].avg, current_step)
-                    #         self.tb_writer.add_scalar(f'{dataset_name}_infoNCE_loss', self.infoNCE_loss_m[dataset_name].avg, current_step)
-                    #         self.tb_writer.add_scalar(f'{dataset_name}_triplet_loss', self.triplet_loss_m[dataset_name].avg, current_step)
-                            
-                    #         # 记录解剖结构损失
-                    #         for anatomy, loss in global_anatomy_infoNCE[dataset_name].items():
-                    #             self.tb_writer.add_scalar(f'{dataset_name}_{anatomy}_infoNCE_loss', loss, current_step)
-                    #         for anatomy, loss in global_anatomy_triplet[dataset_name].items():
-                    #             self.tb_writer.add_scalar(f'{dataset_name}_{anatomy}_triplet_loss', loss, current_step)
-                    #         for anatomy, count in global_anatomy_valid_triplet[dataset_name].items():
-                    #             self.tb_writer.add_scalar(f'{dataset_name}_{anatomy}_valid_triplet', count, current_step)
+                    
+
                     if self.stage1:
                         for dataset_name in self.uncon_dataset_names:
                             log_dict.update({
@@ -1212,15 +1889,20 @@ class CTClipTrainer(nn.Module):
                             for anatomy, count in global_anatomy_valid_triplet[dataset_name].items():
                                 log_dict[f'{dataset_name}_{anatomy}_valid_triplet'] = count
                     # 使用wandb记录所有指标
-                self.wandb.log(log_dict, step=current_step)
-                self._reset_metrics()
-                self._reset_metrics_uncon()
+                    self.wandb.log(log_dict, step=current_step)
+                if self.stage2:
+                    self._reset_metrics()
+                if self.stage1:
+                    self._reset_metrics_uncon()
         self.current_step += 1
 
     def train(self, evaluate_before_train):
         
         if evaluate_before_train:
-            self.evaluate(current_step=self.current_step)   # Evaluate before training
+            if self.stage1:
+                self.evaluate_uncon(current_step=self.current_step)  # Evaluate before training
+            if self.stage2:
+                self.evaluate(current_step=self.current_step)   # Evaluate before training
 
         while self.current_step <= self.num_train_steps:
 

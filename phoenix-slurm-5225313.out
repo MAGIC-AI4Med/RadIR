@@ -1,0 +1,112 @@
+ipex flag is deprecated, will be removed in Accelerate v1.10. From 2.7.0, PyTorch has all needed optimizations for Intel CPU and XPU.
+The following values were not passed to `accelerate launch` and had defaults used instead:
+		More than one GPU was found, enabling multi-GPU training.
+		If this was unintended please pass in `--num_processes=1`.
+To avoid this warning pass in values for each of the problematic parameters or run `accelerate config`.
+/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT_UNI_124/lib/python3.9/site-packages/vector_quantize_pytorch/vector_quantize_pytorch.py:261: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  @autocast(enabled = False)
+/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT_UNI_124/lib/python3.9/site-packages/vector_quantize_pytorch/vector_quantize_pytorch.py:391: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  @autocast(enabled = False)
+/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT_UNI_124/lib/python3.9/site-packages/vector_quantize_pytorch/vector_quantize_pytorch.py:261: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  @autocast(enabled = False)
+/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT_UNI_124/lib/python3.9/site-packages/vector_quantize_pytorch/vector_quantize_pytorch.py:391: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  @autocast(enabled = False)
+最开始 pid=124646  rank not distributed
+开始第二阶段的训练
+最开始 pid=124644  rank not distributed
+开始第二阶段的训练
+num_workers: 2
+num_workers: 2
+Detected kernel version 3.10.0, which is below the recommended minimum of 5.5.0; this can cause the process to hang. It is recommended to upgrade the kernel to the minimum version or higher.
+Rank 0 anatomy subset for training: ['pulmonary artery']
+Rank 0 total samples: 279592
+Rank 0 anatomy subset for validation: ['pulmonary artery']
+Rank 0 total samples: 279592
+pulmonary artery.csv has 1620 rows.
+Rank 1 anatomy subset for training: ['stomach', 'pancreas', 'breast']
+Rank 1 total samples: 148627
+Rank 1 anatomy subset for validation: ['stomach', 'pancreas', 'breast']
+Rank 1 total samples: 148627
+stomach.csv has 753 rows.
+breast.csv has 1080 rows.
+pancreas.csv has 782 rows.
+** DATA ** Load 24127 images.
+** DATA ** Load 1 anatomy.
+For pulmonary artery, 43 samples has no valid candidate, removed
+** DATA ** Load 1563 images.
+** DATA ** Load 1 anatomy.
+Rank 0 anatomy subset for training: ['aortic arch']
+Rank 0 total samples: 905673
+Rank 0 anatomy subset for validation: ['aortic arch']
+Rank 0 total samples: 905673
+aortic arch.csv has 2709 rows.
+For breast, 35 samples has no valid candidate, removed
+For stomach, 17 samples has no valid candidate, removed
+For pancreas, 14 samples has no valid candidate, removed
+Rank 1 anatomy subset for training: ['pericardium', 'pulmonary artery', 'aortic valve']
+Rank 1 total samples: 423679
+Rank 1 anatomy subset for validation: ['pericardium', 'pulmonary artery', 'aortic valve']
+Rank 1 total samples: 423679
+pulmonary artery.csv has 2485 rows.
+pericardium.csv has 1770 rows.
+aortic valve.csv has 1030 rows.
+/p14/p14789176/s51143872 is missing, removed
+/p14/p14789176/s58819381 is missing, removed
+/p14/p14789176/s59710127 is missing, removed
+** DATA ** Load 215697 images.
+** DATA ** Load 1 anatomy.
+For aortic arch, 9 samples has no valid candidate, removed
+** DATA ** Load 3091 images.
+** DATA ** Load 1 anatomy.
+For aortic valve, 23 samples has no valid candidate, removed
+For pericardium, 10 samples has no valid candidate, removed
+For pulmonary artery, 38 samples has no valid candidate, removed
+wandb: Currently logged in as: ztf2020 (ztf2020-ustc) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: Tracking run with wandb version 0.21.0
+wandb: Run data is saved locally in /mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-UNI-Image-Retrieval-CXR_CT/wandb/run-20250801_191218-j8dpbnbf
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run CTClip-Train-phy-[0, 1]-7.30
+wandb: ⭐️ View project at https://wandb.ai/ztf2020-ustc/CTClip-Train
+wandb: 🚀 View run at https://wandb.ai/ztf2020-ustc/CTClip-Train/runs/j8dpbnbf
+[rank1]: Traceback (most recent call last):
+[rank1]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-UNI-Image-Retrieval-CXR_CT/scripts/run_train_CXR_CT.py", line 351, in <module>
+[rank1]:     trainer.load_checkpoint(config.checkpoint, config.allow_partial_load)
+[rank1]:   File "/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-UNI-Image-Retrieval-CXR_CT/scripts/CTCLIPTrainer_CXR_CT.py", line 903, in load_checkpoint
+[rank1]:     CTClip.load_state_dict(pkg['model'])
+[rank1]: KeyError: 'model'
+Log at /mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Conditional-Image-Retrieval-CXR_CT/log/CXR_CT_Uni
+** MODEL ** Load Checkpoint from /mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-Unconditional-Image-Retrieval/CT-CLIP_v2.pt
+W0801 19:12:22.195056 124268 site-packages/torch/distributed/elastic/multiprocessing/api.py:897] Sending process 124644 closing signal SIGTERM
+E0801 19:12:22.662266 124268 site-packages/torch/distributed/elastic/multiprocessing/api.py:869] failed (exitcode: 1) local_rank: 1 (pid: 124646) of binary: /mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT_UNI_124/bin/python3.9
+Traceback (most recent call last):
+  File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT_UNI_124/bin/accelerate", line 8, in <module>
+    sys.exit(main())
+  File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT_UNI_124/lib/python3.9/site-packages/accelerate/commands/accelerate_cli.py", line 50, in main
+    args.func(args)
+  File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT_UNI_124/lib/python3.9/site-packages/accelerate/commands/launch.py", line 1190, in launch_command
+    multi_gpu_launcher(args)
+  File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT_UNI_124/lib/python3.9/site-packages/accelerate/commands/launch.py", line 815, in multi_gpu_launcher
+    distrib_run.run(args)
+  File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT_UNI_124/lib/python3.9/site-packages/torch/distributed/run.py", line 909, in run
+    elastic_launch(
+  File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT_UNI_124/lib/python3.9/site-packages/torch/distributed/launcher/api.py", line 138, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+  File "/mnt/petrelfs/zhangtengfei/anaconda3/envs/CT_CLIP_CXRCT_UNI_124/lib/python3.9/site-packages/torch/distributed/launcher/api.py", line 269, in launch_agent
+    raise ChildFailedError(
+torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
+============================================================
+/mnt/petrelfs/zhangtengfei/RadIR/CT-CLIP/CT-UNI-Image-Retrieval-CXR_CT/scripts/run_train_CXR_CT.py FAILED
+------------------------------------------------------------
+Failures:
+  <NO_OTHER_FAILURES>
+------------------------------------------------------------
+Root Cause (first observed failure):
+[0]:
+  time      : 2025-08-01_19:12:22
+  host      : SH-IDCA1404-10-140-54-9
+  rank      : 1 (local_rank: 1)
+  exitcode  : 1 (pid: 124646)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+============================================================
+srun: error: SH-IDCA1404-10-140-54-9: task 0: Exited with exit code 1

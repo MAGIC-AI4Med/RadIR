@@ -287,13 +287,11 @@ class CTViT(nn.Module):
         h, w = self.patch_height_width
 
         video_shape = tuple(tokens.shape[:-1])
-
         tokens = rearrange(tokens, 'b t h w d -> (b t) (h w) d')
         device=torch.device('cuda')
         attn_bias = self.spatial_rel_pos_bias(h, w, device = device)
-
         tokens = self.enc_spatial_transformer(tokens, attn_bias = attn_bias, video_shape = video_shape)
-        
+
         del attn_bias
         torch.cuda.empty_cache()
         
@@ -301,7 +299,7 @@ class CTViT(nn.Module):
 
         # encode - temporal
         if tokens.shape[1] > 1:
-            # 深度不为1，是2D图像
+            # 深度不为1，是3D图像
             tokens = rearrange(tokens, 'b t h w d -> (b h w) t d')
 
             tokens = self.enc_temporal_transformer(tokens, video_shape = video_shape)
@@ -383,7 +381,7 @@ class CTViT(nn.Module):
         # save height and width in
         else:
             tokens = self.to_patch_emb_first_frame(video)
-            
+
         shape = tokens.shape
         *_, h, w, _ = shape
 
@@ -393,20 +391,20 @@ class CTViT(nn.Module):
 
         # quantize，这里并不影响数据尺寸，而且深度为1依旧可以使用。
         # # # 和量化操作相关，先去除掉这部分
-        # tokens, packed_fhw_shape = pack([tokens], 'b * d')
+        tokens, packed_fhw_shape = pack([tokens], 'b * d')
 
-        # vq_mask = None
-        # if exists(mask):
-        #     vq_mask = self.calculate_video_token_mask(video, mask)
+        vq_mask = None
+        if exists(mask):
+            vq_mask = self.calculate_video_token_mask(video, mask)
 
-        # tokens, indices, commit_loss = self.vq(tokens, mask = vq_mask)
-        # del vq_mask
-        # torch.cuda.empty_cache()
-        # if return_only_codebook_ids:
-        #     indices, = unpack(indices, packed_fhw_shape, 'b *')
-        #     return indices
+        tokens, indices, commit_loss = self.vq(tokens, mask = vq_mask)
+        del vq_mask
+        torch.cuda.empty_cache()
+        if return_only_codebook_ids:
+            indices, = unpack(indices, packed_fhw_shape, 'b *')
+            return indices
 
-        # tokens = rearrange(tokens, 'b (t h w) d -> b t h w d', h = h, w = w)
+        tokens = rearrange(tokens, 'b (t h w) d -> b t h w d', h = h, w = w)
 
         if return_encoded_tokens:
             return tokens

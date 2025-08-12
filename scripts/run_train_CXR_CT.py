@@ -52,6 +52,7 @@ if __name__ == '__main__':
     
     # Additional unconstrained dataset parameters
     parser.add_argument('--uncon_batch_size', nargs='+', type=int, help='Batch size for unconstrained datasets')
+    parser.add_argument('--uncon_batch_size_valid', nargs='+', type=int, help='Batch size for validation of unconstrained datasets')
     parser.add_argument('--uncon_soft_label', action='store_true', help='Use soft labels for unconstrained datasets')
     # 表示文件夹的路径，并不是实际文件的路径
     parser.add_argument('--uncon_similarity_lookup_table_train', nargs='+', type=str, help='Similarity lookup tables for unconstrained training datasets')
@@ -303,6 +304,7 @@ if __name__ == '__main__':
         stage1= config.stage1,
         stage2= config.stage2,
         uncon_batch_size= config.uncon_batch_size,
+        uncon_batch_size_valid= config.uncon_batch_size_valid,
         uncon_soft_label = config.uncon_soft_label,
         uncon_similarity_lookup_table_train = config.uncon_similarity_lookup_table_train,
         uncon_similarity_lookup_table_valid = config.uncon_similarity_lookup_table_valid,
