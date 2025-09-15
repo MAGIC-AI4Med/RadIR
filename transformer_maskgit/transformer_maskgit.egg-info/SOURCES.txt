@@ -1,0 +1,9 @@
+setup.py
+transformer_maskgit/__init__.py
+transformer_maskgit/attention.py
+transformer_maskgit/ctvit.py
+transformer_maskgit.egg-info/PKG-INFO
+transformer_maskgit.egg-info/SOURCES.txt
+transformer_maskgit.egg-info/dependency_links.txt
+transformer_maskgit.egg-info/requires.txt
+transformer_maskgit.egg-info/top_level.txt
