@@ -31,7 +31,7 @@ from accelerate.utils import InitProcessGroupKwargs
 
 import math
 import torch.optim.lr_scheduler as lr_scheduler
-from ct_clip import CTCLIP
+from radir import RADIR
 import os
 
 from scheduler import cosine_lr
@@ -126,7 +126,7 @@ class AverageMeter(object):
 class RadIRTrainer(nn.Module):
     def __init__(
         self,
-        CTClip: CTCLIP,
+        Rad_IR: Rad_IR,
         *,
         num_train_steps,
         current_step,
@@ -193,7 +193,7 @@ class RadIRTrainer(nn.Module):
         self.accelerator = Accelerator(mixed_precision='fp16',kwargs_handlers=[ddp_kwargs, kwargs], **accelerate_kwargs) # 这里增加了参数，使用混合进度训练
         
         # self.accelerator = Accelerator(mixed_precision="fp16",kwargs_handlers=[ddp_kwargs, kwargs], **accelerate_kwargs) # 这里增加了参数，使用混合进度训练
-        self.CTClip = CTClip
+        self.Rad_IR = Rad_IR
         
         if tokenizer != None:
             self.tokenizer=tokenizer
@@ -214,7 +214,7 @@ class RadIRTrainer(nn.Module):
         self.negative_threshold = negative_threshold
         self.dataset_names = dataset_names
         self.uncon_dataset_names = uncon_dataset_names
-        all_parameters = set(CTClip.parameters())
+        all_parameters = set(Rad_IR.parameters())
         self.modal_embedding = modal_embedding
         if isinstance(lr, list):
             self.optim = get_optimizer(all_parameters, lr=lr[-1], wd=wd)
@@ -402,13 +402,13 @@ class RadIRTrainer(nn.Module):
         self.gen_batch_generators()
         # prepare with accelerator
         self.device = self.accelerator.device
-        self.CTClip.to(self.device)
+        self.Rad_IR.to(self.device)
 
         (
-            self.CTClip,
+            self.Rad_IR,
             self.optim,
         ) = self.accelerator.prepare(
-            self.CTClip,
+            self.Rad_IR,
             self.optim,
         )
         
@@ -444,7 +444,7 @@ class RadIRTrainer(nn.Module):
             
             physical_ids = [int(v) for v in visible.split(",")]
             
-            run_name = f'CTClip-Train-phy-{physical_ids}-7.30'
+            run_name = f'Rad_IR-Train-phy-{physical_ids}-7.30'
             
     def gen_batch_generators(self):
         self.batch_generators = []
@@ -595,7 +595,7 @@ class RadIRTrainer(nn.Module):
     def evaluate(self, current_step):
         with torch.no_grad():
             
-            self.CTClip.eval()
+            self.Rad_IR.eval()
             all_metrics = {}
             for dataset_name in self.dataset_names:
                 for k in [3, 5, 10, 20, 50, 100]:
@@ -622,7 +622,7 @@ class RadIRTrainer(nn.Module):
                         sample_id_ls = list(sample_id_ls)
                         text_tokens=self.tokenizer(anatomy_ls, return_tensors="pt", padding="max_length", truncation=True, max_length=512).to(self.device)
                         with torch.autocast(device_type='cuda', dtype=torch.float16):
-                            _, _, fused_latents, _ = self.CTClip(
+                            _, _, fused_latents, _ = self.Rad_IR(
                             text_tokens, video, return_latents=True, device=self.device
                         )  # B 1 Dim
                         fused_latents =  fused_latents.detach().cpu().squeeze().to(torch.float16)  # 去掉local_B，转换为float16
@@ -640,12 +640,12 @@ class RadIRTrainer(nn.Module):
                         sample_id_ls = list(sample_id_ls)
                         text_tokens=self.tokenizer(anatomy_ls, return_tensors="pt", padding="max_length", truncation=True, max_length=512).to(self.device)
                         with torch.autocast(device_type='cuda', dtype=torch.float16):
-                            _, _, fused_latents, _ = self.CTClip(
+                            _, _, fused_latents, _ = self.Rad_IR(
                             text_tokens, video, return_latents=True, device=self.device,is_condition=True,modal_indexs=modal_indexs,modal_embedding=self.modal_embedding
                         )  # B 1 Dim
                         fused_latents =  fused_latents.detach().cpu().squeeze().to(torch.float16)  # 去掉local_B，转换为float16
                         
-                        # _, _, fused_latents, tmp = self.CTClip(text_tokens, video, return_latents=True, device=self.device) # B 1 Dim
+                        # _, _, fused_latents, tmp = self.Rad_IR(text_tokens, video, return_latents=True, device=self.device) # B 1 Dim
                         # fused_latents = fused_latents.detach().cpu().squeeze()  # 去掉local_B
                         for i, (sample_id, anatomy) in enumerate(zip(sample_id_ls, anatomy_ls)):
                             sample_index = self.anatomy2id_lss[dataset_name][anatomy].index(sample_id)
@@ -813,7 +813,7 @@ class RadIRTrainer(nn.Module):
         
         accelerator = self.accelerator  # 假设你已经有accelerator
         device = accelerator.device
-        self.CTClip.eval()
+        self.Rad_IR.eval()
         if is_trainset:
             prex =  'part_trainset'
         else:
@@ -857,7 +857,7 @@ class RadIRTrainer(nn.Module):
                             truncation=True,
                             max_length=512
                         ).to(device)
-                        text_latents, image_latents, _, temp = self.CTClip(
+                        text_latents, image_latents, _, temp = self.Rad_IR(
                             text_tokens, video, return_latents=True, device=device,is_condition=False
                         )
                         text_latents_all.append(text_latents.detach())
@@ -874,7 +874,7 @@ class RadIRTrainer(nn.Module):
                             truncation=True,
                             max_length=512
                         ).to(device)
-                        text_latents, image_latents, _, temp = self.CTClip(
+                        text_latents, image_latents, _, temp = self.Rad_IR(
                             text_tokens, video, return_latents=True, device=device,is_condition=False,modal_embedding=True,modal_indexs=modal_indexs
                         )
                         text_latents_all.append(text_latents.detach())
@@ -983,7 +983,7 @@ class RadIRTrainer(nn.Module):
             return
 
         pkg = dict(
-            model=self.accelerator.get_state_dict(self.CTClip),
+            model=self.accelerator.get_state_dict(self.Rad_IR),
             optim=self.optim.state_dict(),
             step=self.current_step
         )
@@ -996,8 +996,8 @@ class RadIRTrainer(nn.Module):
         assert path.exists()
         pkg = torch.load(path, map_location='cpu',weights_only=False)
 
-        CTClip = self.accelerator.unwrap_model(self.CTClip)
-        CTClip.load_state_dict(pkg['model'])
+        Rad_IR = self.accelerator.unwrap_model(self.Rad_IR)
+        Rad_IR.load_state_dict(pkg['model'])
         # self.optim.load_state_dict(pkg['optim'])
         self.current_step = pkg['step'] + 1
         
@@ -1008,12 +1008,12 @@ class RadIRTrainer(nn.Module):
         assert path.exists()
         pkg = torch.load(path, map_location='cpu', weights_only=False)
 
-        CTClip = self.accelerator.unwrap_model(self.CTClip)
+        Rad_IR = self.accelerator.unwrap_model(self.Rad_IR)
         
         if allow_partial_load:
-            model_dict = CTClip.state_dict()
+            model_dict = Rad_IR.state_dict()
             if 'model' in pkg:
-                pkg_state_dict = pkg['model']  # 假设 pkg['model'] 是模型的状态字典
+                pkg_state_dict = pkg['model']  # 假设 pkg['model'] 是模型的状态··字典
             else:
                 pkg_state_dict = pkg
             # 检查差异
@@ -1024,7 +1024,7 @@ class RadIRTrainer(nn.Module):
             # 加载部分参数
             state_dict = {k: v for k, v in pkg_state_dict.items() if k in model_dict.keys() and v.shape == model_dict[k].shape}
             model_dict.update(state_dict)
-            CTClip.load_state_dict(model_dict)
+            Rad_IR.load_state_dict(model_dict)
 
             self.print('** MODEL ** The following parameters are UNEXPECTED in checkpoint:\n')
             self.print(unexpected_state_dict)
@@ -1035,7 +1035,7 @@ class RadIRTrainer(nn.Module):
             self.print('** MODEL ** The following parameters are LOADED in:\n')
             self.print(state_dict.keys())
         else:
-            CTClip.load_state_dict(pkg['model'])
+            Rad_IR.load_state_dict(pkg['model'])
 
     def print(self, msg):
         self.accelerator.print(msg)
@@ -1064,12 +1064,12 @@ class RadIRTrainer(nn.Module):
         current_step = self.current_step
         self.lr_scheduler(current_step)
 
-        self.CTClip.train()
+        self.Rad_IR.train()
 
-        # update CTClip model
+        # update Rad_IR model
         # 有两种方案，一个是每个step同时做2D和3D的训练。另一个是每个step只做2D或3D的训练，但是要用到梯度累积。
         for stage, dataset_name, dl_iter in self.batch_generators:
-            with self.accelerator.accumulate(self.CTClip):
+            with self.accelerator.accumulate(self.Rad_IR):
                 if stage == 'stage1':
                     print(f"pid={os.getpid()} ",'rank', torch.distributed.get_rank(),'dataset_name', dataset_name, 'step', current_step)
                     # ▸ 让 Accelerate 决定什么时候同步梯度 / clip / step
@@ -1107,7 +1107,7 @@ class RadIRTrainer(nn.Module):
                         print('stage', stage, 'dataset_name', dataset_name, 'data_load_time', time_stats['data_loading'])
                     
                     with self.accelerator.autocast():
-                        loss, image_text_triplet_loss, image_text_infoNCE_loss, image_to_image_triplet_loss = self.CTClip(
+                        loss, image_text_triplet_loss, image_text_infoNCE_loss, image_to_image_triplet_loss = self.Rad_IR(
                             text_tokens,
                             video,
                             gt_similarity_matrix=similarity_tab,
@@ -1188,8 +1188,8 @@ class RadIRTrainer(nn.Module):
                     # ---- 前向 & 反向 ----
                     with self.accelerator.autocast():
                         if self.debug:
-                            print_gpu_memory_stats(self.accelerator,'before self.CTClip')
-                        loss, triplet_loss, infoNCE_loss, valid_triplet_cnt = self.CTClip(
+                            print_gpu_memory_stats(self.accelerator,'before self.Rad_IR')
+                        loss, triplet_loss, infoNCE_loss, valid_triplet_cnt = self.Rad_IR(
                             text_tokens,
                             video,
                             gt_similarity_matrix=similarity_tab,
@@ -1207,7 +1207,7 @@ class RadIRTrainer(nn.Module):
                     if self.debug:            
                         print('rank: ', torch.distributed.get_rank(), "loss isnan:", torch.isnan(loss), "isinf:", torch.isinf(loss))
                     if self.debug:
-                        print_gpu_memory_stats(self.accelerator,'after self.CTClip and before self.accelerator.backward')
+                        print_gpu_memory_stats(self.accelerator,'after self.Rad_IR and before self.accelerator.backward')
                     
                     del video, similarity_tab, text_tokens
                     
@@ -1251,7 +1251,7 @@ class RadIRTrainer(nn.Module):
                 # ---- 梯度同步步：clip / step / zero_grad ----
                 if self.accelerator.sync_gradients:
                     if self.max_grad_norm is not None:
-                        self.accelerator.clip_grad_norm_(self.CTClip.parameters(), self.max_grad_norm)
+                        self.accelerator.clip_grad_norm_(self.Rad_IR.parameters(), self.max_grad_norm)
                     
                     if self.is_main:
                         optimizer_step_start = time.time()
@@ -1268,7 +1268,7 @@ class RadIRTrainer(nn.Module):
 
 
         if not (current_step % self.save_model_every) and self.is_main:
-            model_path = self.results_folder / f'CTClip.{current_step}.pt'
+            model_path = self.results_folder / f'Rad_IR.{current_step}.pt'
             self.save(model_path)
             self.print(f'Saving model to {str(self.results_folder)}')
         if self.stage2:
