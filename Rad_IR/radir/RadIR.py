@@ -128,7 +128,6 @@ class RADIR(nn.Module):
             dim_text = 512,
             dim_image = 512,
             dim_latent = 512,
-<<<<<<< HEAD
             text_seq_len = 256,
             text_has_cls_token = False,
             text_pad_id = 0,
@@ -140,46 +139,12 @@ class RADIR(nn.Module):
             channels = 3,
             use_all_token_embeds = False,
             decoupled_contrastive_learning = False,
-=======
-            num_text_tokens = 28897,
-            text_enc_depth = 6,
-            text_seq_len = 256,
-            text_heads = 8,
-            text_dim_head = 64,
-            text_has_cls_token = False,
-            text_pad_id = 0,
-            text_rotary_pos_emb = False,
-            text_causal_mask = False,
-            text_eos_id = None,
-            text_encode_without_mask = False,
-            visual_enc_depth = 6,
-            visual_heads = 8,
-            visual_dim_head = 64,
-            visual_image_size = 256,
-            visual_patch_size = 32,
-            visual_patch_dropout = 0.5,
-            visual_has_cls_token = False,
-            channels = 3,
-            use_all_token_embeds = False,
-            downsample_image_embeds = False,
-            decoupled_contrastive_learning = False,
-            extra_latent_projection = False,
->>>>>>> 1834991ed6b44b31130c4bb45497b290b3488768
             use_mlm = False,
             text_ssl_loss_weight = 0.05,
             use_visual_ssl = False,
             visual_ssl = None,
-<<<<<<< HEAD
             image_ssl_loss_weight = 0.05,
             multiview_loss_weight = 0.1,
-=======
-            visual_ssl_type = 'simsiam',
-            visual_ssl_hidden_layer = -1,
-            simclr_temperature = 0.1,
-            image_ssl_loss_weight = 0.05,
-            multiview_loss_weight = 0.1,
-            checkpoint_during_training = False,
->>>>>>> 1834991ed6b44b31130c4bb45497b290b3488768
             **kwargs
     ):
         self.infonce_temp = infonce_temp
@@ -313,13 +278,7 @@ class RADIR(nn.Module):
             # print(state_dict.keys())
         else:
             self.load_state_dict(pkg_state_dict)
-<<<<<<< HEAD
   
-=======
-            
-        
-        
->>>>>>> 1834991ed6b44b31130c4bb45497b290b3488768
     def tokenize(self, prompt):
         text_tokens=self.tokenizer(prompt, return_tensors="pt", padding="max_length", truncation=True, max_length=512).to(torch.cuda)
         return text_tokens
@@ -492,7 +451,6 @@ class RADIR(nn.Module):
         # 返回batch平均损失
         return avg_loss_per_query.mean()
 
-<<<<<<< HEAD
     def freeze_text_encoder(self):
         for param in self.text_transformer.parameters():
             param.requires_grad = False
@@ -528,8 +486,6 @@ class RADIR(nn.Module):
             param.requires_grad = False
         for param in self.to_fused_latent.parameters():
             param.requires_grad = False
-=======
->>>>>>> 1834991ed6b44b31130c4bb45497b290b3488768
 
     def forward(
             self,
@@ -783,10 +739,6 @@ if __name__ == '__main__':
     tokenizer = BertTokenizer.from_pretrained('microsoft/BiomedVLP-CXR-BERT-specialized',do_lower_case=True)
     text_encoder = BertModel.from_pretrained("microsoft/BiomedVLP-CXR-BERT-specialized")
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 1834991ed6b44b31130c4bb45497b290b3488768
     image_encoder = CTViT(
         dim = 512,
         codebook_size = 8192,
@@ -800,11 +752,7 @@ if __name__ == '__main__':
         heads = 8
     )
 
-<<<<<<< HEAD
     clip = RADIR(
-=======
-    clip = CTCLIP(
->>>>>>> 1834991ed6b44b31130c4bb45497b290b3488768
         tokenizer=tokenizer,
         image_encoder = image_encoder,
         text_encoder = text_encoder,
