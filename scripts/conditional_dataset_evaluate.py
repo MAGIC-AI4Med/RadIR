@@ -64,11 +64,12 @@ def resize_array(array, current_spacing, target_spacing):
     # Resize the array
     resized_array = F.interpolate(array, size=new_shape, mode='trilinear', align_corners=False).cpu().numpy()
     return resized_array
-
-class Conditional_CTReportDataset_Eval(Dataset):
-    def __init__(self, jsonl_file, csv_file_dir, npy_file_dir, anatomy_filter,modality='2D', max_samples=10000):
+modality_dict = {'3D':0,'2D':1}
+class Conditional_ImageReportDataset_Eval(Dataset):
+    def __init__(self, jsonl_file, csv_file_dir, npy_file_dir, anatomy_filter,modality='2D', max_samples=10000,modal_embedding=False):
         self.anatomy_filter = anatomy_filter
         self.modality = modality
+        self.modal_embedding = modal_embedding
         self.id2image_path = self.prepare_image_paths(jsonl_file)
         self.id2image = {}
         self.anatomy2id_ls = self.prepare_anatomy_data(csv_file_dir, max_samples)   # DEBUG 每个类只取max_samples个测试
@@ -115,7 +116,7 @@ class Conditional_CTReportDataset_Eval(Dataset):
             if anatomy_name not in self.anatomy_filter:
                 continue
             # DEBUG
-            
+             
             anatomy2id_ls[anatomy_name] = []
             df = pd.read_csv(os.path.join(csv_file_dir, csv_file))
             for index, row in df.head(max_samples).iterrows():
@@ -381,42 +382,74 @@ class Conditional_CTReportDataset_Eval(Dataset):
         
         return tensor
 
-    # NOTE 不按照anatomy为单位采
-    # def __getitem__(self, index):
-    #     """
-    #     Returns:
-    #         video_tensor (tensor): N, 1, D, H, W
-    #         similarity_tab (tensor): N, N
-    #         anatomy (str): anatomy name
-    #     """
-    #     anatomy = self.anatomy_ls[index]
-    #     sampled_ids = self.anatomy2id_ls[anatomy]
-    #     similarity_tab = self.anatomy2simi_tab[anatomy]
+    def MLS_nii_img_to_tensor(self, path):
+
+        nii_img = nib.load(str(path))
+        img_data = nii_img.get_fdata()
+        img_data = np.flip(img_data, axis=0)
+        img_data = np.flip(img_data, axis=1)
+
+        # WARNING Respacing
+        img_data = img_data.transpose(2, 0, 1)
+        img_data = np.copy(img_data)
+        tensor = torch.tensor(img_data)
+        tensor = tensor.unsqueeze(0).unsqueeze(0)
         
-    #     stacked_video_tensor = np.zeros((len(sampled_ids), 1, 240, 480, 480))
-    #     for i, sampled_id in enumerate(sampled_ids):
-            
-    #         # NOTE: Load and Save
-    #         # print(sampled_id)
-    #         # if sampled_id in self.id2image:
-    #         #     image_tensor = self.id2image[sampled_id]
-    #         # else:
-    #         #     image_tensor = self.load_image(self.id2image_path[sampled_id])
-    #         #     self.id2image[sampled_id] = image_tensor
-    #         # video_tensor = self.respace_crop_pad(image_tensor)
-            
-    #         # NOTE: All processed in advance
-    #         image_file_name = sampled_id.replace('.nii.gz', '.npz')
-    #         video_tensor = np.load( f'/DB/data/haoningwu-1/zihengzhao/data/tengfei_proj/CT_CLIP_processed_image/valid/{image_file_name}')['image']
-            
-    #         # NOTE: Always load on the fly
-    #         # image_tensor = self.load_image(self.id2image_path[sampled_id])
-    #         # video_tensor = self.respace_crop_pad(image_tensor)
-            
-    #         stacked_video_tensor[i] = video_tensor
+        target_x_spacing = 0.75
+        target_y_spacing = 0.75
+        target_z_spacing = 1.5
+        current = (3, 1, 1)   # this is all set to 3 1 1
+        target = (target_z_spacing, target_x_spacing, target_y_spacing)
         
-    #     return {'video_tensor': torch.tensor(stacked_video_tensor), 'similarity_tab': torch.tensor(similarity_tab), 'anatomy': anatomy}
-    
+        img_data = resize_array(tensor, current, target)
+        img_data = img_data[0][0]
+        img_data= np.transpose(img_data, (1, 2, 0))
+
+        # WARNING Normalization 2
+        hu_min, hu_max = -1000, 1000
+        img_data = np.clip(img_data, hu_min, hu_max)
+        img_data = (((img_data ) / 1000)).astype(np.float32)
+
+        tensor = torch.tensor(img_data)
+        
+        # WARNING Padding or Crop
+        
+        # Get the dimensions of the input tensor
+        target_shape = (480,480,240)    # h w d
+        
+        # Extract dimensions
+        h, w, d = tensor.shape
+        
+        # Calculate cropping/padding values for height, width, and depth
+        dh, dw, dd = target_shape
+        h_start = max((h - dh) // 2, 0)
+        h_end = min(h_start + dh, h)
+        w_start = max((w - dw) // 2, 0)
+        w_end = min(w_start + dw, w)
+        d_start = max((d - dd) // 2, 0)
+        d_end = min(d_start + dd, d)
+
+        # Crop or pad the tensor
+        tensor = tensor[h_start:h_end, w_start:w_end, d_start:d_end]
+
+        pad_h_before = (dh - tensor.size(0)) // 2
+        pad_h_after = dh - tensor.size(0) - pad_h_before
+
+        pad_w_before = (dw - tensor.size(1)) // 2
+        pad_w_after = dw - tensor.size(1) - pad_w_before
+
+        pad_d_before = (dd - tensor.size(2)) // 2
+        pad_d_after = dd - tensor.size(2) - pad_d_before
+
+        tensor = torch.nn.functional.pad(tensor, (pad_d_before, pad_d_after, pad_w_before, pad_w_after, pad_h_before, pad_h_after), value=-1)
+
+        tensor = tensor.permute(2, 0, 1)    # d h w
+
+        tensor = tensor.unsqueeze(0)    # 1 d h w
+
+        return tensor
+
+
     def __getitem__(self, index):
         """
         Returns:
@@ -427,19 +460,22 @@ class Conditional_CTReportDataset_Eval(Dataset):
         anatomy, sampled_id = self.id_antomy_ls[index]
         
         # NOTE: All processed in advance
-        if self.modality == '3D':
+        if  '3D' in self.modality:
             image_file_name = sampled_id.replace('.nii.gz', '.npz')
             if sampled_id in self.id2image_path and os.path.exists(self.id2image_path[sampled_id]):
-                video_tensor = self.nii_img_to_tensor(self.id2image_path[sampled_id])
+                video_tensor = self.MLS_nii_img_to_tensor(self.id2image_path[sampled_id])
             else:
                 raise ValueError(f"Image file {image_file_name} not found.")
-        elif self.modality == '2D':
+        elif '2D' in self.modality:
             if sampled_id in self.id2image_path and os.path.exists(self.id2image_path[sampled_id]):
                 video_tensor = self.load_2d_image_to_tensor(self.id2image_path[sampled_id])
             else:
                 raise ValueError(f"Image file {image_file_name} not found.")
         # return torch.tensor(video_tensor), anatomy, sampled_id
-        return video_tensor.clone().detach(), anatomy, sampled_id
+        if self.modal_embedding:
+            return video_tensor.clone().detach(), anatomy, sampled_id, modality_dict[self.modality]
+        else:
+            return video_tensor.clone().detach(), anatomy, sampled_id
         
 if __name__ == '__main__':
     from torch.utils.data import DataLoader

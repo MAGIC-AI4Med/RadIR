@@ -10,7 +10,7 @@ setup(
     'opencv-python',
     'pillow',
     'numpy',
-    'sentencepiece',
+    'sentencepiece==0.2.0',
     #'torch==2.0.1',
     'torchtyping',
     'torchvision',

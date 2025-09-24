@@ -8,7 +8,7 @@ Requires-Dist: ema-pytorch>=0.2.2
 Requires-Dist: opencv-python
 Requires-Dist: pillow
 Requires-Dist: numpy
-Requires-Dist: sentencepiece
+Requires-Dist: sentencepiece==0.2.0
 Requires-Dist: torchtyping
 Requires-Dist: torchvision
 Requires-Dist: tqdm

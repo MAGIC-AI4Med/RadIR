@@ -1,0 +1,329 @@
+{
+    "airspace": {
+        "nums": 5204
+    },
+    "nasogastric": {
+        "nums": 9578
+    },
+    "coronary artery": {
+        "nums": 569
+    },
+    "right pleura": {
+        "nums": 15987
+    },
+    "head and neck structures": {
+        "nums": 25312
+    },
+    "lumbar spine": {
+        "nums": 808
+    },
+    "bones": {
+        "nums": 40412
+    },
+    "kidneys": {
+        "nums": 223
+    },
+    "right upper lobe": {
+        "nums": 4822
+    },
+    "lung base": {
+        "nums": 11195
+    },
+    "vein": {
+        "nums": 26655
+    },
+    "spleen": {
+        "nums": 204
+    },
+    "costophrenic sulcus": {
+        "nums": 540
+    },
+    "aorta": {
+        "nums": 21403
+    },
+    "hilum": {
+        "nums": 39191
+    },
+    "aortic arch": {
+        "nums": 2709
+    },
+    "vertebrae": {
+        "nums": 2535
+    },
+    "lower abdomen": {
+        "nums": 18
+    },
+    "upper abdomen": {
+        "nums": 4653
+    },
+    "other specific structures": {
+        "nums": 2933
+    },
+    "nasal and oral structures": {
+        "nums": 11265
+    },
+    "pulmonary valve": {
+        "nums": 9
+    },
+    "atrium": {
+        "nums": 12181
+    },
+    "mediastinum": {
+        "nums": 47653
+    },
+    "right lung": {
+        "nums": 29606
+    },
+    "pleura": {
+        "nums": 47262
+    },
+    "humerus": {
+        "nums": 1639
+    },
+    "sinus": {
+        "nums": 1755
+    },
+    "shoulder": {
+        "nums": 1654
+    },
+    "right lower lobe": {
+        "nums": 6720
+    },
+    "inferior vena cava": {
+        "nums": 284
+    },
+    "cardiophrenic angle": {
+        "nums": 310
+    },
+    "carina": {
+        "nums": 11455
+    },
+    "head": {
+        "nums": 1007
+    },
+    "pulmonary artery": {
+        "nums": 2485
+    },
+    "soft tissue": {
+        "nums": 3826
+    },
+    "artery": {
+        "nums": 24055
+    },
+    "spine": {
+        "nums": 12623
+    },
+    "abdomen": {
+        "nums": 23424
+    },
+    "lungs": {
+        "nums": 47381
+    },
+    "ribs": {
+        "nums": 10348
+    },
+    "aortic knob": {
+        "nums": 2622
+    },
+    "left upper lobe": {
+        "nums": 3675
+    },
+    "stomach": {
+        "nums": 14914
+    },
+    "diaphragm": {
+        "nums": 22617
+    },
+    "cervical spine": {
+        "nums": 505
+    },
+    "spinal structures": {
+        "nums": 12623
+    },
+    "scapula": {
+        "nums": 229
+    },
+    "rib": {
+        "nums": 9629
+    },
+    "pulmonary trunk": {
+        "nums": 2491
+    },
+    "chest wall": {
+        "nums": 5152
+    },
+    "left atrium": {
+        "nums": 406
+    },
+    "thymus": {
+        "nums": 6
+    },
+    "throat": {
+        "nums": 3543
+    },
+    "nipple": {
+        "nums": 727
+    },
+    "ventricle": {
+        "nums": 5988
+    },
+    "left hemidiaphragm": {
+        "nums": 3941
+    },
+    "lingula": {
+        "nums": 1518
+    },
+    "thoracic structures": {
+        "nums": 47510
+    },
+    "bronchioles": {
+        "nums": 17
+    },
+    "vascular structures": {
+        "nums": 47159
+    },
+    "clavicle": {
+        "nums": 1702
+    },
+    "left ventricle": {
+        "nums": 1156
+    },
+    "alveolar": {
+        "nums": 1259
+    },
+    "pericardium": {
+        "nums": 1770
+    },
+    "miscellaneous anatomical structures": {
+        "nums": 6401
+    },
+    "abdominal structures": {
+        "nums": 24120
+    },
+    "subclavian vein": {
+        "nums": 328
+    },
+    "right atrium": {
+        "nums": 11602
+    },
+    "costophrenic angle": {
+        "nums": 3849
+    },
+    "musculoskeletal structures": {
+        "nums": 41472
+    },
+    "liver": {
+        "nums": 317
+    },
+    "airway structures": {
+        "nums": 19434
+    },
+    "subdiaphragmatic structures": {
+        "nums": 5506
+    },
+    "intraperitoneal": {
+        "nums": 712
+    },
+    "right middle lobe": {
+        "nums": 1917
+    },
+    "bronchi": {
+        "nums": 5750
+    },
+    "pulmonary vasculature": {
+        "nums": 29743
+    },
+    "aortic valve": {
+        "nums": 1030
+    },
+    "left lung": {
+        "nums": 29238
+    },
+    "breast": {
+        "nums": 773
+    },
+    "thoracic aorta": {
+        "nums": 5214
+    },
+    "left auricle": {
+        "nums": 1
+    },
+    "heart": {
+        "nums": 47332
+    },
+    "subcutaneous tissue": {
+        "nums": 2789
+    },
+    "trachea": {
+        "nums": 2967
+    },
+    "cervical structures": {
+        "nums": 12702
+    },
+    "thyroid": {
+        "nums": 863
+    },
+    "esophagus": {
+        "nums": 3500
+    },
+    "thorax": {
+        "nums": 47486
+    },
+    "pleural space": {
+        "nums": 738
+    },
+    "pancreas": {
+        "nums": 20
+    },
+    "axilla": {
+        "nums": 1551
+    },
+    "tricuspid valve": {
+        "nums": 145
+    },
+    "mitral valve": {
+        "nums": 605
+    },
+    "gastroesophageal junction": {
+        "nums": 2213
+    },
+    "cardiovascular structures": {
+        "nums": 47412
+    },
+    "superior vena cava": {
+        "nums": 15057
+    },
+    "left pleura": {
+        "nums": 16563
+    },
+    "hemidiaphragm": {
+        "nums": 16467
+    },
+    "sternum": {
+        "nums": 2268
+    },
+    "lung parenchyma": {
+        "nums": 11614
+    },
+    "left lower lobe": {
+        "nums": 11402
+    },
+    "right ventricle": {
+        "nums": 4598
+    },
+    "right hemidiaphragm": {
+        "nums": 10258
+    },
+    "thoracolumbar": {
+        "nums": 999
+    },
+    "thoracic spine": {
+        "nums": 6394
+    },
+    "jugular vein": {
+        "nums": 8291
+    },
+    "cavoatrial junction": {
+        "nums": 4539
+    }
+}

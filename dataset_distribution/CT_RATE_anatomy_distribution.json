@@ -1,0 +1,146 @@
+{
+    "trachea": {
+        "nums": 21715
+    },
+    "thyroid gland": {
+        "nums": 300
+    },
+    "adrenal gland": {
+        "nums": 12934
+    },
+    "mediastinum": {
+        "nums": 23684
+    },
+    "lung upper lobe": {
+        "nums": 8176
+    },
+    "heart": {
+        "nums": 23289
+    },
+    "right lung upper lobe": {
+        "nums": 3226
+    },
+    "left lung": {
+        "nums": 8481
+    },
+    "pleura": {
+        "nums": 18156
+    },
+    "kidney": {
+        "nums": 3864
+    },
+    "spinal canal": {
+        "nums": 2351
+    },
+    "left kidney": {
+        "nums": 1723
+    },
+    "heart atrium": {
+        "nums": 416
+    },
+    "lumbar vertebrae": {
+        "nums": 395
+    },
+    "right lung": {
+        "nums": 10015
+    },
+    "esophagus": {
+        "nums": 20693
+    },
+    "left lung lower lobe": {
+        "nums": 3949
+    },
+    "left adrenal gland": {
+        "nums": 1097
+    },
+    "bone": {
+        "nums": 23479
+    },
+    "breast": {
+        "nums": 1080
+    },
+    "rib": {
+        "nums": 719
+    },
+    "bronchie": {
+        "nums": 21722
+    },
+    "thymus": {
+        "nums": 362
+    },
+    "gallbladder": {
+        "nums": 2406
+    },
+    "thoracic vertebrae": {
+        "nums": 3993
+    },
+    "pancreas": {
+        "nums": 782
+    },
+    "right adrenal gland": {
+        "nums": 780
+    },
+    "stomach": {
+        "nums": 753
+    },
+    "left lung upper lobe": {
+        "nums": 3948
+    },
+    "heart ascending aorta": {
+        "nums": 1620
+    },
+    "superior vena cava": {
+        "nums": 743
+    },
+    "lung lower lobe": {
+        "nums": 10091
+    },
+    "clavicle": {
+        "nums": 1181
+    },
+    "cervical esophagus": {
+        "nums": 4418
+    },
+    "aorta": {
+        "nums": 11808
+    },
+    "spleen": {
+        "nums": 2223
+    },
+    "left breast": {
+        "nums": 353
+    },
+    "right rib": {
+        "nums": 324
+    },
+    "right kidney": {
+        "nums": 1425
+    },
+    "pulmonary artery": {
+        "nums": 1620
+    },
+    "thyroid": {
+        "nums": 1093
+    },
+    "right lung lower lobe": {
+        "nums": 3930
+    },
+    "sternum": {
+        "nums": 669
+    },
+    "heart ventricle": {
+        "nums": 450
+    },
+    "vertebrae": {
+        "nums": 13474
+    },
+    "lung": {
+        "nums": 23741
+    },
+    "right lung middle lobe": {
+        "nums": 641
+    },
+    "liver": {
+        "nums": 12434
+    }
+}

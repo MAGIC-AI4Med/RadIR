@@ -103,13 +103,14 @@ class Attention(nn.Module):
         num_null_kv = 0,
         norm_context = True,
         dropout = 0.,
-        scale = 8
+        scale = None
     ):
         super().__init__()
         self.heads = heads
         self.causal = causal
         if scale is None:
             scale = dim_head ** -0.5
+        # print('scale:', scale)
         self.scale = scale
         inner_dim = dim_head * heads
         dim_context = default(dim_context, dim)
@@ -373,6 +374,69 @@ class Transformer(nn.Module):
         for peg, self_attn, cross_attn, ff in self.layers:
             if exists(peg):
                 x = peg(x, shape = video_shape) + x
+
+            x = self_attn(x, attn_bias = attn_bias, mask = self_attn_mask) + x
+
+            if exists(cross_attn) and exists(context):
+                x = cross_attn(x, context = context, mask = cross_attn_context_mask) + x
+            # 检查x的形状和数据类型以及数据范围，是否有空值无限值
+            # print("[DEBUG] Transormer forward", x.shape, x.dtype, x.device, flush=True)
+            if torch.isnan(x).any() or torch.isinf(x).any():
+                print(f"Warning: x contains NaN or inf values, shape: {x.shape}, dtype: {x.dtype}, device: {x.device}")
+            x = ff(x) + x
+
+        return self.norm_out(x)
+
+
+
+class TransformerCLS(nn.Module):
+    def __init__(
+        self,
+        dim,
+        *,
+        depth,
+        dim_context = None,
+        causal = False,
+        dim_head = 64,
+        heads = 8,
+        ff_mult = 4,
+        peg = False,
+        peg_causal = False,
+        attn_num_null_kv = 2,
+        has_cross_attn = False,
+        attn_dropout = 0.,
+        ff_dropout = 0.
+    ):
+        super().__init__()
+        self.layers = nn.ModuleList([])
+
+        for _ in range(depth):
+            self.layers.append(nn.ModuleList([
+                PEG(dim = dim, causal = peg_causal) if peg else None,
+                Attention(dim = dim, dim_head = dim_head, heads = heads, causal = causal, dropout = attn_dropout),
+                Attention(dim = dim, dim_head = dim_head, dim_context = dim_context, heads = heads, causal = False, num_null_kv = attn_num_null_kv, dropout = attn_dropout) if has_cross_attn else None,
+                FeedForward(dim = dim, mult = ff_mult, dropout = ff_dropout)
+            ]))
+
+        self.norm_out = LayerNorm(dim)
+        self.cls_token = nn.Parameter(torch.randn(1, 1, dim))  # 添加CLS token
+    @beartype
+    def forward(
+        self,
+        x,
+        video_shape: Tuple[int, int, int, int] = None,
+        attn_bias = None,
+        context = None,
+        self_attn_mask = None,
+        cross_attn_context_mask = None
+    ):
+        B = x.shape[0]
+        # 添加CLS token
+        cls_token = self.cls_token.expand(B, -1, -1)  # 扩展到batch size
+        x = torch.cat((cls_token, x), dim=1)  # 在序列的开头添加CLS token
+        for peg, self_attn, cross_attn, ff in self.layers:
+            if exists(peg):
+                x[:,1:] = peg(x[:,1:], shape = video_shape) + x[:,1:]
 
             x = self_attn(x, attn_bias = attn_bias, mask = self_attn_mask) + x
 

@@ -1,6 +1,0 @@
-from ct_clip.ct_clip import CTCLIP, TextTransformer
-from ct_clip.ct_clip_no_img_latent import CTCLIP_NO_IMG_LATENT
-from ct_clip.ct_clip_tengfei_version import CTCLIP_Tengfei_CrossAttn
-from ct_clip.ct_clip_early_fusion import CTCLIP_Earyly_Fusion
-from ct_clip.ct_clip_temporal_fusion import CTCLIP_Temporal_Fusion
-from ct_clip.ct_clip_temporal_fusion_butCLS import CTCLIP_Temporal_Fusion_butCLS

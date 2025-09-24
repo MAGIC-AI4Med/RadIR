@@ -5,7 +5,7 @@ ema-pytorch>=0.2.2
 opencv-python
 pillow
 numpy
-sentencepiece
+sentencepiece==0.2.0
 torchtyping
 torchvision
 tqdm

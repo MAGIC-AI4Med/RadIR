@@ -13,7 +13,31 @@ import nibabel as nib
 from tqdm import tqdm
 import random
 import math
-from monai.transforms import Compose, RandRotate, RandFlip, RandZoom, RandAffine, RandGaussianNoise, RandScaleIntensity
+from monai.transforms import Compose, RandRotate, RandFlip, RandZoom, RandAffine, RandGaussianNoise, RandScaleIntensity, RandAdjustContrast,RandCoarseDropout
+from monai.data.meta_tensor import MetaTensor
+def resize_array_to_tensor(array, current_spacing, target_spacing):
+    """
+    Resize the array to match the target spacing.
+
+    Args:
+    array (torch.Tensor): Input array to be resized.
+    current_spacing (tuple): Current voxel spacing (z_spacing, xy_spacing, xy_spacing).
+    target_spacing (tuple): Target voxel spacing (target_z_spacing, target_x_spacing, target_y_spacing).
+
+    Returns:
+    np.ndarray: Resized array.
+    """
+    # Calculate new dimensions
+    original_shape = array.shape[2:]
+    scaling_factors = [
+        current_spacing[i] / target_spacing[i] for i in range(len(original_shape))
+    ]
+    new_shape = [
+        int(original_shape[i] * scaling_factors[i]) for i in range(len(original_shape))
+    ]
+    # Resize the array
+    resized_array = F.interpolate(array, size=new_shape, mode='trilinear', align_corners=False)
+    return resized_array
 
 def resize_array(array, current_spacing, target_spacing):
     """
@@ -39,9 +63,12 @@ def resize_array(array, current_spacing, target_spacing):
     resized_array = F.interpolate(array, size=new_shape, mode='trilinear', align_corners=False).cpu().numpy()
     return resized_array
 
-class Conditional_CTReportDataset_Train(Dataset):
-    def __init__(self, local_batch_size, jsonl_file, csv_file_dir, npy_file_dir, anatomy_filter, positive_threshold, negative_threshold, max_samples=30000,modality='3D', need_aug=True):
+modality_dict = {'3D':0,'2D':1}
+class Conditional_ImageReportDataset_Train(Dataset):
+    def __init__(self, local_batch_size, jsonl_file, csv_file_dir, npy_file_dir, anatomy_filter, positive_threshold, negative_threshold, max_samples=30000,modality='CT', need_aug=True,modal_embedding=False,is_train=True):
         self.anatomy_filter = anatomy_filter
+        self.is_train = is_train
+        self.modal_embedding = modal_embedding
         self.csv_file_dir = csv_file_dir
         self.npy_file_dir = npy_file_dir
         self.max_samples = max_samples
@@ -66,26 +93,27 @@ class Conditional_CTReportDataset_Train(Dataset):
         # self.anatomy_weight = [1/len(self.anatomy_ls) for anatomy in self.anatomy_ls]
         
         if need_aug:
-            # input image must be CDHW
-            # 修改
-            if self.modality == '3D':
+            if '3D' in self.modality:
                 self.augmentator = Compose([
-                    RandRotate(range_x=45, range_y=45, range_z=45, prob=0.5, keep_size=True),  # 随机旋转
-                    RandFlip(prob=0.5, spatial_axis=(0,1,2)),  # 随机翻转（沿深度轴）
-                    RandZoom(min_zoom=0.5, max_zoom=1.5, prob=0.5, keep_size=True),  # 随机缩放
-                    RandAffine(prob=0.5, translate_range=(32, 64, 64)),  # 随机平移
-                    RandGaussianNoise(prob=0.5, mean=0.0, std=0.1),  # 添加高斯噪声
-                    RandScaleIntensity(factors=[-0.25, 0.25], prob=0.5)
+                        RandRotate(range_x=15, range_y=15, range_z=15, prob=0.3, keep_size=True),  # 随机旋转
+                        RandFlip(prob=0.5, spatial_axis=0),  # 随机翻转（沿深度轴）
+                        RandZoom(min_zoom=0.85, max_zoom=1.15, prob=0.3, keep_size=True),  # 随机缩放
+                        RandAffine(prob=0.3, translate_range=(24, 48, 48)),  # 随机平移
+                        RandGaussianNoise(prob=0.3, mean=0.0, std=0.05),  # 添加高斯噪声
+                        RandScaleIntensity(factors=[-0.1, 0.1], prob=0.3),
+                        RandAdjustContrast(prob=0.3, gamma=(0.9, 1.1)),  # 增加对比度调整
+                        RandCoarseDropout(prob=0.2, holes=8, spatial_size=3)  # 模拟局部缺失
                 ])
-            elif self.modality == '2D':
+            elif '2D' in self.modality:
                 self.augmentator = Compose([
-                RandRotate(range_x=45, range_y=45, prob=0.5, keep_size=True),  # 随机旋转（仅x和y轴）
-                RandFlip(prob=0.5, spatial_axis=(0,1)),  # 随机翻转（仅水平和垂直轴）
-                RandZoom(min_zoom=0.5, max_zoom=1.5, prob=0.5, keep_size=True),  # 随机缩放
-                RandAffine(prob=0.5, translate_range=(32, 32)),  # 随机平移（仅2D平移）
-                RandGaussianNoise(prob=0.5, mean=0.0, std=0.1),  # 添加高斯噪声
-                RandScaleIntensity(factors=[-0.25, 0.25], prob=0.5)  # 随机调整像素强度
-            ])
+                    RandRotate(range_x=15, range_y=15, prob=0.5, keep_size=True),  # 随机旋转（仅x和y轴）
+                    RandFlip(prob=0.5, spatial_axis=(0,1)),  # 随机翻转（仅水平和垂直轴）
+                    RandZoom(min_zoom=0.8, max_zoom=1.1, prob=0.5, keep_size=True),  # 随机缩放
+                    RandAffine(prob=0.5, translate_range=(32, 32)),  # 随机平移（仅2D平移）
+                    RandGaussianNoise(prob=0.5, mean=0.0, std=0.1),  # 添加高斯噪声
+                    RandScaleIntensity(factors=[-0.15, 0.15], prob=0.5),  # 随机调整像素强度
+                    RandAdjustContrast(prob=0.4, gamma=(0.85, 1.15))  # 增加对比度变化
+                    ])
         else:
             self.augmentator = None
         
@@ -100,7 +128,8 @@ class Conditional_CTReportDataset_Train(Dataset):
             data = f.readlines()
         data = [json.loads(l) for l in data]
         for d in data:
-            data_id = os.path.basename(d['img_path'])   # valid_692_a_1.nii.gz
+            # 这里有问题的
+            data_id = d['name']   # valid_692_a_1.nii.gz
             id2image_path[data_id] = d['img_path']
 
         return id2image_path
@@ -157,16 +186,19 @@ class Conditional_CTReportDataset_Train(Dataset):
                 
                 # Here we check if all samples are readable
                 filtered_sample_id_ls = []
+                valid_indices = []
                 for i, sample_id in enumerate(self.anatomy2id_ls[anatomy]):
                     # image_file_name = sample_id.replace('.nii.gz', '.npz')
                     if sample_id in self.id2image_path and os.path.exists(self.id2image_path[sample_id]):
                         filtered_sample_id_ls.append(sample_id)
+                        valid_indices.append(i)
                         continue
                     else:
                         print(f'{sample_id} is missing, removed')
-                        # Remove the invalid sample from self.anatomy2id_ls and update simi_tab accordingly
-                        self.anatomy2simi_tab[anatomy] = np.delete(self.anatomy2simi_tab[anatomy], i, axis=0)
-                        self.anatomy2simi_tab[anatomy] = np.delete(self.anatomy2simi_tab[anatomy], i, axis=1)
+                        # # Remove the invalid sample from self.anatomy2id_ls and update simi_tab accordingly
+                        # self.anatomy2simi_tab[anatomy] = np.delete(self.anatomy2simi_tab[anatomy], i, axis=0)
+                        # self.anatomy2simi_tab[anatomy] = np.delete(self.anatomy2simi_tab[anatomy], i, axis=1)
+                self.anatomy2simi_tab[anatomy] = self.anatomy2simi_tab[anatomy][np.ix_(valid_indices, valid_indices)]  # 保留有效索引对应的子矩阵
                 self.anatomy2id_ls[anatomy] = filtered_sample_id_ls
                 
                 assert len(self.anatomy2id_ls[anatomy]) == self.anatomy2simi_tab[anatomy].shape[0] and len(self.anatomy2id_ls[anatomy]) == self.anatomy2simi_tab[anatomy].shape[1]
@@ -177,23 +209,27 @@ class Conditional_CTReportDataset_Train(Dataset):
                 
                 # Here we check if all samples are readable
                 filtered_sample_id_ls = []
+                valid_indices = []
                 for i, sample_id in enumerate(self.anatomy2id_ls[anatomy]):
                     if sample_id in self.id2image_path and os.path.exists(self.id2image_path[sample_id]):
                         filtered_sample_id_ls.append(sample_id)
+                        valid_indices.append(i)
                         continue
                     else:
                         print(f'{sample_id} is missing, removed')
-                        # Remove the invalid sample from self.anatomy2id_ls and update simi_tab accordingly
-                        self.anatomy2simi_tab[anatomy] = np.delete(self.anatomy2simi_tab[anatomy], i, axis=0)
-                        self.anatomy2simi_tab[anatomy] = np.delete(self.anatomy2simi_tab[anatomy], i, axis=1)
+                        # # Remove the invalid sample from self.anatomy2id_ls and update simi_tab accordingly
+                        # self.anatomy2simi_tab[anatomy] = np.delete(self.anatomy2simi_tab[anatomy], i, axis=0)
+                        # self.anatomy2simi_tab[anatomy] = np.delete(self.anatomy2simi_tab[anatomy], i, axis=1)
+                self.anatomy2simi_tab[anatomy] = self.anatomy2simi_tab[anatomy][np.ix_(valid_indices, valid_indices)]  # 保留有效索引对应的子矩阵
                 self.anatomy2id_ls[anatomy] = filtered_sample_id_ls
                 
                 assert len(self.anatomy2id_ls[anatomy]) == self.anatomy2simi_tab[anatomy].shape[0] and len(self.anatomy2id_ls[anatomy]) == self.anatomy2simi_tab[anatomy].shape[1]
-                    
+        else:
+            raise   ValueError(f"Unsupported modality: {self.modality}. Supported modalities are '3D' and '2D'.")
     def __len__(self):
-        return 10000000000
+        return 100000
     
-    def nii_img_to_tensor(self, path):
+    def MLS_nii_img_to_tensor(self, path):
 
         nii_img = nib.load(str(path))
         img_data = nii_img.get_fdata()
@@ -239,23 +275,6 @@ class Conditional_CTReportDataset_Train(Dataset):
         w_end = min(w_start + dw, w)
         d_start = max((d - dd) // 2, 0)
         d_end = min(d_start + dd, d)
-        
-        # Add random shift to the crop region
-        hw_max_shift = 128
-        z_max_shift = 64
-        if z_max_shift > 0 or hw_max_shift > 0:
-            # Generate random shifts within [-max_shift, max_shift]
-            h_shift = np.random.randint(-hw_max_shift, hw_max_shift + 1)
-            w_shift = np.random.randint(-hw_max_shift, hw_max_shift + 1)
-            d_shift = np.random.randint(-z_max_shift, z_max_shift + 1)
-
-            # Apply shifts, ensuring the crop region remains within the image bounds
-            h_start = max(h_start + h_shift, 0)
-            h_end = min(h_start + dh, h)
-            w_start = max(w_start + w_shift, 0)
-            w_end = min(w_start + dw, w)
-            d_start = max(d_start + d_shift, 0)
-            d_end = min(d_start + dd, d)
 
         # Crop or pad the tensor
         tensor = tensor[h_start:h_end, w_start:w_end, d_start:d_end]
@@ -276,7 +295,87 @@ class Conditional_CTReportDataset_Train(Dataset):
         tensor = tensor.unsqueeze(0)    # 1 d h w
 
         return tensor
-# 补充
+
+    def nii_img_to_tensor(self, path):
+
+        nii_img = nib.load(str(path))
+        img_data = nii_img.get_fdata()
+        img_data = np.flip(img_data, axis=0)
+        img_data = np.flip(img_data, axis=1)
+
+        # WARNING Respacing
+        img_data = img_data.transpose(2, 0, 1)
+        img_data = np.copy(img_data)
+        tensor = torch.tensor(img_data)
+        tensor = tensor.unsqueeze(0).unsqueeze(0)
+        
+        target_x_spacing = 0.75
+        target_y_spacing = 0.75
+        target_z_spacing = 1.5
+        current = (3, 1, 1)   # this is all set to 3 1 1
+        target = (target_z_spacing, target_x_spacing, target_y_spacing)
+        
+        img_data = resize_array(tensor, current, target)
+        img_data = img_data[0][0]
+        img_data= np.transpose(img_data, (1, 2, 0))
+        
+        # WARNING Normalization 2
+        hu_min, hu_max = -1000, 1000
+        img_data = np.clip(img_data, hu_min, hu_max)
+        img_data = (((img_data ) / 1000)).astype(np.float32)
+
+        tensor = torch.tensor(img_data)
+        target_shape = (480,480,240)    # h w d
+        
+        # Extract dimensions
+        h, w, d = tensor.shape
+        
+        # Calculate cropping/padding values for height, width, and depth
+        dh, dw, dd = target_shape
+        h_start = max((h - dh) // 2, 0)
+        h_end = min(h_start + dh, h)
+        w_start = max((w - dw) // 2, 0)
+        w_end = min(w_start + dw, w)
+        d_start = max((d - dd) // 2, 0)
+        d_end = min(d_start + dd, d)
+        
+        # # Add random shift to the crop region
+        # hw_max_shift = 128
+        # z_max_shift = 64
+        # if z_max_shift > 0 or hw_max_shift > 0:
+        #     # Generate random shifts within [-max_shift, max_shift]
+        #     h_shift = np.random.randint(-hw_max_shift, hw_max_shift + 1)
+        #     w_shift = np.random.randint(-hw_max_shift, hw_max_shift + 1)
+        #     d_shift = np.random.randint(-z_max_shift, z_max_shift + 1)
+
+        #     # Apply shifts, ensuring the crop region remains within the image bounds
+        #     h_start = max(h_start + h_shift, 0)
+        #     h_end = min(h_start + dh, h)
+        #     w_start = max(w_start + w_shift, 0)
+        #     w_end = min(w_start + dw, w)
+        #     d_start = max(d_start + d_shift, 0)
+        #     d_end = min(d_start + dd, d)
+
+        # Crop or pad the tensor
+        tensor = tensor[h_start:h_end, w_start:w_end, d_start:d_end]
+
+        pad_h_before = (dh - tensor.size(0)) // 2
+        pad_h_after = dh - tensor.size(0) - pad_h_before
+
+        pad_w_before = (dw - tensor.size(1)) // 2
+        pad_w_after = dw - tensor.size(1) - pad_w_before
+
+        pad_d_before = (dd - tensor.size(2)) // 2
+        pad_d_after = dd - tensor.size(2) - pad_d_before
+
+        tensor = torch.nn.functional.pad(tensor, (pad_d_before, pad_d_after, pad_w_before, pad_w_after, pad_h_before, pad_h_after), value=-1)
+
+        tensor = tensor.permute(2, 0, 1)    # d h w
+
+        tensor = tensor.unsqueeze(0)    # 1 d h w
+
+        return tensor
+    
     def load_2d_image_to_tensor(self, image_path,resize=False):
             """
             Load a 2D grayscale image and convert it to a tensor with dimensions [1, 1, 480, 480].
@@ -379,152 +478,312 @@ class Conditional_CTReportDataset_Train(Dataset):
                 )
                 # 直接使用存储的 uint8 值（无需转换）
                 similarity_tab[local_i, local_j] = raw_value  # 已经是 0~100 的整数
-        # 修改
-        if self.modality == '3D':
-            stacked_video_tensor = torch.zeros((self.local_batch_size, 1, 240, 480, 480))
-            
-            for i, sampled_id in enumerate(sampled_ids):
-                image_file_name = sampled_id.replace('.nii.gz', '.npz')
+        # # 修改
+        video_tensors = []
+
+        if '3D' in self.modality:
+            for sampled_id in sampled_ids:
                 try:
-                    video_tensor = self.nii_img_to_tensor(self.id2image_path[sampled_id])
+                    # 返回的 video_tensor 已经是 [1, D, H, W]
+                    if self.is_train:
+                        video_tensor = self.nii_img_to_tensor(self.id2image_path[sampled_id])
+                    else:
+                        video_tensor = self.MLS_nii_img_to_tensor(self.id2image_path[sampled_id])
+                    assert video_tensor.dim() == 4, f"Expected 4D tensor, got {video_tensor.dim()}D tensor for {sampled_id}"
+                    if self.augmentator is not None and self.is_train:
+                        video_tensor = self.augmentator(video_tensor)
+                    video_tensors.append(video_tensor)
+
                 except Exception as e:
-                    print(e)
-                    video_tensor = self.nii_img_to_tensor(self.id2image_path[sampled_id])
-
-                stacked_video_tensor[i] = video_tensor
-                
-            if self.augmentator is not None:
-                stacked_video_tensor = stacked_video_tensor.squeeze()   # N 240 480 480
-                stacked_video_tensor = self.augmentator(stacked_video_tensor)
-                stacked_video_tensor = stacked_video_tensor.unsqueeze(1)   # N 1 240 480 480
+                    print(f"Error processing {sampled_id}: {e}. Skipping.")
+                    # 如果一个样本失败，为了保持批次大小，可以加载一个全零张量或重复上一个
+                    if video_tensors:
+                        video_tensors.append(torch.zeros_like(video_tensors[-1]))
+                    else: # 如果第一个就失败了
+                        video_tensors.append(torch.zeros((1, 240, 480, 480), dtype=torch.float32))
             
-        elif self.modality == '2D':
-            stacked_video_tensor = torch.zeros((self.local_batch_size, 1, 1, 480, 480))
-        
-            for i, sampled_id in enumerate(sampled_ids):
-                video_tensor = self.load_2d_image_to_tensor(self.id2image_path[sampled_id])  # 1 1 480 480
-                stacked_video_tensor[i] = video_tensor
-                
-            if self.augmentator is not None:
-                stacked_video_tensor = stacked_video_tensor.squeeze()   # N 480 480
-                stacked_video_tensor = self.augmentator(stacked_video_tensor)
-                stacked_video_tensor = stacked_video_tensor.unsqueeze(1).unsqueeze(1)   # N 1 1 480 480
+            # 此时 video_tensors 是一个列表，包含 N 个 [1, D, H, W] 的张量
+            stacked_video_tensor = torch.cat(video_tensors, dim=0) # -> [N, D, H, W]
+            
+            # if self.augmentator is not None:
+            #     stacked_video_tensor = self.augmentator(stacked_video_tensor) # MONAI增广可以直接处理 [N, D, H, W]
+            stacked_video_tensor = stacked_video_tensor.unsqueeze(1) # -> [N, 1, D, H, W]
+            
+        elif '2D' in self.modality:
+            for sampled_id in sampled_ids:
+                try:
+                    # 返回的 video_tensor 已经是 [1, 1, H, W]
+                    video_tensor = self.load_2d_image_to_tensor(self.id2image_path[sampled_id],resize=True)
+                    video_tensor = video_tensor.squeeze().unsqueeze(0)  # 确保是 [1, H, W]
+                    if self.augmentator is not None and self.is_train:
+                        video_tensor = self.augmentator(video_tensor)
+                    
+                    video_tensor = video_tensor.unsqueeze(0)  # 变成 [1, 1, H, W]
+                    video_tensors.append(video_tensor)
+                except Exception as e:
+                    print(f"Error processing {sampled_id}: {e}. Skipping.")
+                    # 如果一个样本失败，为了保持批次大小，可以加载一个全零张量或重复上一个
+                    if video_tensors:
+                        video_tensors.append(torch.zeros_like(video_tensors[-1]))
+                    else:
+                        video_tensors.append(torch.zeros((1, 1, 480, 480), dtype=torch.float32))
+            # 此时 video_tensors 是一个列表，包含 N 个 [1, 1, H, W] 的张量
+            stacked_video_tensor = torch.cat(video_tensors, dim=0) # -> [N, 1, H, W]
+            
+            # 确保最终形状符合预期
+            stacked_video_tensor = stacked_video_tensor.unsqueeze(1) # -> [N, 1, 1, H, W]
+        if isinstance(stacked_video_tensor, MetaTensor):
+            stacked_video_tensor = stacked_video_tensor.as_tensor()
+        if self.modal_embedding:
+            return {'video_tensor': stacked_video_tensor, 'similarity_tab': torch.tensor(similarity_tab), 'anatomy': anatomy, 'sampled_ids':sampled_ids, 'modality':modality_dict[self.modality]}
+        else:
+            return {'video_tensor': stacked_video_tensor, 'similarity_tab': torch.tensor(similarity_tab), 'anatomy': anatomy, 'sampled_ids':sampled_ids}
 
-        return {'video_tensor': stacked_video_tensor, 'similarity_tab': torch.tensor(similarity_tab), 'anatomy': anatomy, 'sampled_ids':sampled_ids}
-def collate_fn(data):
-    batched_video = torch.zeros(len(data), *data[0]['video_tensor'].shape)
-    batched_similarity_tab = torch.zeros(len(data), *data[0]['similarity_tab'].shape)
-    batched_anatomy = []
-    batched_sampled_ids = []
+def collate_fn(batch):
+    # batch 是一个列表，其中每个元素是 __getitem__ 返回的字典
     
-    for i in range(len(data)):
-        video, similarity_tab, anatomy, sampled_ids = data[i]['video_tensor'], data[i]['similarity_tab'], data[i]['anatomy'], data[i]['sampled_ids']
-        batched_video[i] = video
-        batched_similarity_tab[i] = similarity_tab
-        batched_anatomy.append(anatomy)
-        batched_sampled_ids.append(sampled_ids)
+    # 使用列表推导式和 torch.stack 高效地组合批次
+    videos = torch.stack([item['video_tensor'] for item in batch], dim=0)
+    similarity_tabs = torch.stack([item['similarity_tab'] for item in batch], dim=0)
     
-    return batched_video, batched_similarity_tab, batched_anatomy, batched_sampled_ids
+    # 其他非张量数据正常收集
+    anatomies = [item['anatomy'] for item in batch]
+    sampled_ids_list = [item['sampled_ids'] for item in batch]
+    if 'modality' in batch[0]:
+        modalities = torch.tensor([item['modality'] for item in batch])
+        return videos, similarity_tabs, anatomies, sampled_ids_list, modalities
+    else:
+        return videos, similarity_tabs, anatomies, sampled_ids_list
+
+# if __name__ == '__main__':
+#     from torch.utils.data import Dataset, DataLoader, random_split
+#     print('** CXR **')
+#     dataset = Conditional_CTReportDataset_Train(
+#         local_batch_size=8,
+#         modality='2D',
+#         jsonl_file='/mnt/petrelfs/zhangtengfei/RadIR/dataset/CXR/MIMIC_CXR/train.jsonl',
+#         csv_file_dir='/mnt/petrelfs/zhangtengfei/RadIR/dataset/CXR/MIMIC_CXR/train_entity',
+#         npy_file_dir='/mnt/petrelfs/zhangtengfei/RadIR/dataset/CXR/MIMIC_CXR/train_ratescore',
+#         positive_threshold=0.75,
+#         negative_threshold=1,
+#         anatomy_filter=['left hemidiaphragm', 'airspace']
+#     )
+    
+#     dl = DataLoader(
+#         dataset,
+#         num_workers=8,
+#         batch_size=1,
+#         shuffle = False,
+#         drop_last = False,
+#         pin_memory = False,
+#         collate_fn = collate_fn
+#     )        
+
+#     dl_iter = iter(dl)
+    
+#     for threshold in [0.1, 0.15, 0.2, 0.25, 0.3]:
+    
+#         count = 0
+#         triplet_count = 0
+        
+#         while True:
+            
+#             count += 1
+#             if count > 50:
+#                 break
+            
+#             video, similarity_tab, anatomy, batched_sampled_ids = next(dl_iter)   # 1 8 8
+            
+#             print(batched_sampled_ids)
+#             print(similarity_tab)
+                    
+#             mask = (similarity_tab.unsqueeze(3) - similarity_tab.unsqueeze(2)) > 0.2   # N N N
+#             triplet_count += torch.sum(mask)
+            
+#         print(f'** {threshold} **')
+#         print(similarity_tab.shape)
+#         print(triplet_count/count)
+    
+#     # > 0.1 时 8x8x8 的 matrix 上平均有 _ 个有效对
+#     # > 0.15 时 8x8x8 的 matrix 上平均有 _ 个有效对
+#     # > 0.2 时 8x8x8 的 matrix 上平均有 _ 个有效对
+#     # > 0.25 时 8x8x8 的 matrix 上平均有 _ 个有效对
+#     # > 0.3 时 8x8x8 的 matrix 上平均有 _ 个有效对
+#     print('** CT **')
+#     dataset = Conditional_CTReportDataset_Train(
+#         local_batch_size=8,
+#         modality='3D',
+#         jsonl_file='/mnt/petrelfs/zhangtengfei/RadIR/dataset/CT_RATE/train_replaced.jsonl',
+#         csv_file_dir='/mnt/petrelfs/zhangtengfei/RadIR/dataset/CT_RATE/anatomy/train_entity',
+#         npy_file_dir='/mnt/petrelfs/zhangtengfei/RadIR/dataset/CT_RATE/anatomy/train_ratescore',
+#         positive_threshold=0.75,
+#         negative_threshold=1,
+#         anatomy_filter=['right rib', 'thyroid gland']
+#     )
+    
+#     dl = DataLoader(
+#         dataset,
+#         num_workers=8,
+#         batch_size=1,
+#         shuffle = False,
+#         drop_last = False,
+#         pin_memory = False,
+#         collate_fn = collate_fn
+#     )        
+    
+#     dl_iter = iter(dl)
+    
+#     for threshold in [0.1, 0.15, 0.2, 0.25, 0.3]:
+    
+#         count = 0
+#         triplet_count = 0
+        
+#         while True:
+            
+#             count += 1
+#             if count > 50:
+#                 break
+            
+#             video, similarity_tab, anatomy, batched_sampled_ids = next(dl_iter)   # 1 8 8
+            
+#             print(batched_sampled_ids)
+#             print(similarity_tab)
+                    
+#             mask = (similarity_tab.unsqueeze(3) - similarity_tab.unsqueeze(2)) > 0.2   # N N N
+#             triplet_count += torch.sum(mask)
+            
+#         print(f'** {threshold} **')
+#         print(similarity_tab.shape)
+#         print(triplet_count/count)
     
 if __name__ == '__main__':
     from torch.utils.data import Dataset, DataLoader, random_split
-    print('** 2d **')
-    dataset = Conditional_CTReportDataset_Train(
-        local_batch_size=8,
+    import time
+    from tqdm import tqdm
+    
+    print('** 测试数据加载耗时 **')
+    
+    # 创建CXR数据集
+    print('** 创建CXR数据集 **')
+    cxr_dataset = Conditional_CTReportDataset_Train(
+        local_batch_size=35,
         modality='2D',
-        jsonl_file='/mnt/petrelfs/zhangtengfei/RadIR/dataset/CXR/IU_xray/all.jsonl',
-        csv_file_dir='/mnt/petrelfs/zhangtengfei/RadIR/dataset/CXR/IU_xray/anatomy_entity',
-        npy_file_dir='/mnt/petrelfs/zhangtengfei/RadIR/dataset/CXR/IU_xray/anatomy_ratescore',
+        jsonl_file='/mnt/petrelfs/zhangtengfei/RadIR/dataset/CXR/MIMIC_CXR/train.jsonl',
+        csv_file_dir='/mnt/petrelfs/zhangtengfei/RadIR/dataset/CXR/MIMIC_CXR/train_entity',
+        npy_file_dir='/mnt/petrelfs/zhangtengfei/RadIR/dataset/CXR/MIMIC_CXR/train_ratescore',
         positive_threshold=0.75,
         negative_threshold=1,
-        anatomy_filter=['left lung']
+        anatomy_filter=['lungs', 'ventricle', 'right upper lobe'],
+        need_aug=True
     )
     
-    dl = DataLoader(
-        dataset,
-        num_workers=8,
-        batch_size=1,
-        shuffle = False,
-        drop_last = False,
-        pin_memory = False,
-        collate_fn = collate_fn
-    )        
-    np1 = np.load('/mnt/petrelfs/zhangtengfei/RadIR/dataset/CXR/IU_xray/anatomy_ratescore/left lung.npy')
-    print('相似度矩阵',np1.shape)
-    dl_iter = iter(dl)
-    
-    for threshold in [0.1, 0.15, 0.2, 0.25, 0.3]:
-    
-        count = 0
-        triplet_count = 0
-        
-        while True:
-            
-            count += 1
-            if count > 50:
-                break
-            
-            video, similarity_tab, anatomy, batched_sampled_ids = next(dl_iter)   # 1 8 8
-            
-            print(batched_sampled_ids)
-            print(similarity_tab)
-                    
-            mask = (similarity_tab.unsqueeze(3) - similarity_tab.unsqueeze(2)) > 0.2   # N N N
-            triplet_count += torch.sum(mask)
-            
-        print(f'** {threshold} **')
-        print(similarity_tab.shape)
-        print(triplet_count/count)
-    
-    # > 0.1 时 8x8x8 的 matrix 上平均有 _ 个有效对
-    # > 0.15 时 8x8x8 的 matrix 上平均有 _ 个有效对
-    # > 0.2 时 8x8x8 的 matrix 上平均有 _ 个有效对
-    # > 0.25 时 8x8x8 的 matrix 上平均有 _ 个有效对
-    # > 0.3 时 8x8x8 的 matrix 上平均有 _ 个有效对
-    print('** CT **')
-    dataset = Conditional_CTReportDataset_Train(
-        local_batch_size=8,
+    # 创建CT数据集
+    print('** 创建CT数据集 **')
+    ct_dataset = Conditional_CTReportDataset_Train(
+        local_batch_size=7,
         modality='3D',
-        jsonl_file='/mnt/petrelfs/zhangtengfei/RadIR/dataset/CT_RATE/test_replaced.jsonl',
-        csv_file_dir='/mnt/petrelfs/zhangtengfei/RadIR/dataset/CT_RATE/anatomy/val_entity',
-        npy_file_dir='/mnt/petrelfs/zhangtengfei/RadIR/dataset/CT_RATE/anatomy/val_ratescore',
+        jsonl_file='/mnt/petrelfs/zhangtengfei/RadIR/dataset/CT_RATE/train.jsonl',
+        csv_file_dir='/mnt/petrelfs/zhangtengfei/RadIR/dataset/CT_RATE/anatomy/train_entity',
+        npy_file_dir='/mnt/petrelfs/zhangtengfei/RadIR/dataset/CT_RATE/anatomy/train_ratescore',
         positive_threshold=0.75,
         negative_threshold=1,
-        anatomy_filter=['liver']
+        anatomy_filter=['bone', 'pulmonary artery', 'stomach'],
+        need_aug=True
     )
     
-    dl = DataLoader(
-        dataset,
-        num_workers=8,
-        batch_size=1,
-        shuffle = False,
-        drop_last = False,
-        pin_memory = False,
-        collate_fn = collate_fn
-    )        
-    
-    dl_iter = iter(dl)
-    
-    for threshold in [0.1, 0.15, 0.2, 0.25, 0.3]:
-    
-        count = 0
-        triplet_count = 0
+    # 测试不同的工作线程数量
+    for num_workers in [2, 4,6, 8,12]:
+        print(f"\n使用 {num_workers} 个工作线程")
         
-        while True:
-            
-            count += 1
-            if count > 50:
+        # 测试CXR数据集
+        dl_cxr = DataLoader(
+            cxr_dataset,
+            num_workers=num_workers,
+            batch_size=2,
+            shuffle=False,
+            drop_last=False,
+            pin_memory=True,
+            collate_fn=collate_fn
+        )
+        
+        # 预热（初始化可能很慢）
+        print("预热CXR数据加载器...")
+        for _ in range(5):
+            next(iter(dl_cxr))
+        
+        # 测量CXR数据加载时间
+        print("开始测量CXR数据加载时间...")
+        start_time = time.time()
+        total_batches = min(20, len(dl_cxr))  # 限制测试数量
+        
+        for i, _ in enumerate(tqdm(dl_cxr, total=total_batches)):
+            if i >= total_batches - 1:
                 break
-            
-            video, similarity_tab, anatomy, batched_sampled_ids = next(dl_iter)   # 1 8 8
-            
-            print(batched_sampled_ids)
-            print(similarity_tab)
+        
+        cxr_time = time.time() - start_time
+        print(f"CXR数据集: {total_batches}个批次耗时 {cxr_time:.2f}秒, 平均每批次 {cxr_time/total_batches:.4f}秒")
+        
+        # 测试CT数据集
+        dl_ct = DataLoader(
+            ct_dataset,
+            num_workers=num_workers,
+            batch_size=1,
+            shuffle=False,
+            drop_last=False,
+            pin_memory=True,
+            collate_fn=collate_fn
+        )
+        
+        # 预热
+        print("预热CT数据加载器...")
+        for _ in range(5):
+            next(iter(dl_ct))
+        
+        # 测量CT数据加载时间
+        print("开始测量CT数据加载时间...")
+        start_time = time.time()
+        total_batches = min(20, len(dl_ct))  # 限制测试数量
+        
+        for i, _ in enumerate(tqdm(dl_ct, total=total_batches)):
+            if i >= total_batches - 1:
+                break
+        
+        ct_time = time.time() - start_time
+        print(f"CT数据集: {total_batches}个批次耗时 {ct_time:.2f}秒, 平均每批次 {ct_time/total_batches:.4f}秒")
 
-            mask = (similarity_tab.unsqueeze(3) - similarity_tab.unsqueeze(2)) > 0.2   # N N N
-            triplet_count += torch.sum(mask)
-            
-        print(f'** {threshold} **')
-        print(similarity_tab.shape)
-        print(triplet_count/count)
+    # # 测试不同的batch_size
+    # num_workers = 8  # 使用固定的工作线程数
+    # print(f"\n使用固定的{num_workers}个工作线程，测试不同batch_size")
     
+    # for batch_size in [1, 2, 4, 8, 16]:
+    #     print(f"\nbatch_size = {batch_size}")
+        
+    #     # CXR数据集
+    #     dl_cxr = DataLoader(
+    #         cxr_dataset,
+    #         num_workers=num_workers,
+    #         batch_size=batch_size,
+    #         shuffle=False,
+    #         drop_last=False,
+    #         pin_memory=True,
+    #         collate_fn=collate_fn
+    #     )
+        
+    #     # 预热
+    #     print("预热CXR数据加载器...")
+    #     for _ in range(3):
+    #         next(iter(dl_cxr))
+        
+    #     # 测量CXR数据加载时间
+    #     print("开始测量CXR数据加载时间...")
+    #     start_time = time.time()
+    #     total_batches = min(50, len(dl_cxr))  # 限制测试数量
+        
+    #     for i, _ in enumerate(tqdm(dl_cxr, total=total_batches)):
+    #         if i >= total_batches - 1:
+    #             break
+        
+    #     cxr_time = time.time() - start_time
+    #     print(f"CXR数据集(batch_size={batch_size}): {total_batches}个批次耗时 {cxr_time:.2f}秒, "
+    #           f"平均每批次 {cxr_time/total_batches:.4f}秒, "
+    #           f"平均每样本 {cxr_time/(total_batches*batch_size):.4f}秒")
